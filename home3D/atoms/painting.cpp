@@ -9,13 +9,15 @@
 #include "painting.h"
 #include "all_objects.h"
 
-const float FRAME_WIDTH = 2.5;
-
 
 glPainting::glPainting()
 {
+    m_frame_width   = 1.5;
+    m_matting_width = 2;
+    
     m_object_type_name = "painter";    
 }
+
 glPainting::~glPainting()
 {
     if (m_painting->m_texture)
@@ -27,8 +29,12 @@ void glPainting::create_components()
     m_painting->setup();
     m_components.push_back(m_painting);
     
+    m_matting = new glFrame( );
+    m_matting->set_params( m_matting_width, m_painting->m_height, m_matting_width, 0.1 );
+    m_matting->setup       ( );
+
     m_frame = new glFrame();
-    m_frame->set_params( m_painting->m_width, m_painting->m_height, 2.5 );
+    m_frame->set_params( m_painting->m_width, m_painting->m_height, m_frame_width, 2.5 );
     m_frame->setup();
     m_components.push_back(m_frame);
 }

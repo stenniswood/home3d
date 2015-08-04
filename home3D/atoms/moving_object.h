@@ -29,25 +29,35 @@ public:
     ~glMovingObject( );
 
     virtual void    f_ma            ( );                        // net forces / inertia
-    virtual void    update_position ( );
-    virtual void    update_rotation ( );
+    virtual void    update_position ( float time_period = 0.01 );
+    virtual void    update_rotation ( float time_period = 0.01 );
     void            add_force       ( MathVector mNewForce );   // acting on the object.
     void            clear_net_forces( );
+    virtual bool    evaluate_collision( glMovingObject* mOther );
     
     // TRANSLATIONAL:
     MathVector m_net_forces;
     MathVector m_acceleration;
     MathVector m_velocity;
     MathVector m_position;
+    
+    MathVector m_prev_position;     // not sure this is right way to do it (used to restore after a collision)
+    
 
     // ROTATIONAL:
-    float Inertia = 0.0;
+    MathVector Inertia;               // 3 axis.
+    
+    float coef_of_restitution;      // ratio of the velocities before and after a collision.
+    
     MathVector m_R_net_torques;
     MathVector m_R_acceleration;
     MathVector m_R_velocity;
     MathVector m_R_position;
     
-    bool    is_active;
+    bool    is_active;          // out of bounds?
+    bool    is_participating;   // participates in physics simulation.
+    bool    m_collision_handled;
+    
 };
 
 

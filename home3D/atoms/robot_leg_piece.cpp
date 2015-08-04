@@ -33,6 +33,7 @@ void glInner::generate_shank_vertices( )		// 2D
 	float angle       = 0.0;
 	float increment   = 2.*M_PI/SHANK_SAMPLES;
 	struct Vertex v;
+    set_vertex_color(v);
 	for (int i=0; i<SHANK_SAMPLES; i++)	
 	{		
 		v.position[0] = shank_radius*sin(angle);
@@ -52,7 +53,7 @@ void glInner::generate_round_vertices( )		// 2D
 	float angle       = -2.*M_PI/4.;			
 	float increment   = M_PI/SAMPLES;	// half circle only!
 	struct Vertex v;
-	
+    set_vertex_color(v);
 	for (int i=0; i<SAMPLES; i++)	
 	{
 		v.position[0] = round_radius*sin(angle);
@@ -68,6 +69,7 @@ void	glInner::generate_layer_vertices( )
 {
 	m_layer_one_vertices = 13;
 	struct Vertex v;
+    set_vertex_color(v);
 	
 	// Go along bottom first:
 	v.position[0] =  0.0;
@@ -114,7 +116,7 @@ glLegSegment::glLegSegment( float mLength )
 : glCylinder( 16 )
 {
 	m_radius              = 2.;
-    m_joint_length        = LEG_SEGMENT_LENGTH;
+    m_joint_length        = mLength; //LEG_SEGMENT_LENGTH;
     m_extrusion_length    = mLength-FORK_CENTER_LENGTH-TONGUE_CENTER_LENGTH;
 	m_number_fork_indices = 0;
 }
@@ -147,7 +149,7 @@ We'll not draw any axle or hole between the 2.  Because the translation will ali
 void glLegSegment::generate_fork_vertices( float mKeyWidth, float mYlocation )
 {
 	struct Vertex v;
-	v.color[0] = 0x7F;		v.color[1] = 0x7F;		v.color[2] = 0x7F;		v.color[3] = 0x7F;
+    set_vertex_color(v);
 	
 	float TwoPi     = 2.*M_PI;
 	float increment = (TwoPi / ((float)m_number_of_samples));
@@ -210,6 +212,7 @@ void glLegSegment::generate_fork_indices( )
 void glLegSegment::generate_round_vertices( )
 {
 	struct Vertex v;
+    set_vertex_color(v);
 	const int SAMPLES = 18;
 	// Not sure which quadrant we'll need.  Let's try going from [-PI/2 to +PI/2]
 	float angle       = -2.*M_PI/4.;	
@@ -237,7 +240,9 @@ void print_vetex(struct Vertex v)
 void glLegSegment::generate_stud_vertices( float mRadius, float mLength, float mWidth )
 {
 	struct Vertex   v;
-	v.color[0] = 0x9F;		v.color[1] = 0x7F;		v.color[2] = 0x9F;		v.color[3] = 0x7F;	
+//	v.color[0] = 0x9F;		v.color[1] = 0x7F;		v.color[2] = 0x9F;		v.color[3] = 0x7F;
+//    v.color[0] = 0x7F;		v.color[1] = 0x7F;		v.color[2] = 0x7F;		v.color[3] = 0x7F;
+    set_vertex_color(v);
 	int   i;
 	float half_key_width = mWidth / 2.0;
 	i = (int)m_vertices.size();
@@ -408,8 +413,11 @@ void glLeg::Initialize( )
 void glLeg::create_components()
 {
 	Initialize();
+    m_upper_leg.set_color(0xFFFF0000);
 	m_upper_leg.setup();
-	m_lower_leg.setup();
+    m_upper_leg.set_color(0xFFFF0000);
+    m_lower_leg.setup();
+    m_upper_leg.set_color(0xFFFF9F00);
     m_foot.setup(  );
 
     m_components.push_back( &m_upper_leg );
@@ -682,10 +690,11 @@ void glLeg::floor_sitting_position( )    // legs stretched out in front.
     set_hip_rotate_angle( 0.0 );
 }
 
-void glLeg::move_heel_to( MathVector mheel )
+void glLeg::place_heel_at( float mheel[3] )
 {
-    //
+        
 }
+
 void glLeg::transfer_angles()
 {
     //    m_upper_leg.m_x_angle = -m_hip_fb_swing_angle;

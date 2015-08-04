@@ -369,7 +369,7 @@ bool glRobot::is_in_front_of( MathVector mWorldLoc )
     body.m_vector[1] = front[1];
     body.m_vector[2] = front[2];
     
-    front_perp = front_vector.get_perp_yz();
+    front_perp = front_vector.get_perp_xz();
     test_pt.m_origin[0] = mWorldLoc[0];
     test_pt.m_origin[1] = mWorldLoc[1];
     test_pt.m_origin[2] = mWorldLoc[2];
@@ -478,31 +478,41 @@ void glRobot::place_foot_at ( struct stFootPosition fp, glLeg& mSwing, glLeg& mS
 /* Use for the heel strike portion of the walking */
 void	glRobot::place_left_heel_at( float mHeel[3] )
 {
-	// Calc distance between feet.
-	//struct Vertex Heel;
-	//Heel.position[0] = mHeel[0];	Heel.position[1] = mHeel[1];	Heel.position[2] = mHeel[2];
-
-	//struct Vertex delta = subtract( Heel,  m_right_leg.m_foot.m_fp.heel );
-    float delta[3];
-    delta[0] = mHeel[0] - m_right_leg.m_foot.m_world_coords.heel[0];
-    delta[1] = mHeel[1] - m_right_leg.m_foot.m_world_coords.heel[1];
-    delta[2] = mHeel[2] - m_right_leg.m_foot.m_world_coords.heel[2];
-
-    float  distance_between_feet = sqrt( delta[0]*delta[0] + delta[1]*delta[1] + delta[2]*delta[2] );
-
-    //magnitude ( delta );
+    /* Note rigid body assumption means that to go forward we have to move the back leg too. */
+    /* Big Assumption! - this is only good for the heel strike.  */
+    
+    /* To place the heel at any location.  is more complicated 
+            We need to first asses whether the position can be reached by just moving the left leg.
+            Or if we should move the right leg too.
+            And really should even verify that the arms aren't in the way or else move them too.
+            This is the correct inverse kinematic way to do it.
+        But for simple heel strike, it's easier.
+     */
+    
+    // Calc distance between feet:
+    MathVector heel(mHeel, 3);
+    MathVector opposite_leg_heel(m_right_leg.m_foot.m_world_coords.heel, 3);
+    MathVector delta(3);
+    delta = heel - opposite_leg_heel;
+    float  distance_between_feet = delta.magnitude( );
 	printf("distance_between_feet %6.1f\n", distance_between_feet);
 	
+    // Calc hip swing angles :
+    
 	// isosceles triangle  = 2 right triangles
 	float dist = distance_between_feet / 2.0;
     float total_leg_length = m_left_leg.get_length();
-    
     float angle = acos( dist / total_leg_length );		// radians !
+    
 	m_left_leg.set_hip_angle ( degrees(angle));
 	m_left_leg.m_knee_angle = 0.0;
-	
 	m_right_leg.set_hip_angle ( - degrees(angle));
 
+    // NOW POSITION THE BODY:
+    //  Need a better way to do this.  Because we want to simulate the movement
+    //  and not assume that the robot will get there.
+    
+    
 	// vertical distance to base of robot body:
 	m_y = sin(angle) * total_leg_length;
 	m_x = (delta[0]/2.0);
@@ -515,8 +525,36 @@ void	glRobot::place_left_heel_at( float mHeel[3] )
 
 void	glRobot::place_right_heel_at( float mHeel[3] )
 {
+    // Calc distance between feet:
+    MathVector heel(mHeel, 3);
+    MathVector opposite_leg_heel(m_right_leg.m_foot.m_world_coords.heel, 3);
+    MathVector delta(3);
+    delta = heel - opposite_leg_heel;
+    float  distance_between_feet = delta.magnitude( );
+    printf("distance_between_feet %6.1f\n", distance_between_feet);
     
+    // Calc hip swing angles :
+    
+    // isosceles triangle  = 2 right triangles
+    float dist = distance_between_feet / 2.0;
+    float total_leg_length = m_left_leg.get_length();
+    float angle = acos( dist / total_leg_length );		// radians !
+    
+    m_left_leg.set_hip_angle ( degrees(angle));
+    m_left_leg.m_knee_angle = 0.0;
+    m_right_leg.set_hip_angle ( - degrees(angle));
+    
+    // NOW POSITION THE BODY:
+    //  Need a better way to do this.  Because we want to simulate the movement
+    //  and not assume that the robot will get there.
+    
+    
+    // vertical distance to base of robot body:
+    m_y = sin(angle) * total_leg_length;
+    m_x = (delta[0]/2.0);
+    m_z = (delta[2]/2.0);
 }
+
 void	glRobot::place_left_toe_at( struct Vertex mHeel )
 {
     

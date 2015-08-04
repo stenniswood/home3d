@@ -32,13 +32,16 @@ public:
     float	get_door_nearside (  int mDoorIndex  );
     float	get_door_center   (  int mDoorIndex  );
     float	get_door_far	  (  int mDoorIndex  );
+
+//  virtual bool    evaluate_collision( glMovingObject* mOther );
+    virtual bool    evaluate_collision( glSphere* mOther );
     
-    MathVector  get_point_away_from  (  float mDistanceAlong, float mPerpendicularDistance, bool mPositiveSide=true );
-    MathVector	get_door_coord		 (  int mDoorIndex, float mPerpDistance=0.0  );
-    MathVector	get_door_center_coord(  int mDoorIndex, float mPerpDistance=0.0  );
-    MathVector	get_door_far_coord	 (  int mDoorIndex, float mPerpDistance=0.0  );
+    MathVector  get_point_away_from  ( float mDistanceAlong, float mPerpendicularDistance, bool mPositiveSide=true );
+    MathVector	get_door_coord		 ( int mDoorIndex, float mPerpDistance=0.0  );
+    MathVector	get_door_center_coord( int mDoorIndex, float mPerpDistance=0.0  );
+    MathVector	get_door_far_coord	 ( int mDoorIndex, float mPerpDistance=0.0  );
+    MathVector	get_origin           (  );
     MathVector	get_far_end          (  );
-    
 };
 
 

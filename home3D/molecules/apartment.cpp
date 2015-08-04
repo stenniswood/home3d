@@ -28,7 +28,7 @@ void glApartment::create_vertical_walls()
     struct stSize s;		// for windows
     //w->set_texture(1);
     
-    // Outside wall (sliding door)
+    // Outside wall (sliding door)                  # 0
     w = new glFullWall();
     w->set_length(144.+36.+116.+120.);
     s.width = 46.25;    s.height = 46.25;
@@ -44,7 +44,7 @@ void glApartment::create_vertical_walls()
     m_components.push_back( w );
     m_fwalls.push_back    ( w );
     
-    // Hall way 1 :
+    // Hall way 1 :                             #1
     w = new glFullWall();
     w->clear( );
     w->set_length( 36.+116.+120.-3.);
@@ -72,7 +72,7 @@ void glApartment::create_vertical_walls()
     m_components.push_back( w );
     m_fwalls.push_back( w );
     
-    // Hall way 2 :
+    // Hall way 2 :                             #2
     w = new glFullWall();
     w->clear();
     w->set_length(36.+116.+120.-77.5);
@@ -92,7 +92,7 @@ void glApartment::create_vertical_walls()
     m_components.push_back( w );
     m_fwalls.push_back( w );
     
-    // Final (kitchen to neighbors)
+    // Final (kitchen to neighbors)             #3
     w = new glFullWall();
     w->clear();
     w->set_length(144.+36.+116.+120.);
@@ -105,7 +105,7 @@ void glApartment::create_vertical_walls()
     m_fwalls.push_back( w );
         // 4 WALLS TOTAL.   [0-3]
 
-    // Bathroom
+    // Bathroom                                     #4 (zero indexed)
     w = new glFullWall();                   // WALL #5
     w->clear();
     w->set_length( 416. - 338.5 );
@@ -132,7 +132,7 @@ void glApartment::create_horizontal_walls()
     struct stSize s;		// for windows
 
     ////////////////////////// horizontals //////////////////////////
-    // End of Hallway
+    // End of Hallway                       [5]
     w = new glFullWall();
     w->clear();
     w->set_length( 70. );
@@ -143,7 +143,7 @@ void glApartment::create_horizontal_walls()
     m_fwalls.push_back( w );
     m_components.push_back( w );
 
-    // Divide (living & bed1)
+    // Divide (living & bed1)               [6]
     w = new glFullWall();
     w->clear();
     w->set_length( 160. );

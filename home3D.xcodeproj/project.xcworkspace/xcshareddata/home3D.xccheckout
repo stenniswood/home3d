@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>D3F25596-9C02-42D3-8B11-06E822F80247</string>
+	<key>IDESourceControlProjectName</key>
+	<string>home3D</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>643CC0E124BD7FF6AEB4AA5EF1D1429444EBAEAD</key>
+		<string>https://github.com/stenniswood/home3d.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>home3D.xcodeproj</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>643CC0E124BD7FF6AEB4AA5EF1D1429444EBAEAD</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/stenniswood/home3d.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>643CC0E124BD7FF6AEB4AA5EF1D1429444EBAEAD</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>643CC0E124BD7FF6AEB4AA5EF1D1429444EBAEAD</string>
+			<key>IDESourceControlWCCName</key>
+			<string>home3D</string>
+		</dict>
+	</array>
+</dict>
+</plist>

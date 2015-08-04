@@ -22,7 +22,7 @@ float template_data[] =
 	-1.0, 1.0, -1.0,	 // 7
 };
 
-// CLOSED INDICES:
+// CLOSED INDICES:           bottom   top       front     ....
 GLubyte q_Indices     [] = { 0,1,2,3, 4,5,6,7,  0,1,5,4,  2,3,7,6, 0,4,7,3, 1,2,6,5  }; 
 // OPEN INDICES:
 GLubyte s_Indices     [] = { 0,1,2,3, 0,1,5,4,  2,3,7,6, 0,4,7,3, 1,2,6,5   }; 
@@ -59,8 +59,8 @@ void glBox::generate_vertices()
 		v.position[2] = template_data[i*3+2]*hd;
 		m_vertices.push_back(v);
 	}
-	
-	// For grab_top(), etc later.
+
+	// For grab_top(), etc later:
 	m_max.position[0] = +hw;
 	m_max.position[1] = +hh;
 	m_max.position[2] = +hd;
@@ -149,6 +149,68 @@ void glBox::draw_body()
 	else 
 		glDrawElements(GL_QUAD_STRIP, (int)m_indices.size(), GL_UNSIGNED_INT,
 					   (GLvoid*)((char*)NULL));
-
 }
 
+// see https://en.wikipedia.org/wiki/List_of_moments_of_inertia
+void glBox::compute_inertia     ( float mTotalMass )
+{
+    Inertia[0] = (height*height + depth*depth);
+    Inertia[1] = (width*width + depth*depth);
+    Inertia[2] = (width*width + height*height);
+    Inertia *= mTotalMass/12.;
+    
+}
+
+bool glBox::evaluate_collision( glSphere* mOther )
+{
+    // for now we assume it's a sphere:
+    
+    // IS IT ABOVE/BELOW the box?
+/*    bool candidate = false;
+    float extent = mOther->m_position[1] + mOther->m_radius;
+    if (extent < m_y)                return false;
+    extent = mOther->m_position[1] - mOther->m_radius;
+    if (extent > m_y+m_wall_height)  return false;
+    
+    // IS IT PAST THE START or END of the WALL?
+    MathVector delta = mOther->m_position - m_line.m_origin;
+    float distance_along_wall = m_line.m_vector.dot(delta);
+    if (distance_along_wall < -mOther->m_radius) return false;
+    if (distance_along_wall > (m_wall_length+mOther->m_radius)) return false;
+    
+    // We are now within the extents of the wall.  Check the actual distance away:
+    MathVector perp = m_line.m_vector.get_perp_xz();
+    float distance_away_from_wall = fabs(perp.dot( delta ));
+    
+    if (distance_away_from_wall > mOther->m_radius)
+        return false;
+    
+    // Only chance of no collision now is in a doorway:
+    long size = m_doorways.size();
+    for(int d=0; d<size; d++)
+    {
+        // If it's in the doorway, let it pass.
+        if ((distance_along_wall > m_doorways[d].position_lengthwise) &&
+            (distance_along_wall < (m_doorways[d].position_lengthwise+m_doorways[d].width)) )
+            if (mOther->m_y < (m_doorways[d].height-mOther->m_radius))
+                return false;
+    } */
+    return true;
+}
+
+int glBox::get_largest_axis    ()
+{
+    float max = width;
+    float max_index = 0;
+    if (height>max)
+    {
+        max =height;
+        max_index = 1;
+    }
+    if (depth>max)
+    {
+        max =depth;
+        max_index = 2;
+    }
+    return max_index;
+}

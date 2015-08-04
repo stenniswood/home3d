@@ -12,7 +12,7 @@
 #include <stdio.h>
 #include "gl_atom.hpp"
 #include "Texture.hpp"
-
+#include "glMolecule.h"
 
 
 class glSign : public glAtom
@@ -29,6 +29,12 @@ public:
     float 	 m_width;
 };
 
-
+class StreetSign : public glMolecule
+{
+public:
+    StreetSign();
+    ~StreetSign();
+    
+};
 
 #endif /* defined(__home3D__sign__) */

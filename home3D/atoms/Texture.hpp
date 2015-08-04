@@ -35,7 +35,7 @@ public:
 	// The object can either create a class derived from this and override this function.
 	// Or ignore this function and add coordinates to "m_TexCoords" - better usually.
     GLuint          generate_grid_coords    ( int mWidth, int mHeight );
-    GLuint			generate_texture_coords	( );		// data to match vertexes.  Unique to each object!
+    GLuint			generate_texture_coords	( int mRotation = 0);		// data to match vertexes.  Unique to each object!
 	GLuint			generate_TBO			( );		// handle
 	void			generate_VBOTexCoords	( );		// handle
 
@@ -48,7 +48,9 @@ public:
 	vector<struct stTextCoord>	m_TexCoords;
 
     int             format,format2;
-    float           m_tiles;
+    int             m_repetitions_x;
+    int             m_repetitions_y;
+//    float           m_tiles;
 	Mat 			m_image;
     
 };

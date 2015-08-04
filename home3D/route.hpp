@@ -47,7 +47,7 @@ class glRoute : public glAtom
 public:
 	glRoute( );
     void             reset                  ( );
-    void			 start_over_at          ( struct Vertex mStart );
+    virtual void	 start_over_at          ( struct Vertex mStart );
     void			 start_over_at2         ( MathVector    mStart );
 
     void 			 add_way_point          ( struct Vertex mStart );
@@ -58,7 +58,7 @@ public:
     
     float 			 get_angle_degrees      ( int mIndex );
 	void 			 compute_slopes			( );
-	MathVector       compute_slope			( int mIndex );
+	MathVector       compute_delta			( int mIndex );
 	struct stRiseRun compute_perpendicular	( int mIndex );
     MathVector       get_perpendicular      ( int mIndex, float mPerpendicular_Distance );
     

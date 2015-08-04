@@ -45,8 +45,8 @@ void  glWindow::set_params  (float mWidth,
         m_piece2 = new glFrame();
     
     // Have to specify the inside frame width/height:
-    m_piece1->set_params( mWidth/2-2*m_frame_thickness, mHeight, mThick/2 );
-    m_piece2->set_params( mWidth/2-2*m_frame_thickness, mHeight, mThick/2);
+    m_piece1->set_params( mWidth/2-2*m_frame_thickness, mHeight, m_frame_thickness, mThick/2 );
+    m_piece2->set_params( mWidth/2-2*m_frame_thickness, mHeight, m_frame_thickness, mThick/2 );
     m_piece1->m_y = mSillHeight;
     m_piece2->m_y = mSillHeight;
 }

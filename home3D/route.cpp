@@ -151,7 +151,7 @@ void glRoute::compute_slopes( )
 	m_slopes.clear();
 	for (int v=0; v<m_number_path_vertices; v++)
 	{
-        rr = compute_slope( v );
+        rr = compute_delta( v );
         m_slopes.push_back ( rr );
 	}
 }
@@ -160,7 +160,7 @@ void glRoute::compute_slopes( )
 	Computes the slope between 2 consequative vertices on the 2 dimensional plane.
 	(y = 0)   										
 */
-MathVector glRoute::compute_slope( int mIndex )
+MathVector glRoute::compute_delta( int mIndex )
 {
 	MathVector rr(3);
     rr[0] = 0.0; 	rr[1]=0.0;      rr[2]=0.0;
@@ -189,8 +189,8 @@ struct stRiseRun  glRoute::compute_perpendicular( int mIndex )
 
 MathVector glRoute::get_perpendicular( int mIndex, float mPerpendicular_Distance )
 {
-    MathVector mv = compute_slope( mIndex );
-    MathVector perp = mv.get_perp_yz();
+    MathVector mv = compute_delta( mIndex );
+    MathVector perp = mv.get_perp_xz();
     MathVector center(3);
     center[0] = m_vertices[mIndex].position[0];
     center[1] = m_vertices[mIndex].position[1];

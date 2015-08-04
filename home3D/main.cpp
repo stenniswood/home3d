@@ -26,14 +26,19 @@
 
 #include "quarter_629.h"
 #include "hampton_complex.h"
+#include "basket_ball_court.h"
+#include "sports_bench.h"
+#include "basketball_arena.h"
+
+#include "atom_objects.h"
 
 
 /*************** OBJECTS ***********************/
+//glStairway      stairs;
 /*
 Palette         palette;
-glLeg           leg;
 glCabinet       cabinet;
-glStairway      stairs;
+
 
 glBox           box;
 glBox           box2;
@@ -50,6 +55,9 @@ glFullWall          fwall;
 
 glIbeam             ibeam(12.*8.);
 */
+glFaceBox           cube;
+txtContainer        ground;
+glRing              ring;
 
 glLightSwitch       ls;
 glBrickWall         brick_wall;
@@ -72,7 +80,13 @@ glTable             table;
 glTableCenterPole   tableCP;
 glCounter           KitchenSinkCounter(5.*18., 26., 37. );
 glWalkingRobot      robot;
-glSphere            sphere(15, 10, 64);
+glSphere            sphere1(NBA_BASKET_BALL_RADIUS, 10, 64);
+glSphere            sphere2(FIFA_SOCCER_BALL_RADIUS_SIZE5, 10, 64);
+glSphere            sphere3(FIFA_SOCCER_BALL_RADIUS_SIZE4, 10, 64);
+glSphere            sphere4(BASEBALL_RADIUS, 10, 64);
+
+glArena             bball_arena;
+
 
 //CameraTexture       camera;
 //glPicnicTable       picnic;
@@ -123,8 +137,8 @@ void move_forward( float mAmount )
 	float F_vec_z = eyeZ - centerZ;
 	float sum = fabs(F_vec_x) + fabs(F_vec_y) + fabs(F_vec_z);
 	
-	F_vec_x *= mAmount/sum;
-	F_vec_z *= mAmount/sum;
+	F_vec_x *= 2*mAmount/sum;
+	F_vec_z *= 2*mAmount/sum;
 	//printf("Delta x=%6.3f \t", F_vec_x );
 	//printf("Delta z=%6.3f \n", F_vec_z );
 
@@ -140,16 +154,17 @@ void move_sideways( float mAmount )
     forward[0] = centerX - eyeX;
     forward[1] = centerY - eyeY;
     forward[2] = centerZ - eyeZ;
-  
-    MathVector perp = forward.get_perp_yz();
+
+    MathVector perp = forward.get_perp_xz();
     perp.unitize();
     perp *= mAmount;
-    
+
     eyeX    += perp[0];
     eyeZ    += perp[2];
     centerX += perp[0];
     centerZ += perp[2];
 }
+
 void assume_robot_view()
 {
     eye  = robot.get_eye_location();
@@ -175,6 +190,7 @@ void change_route( MathVector mSource, MathVector mDestination )
     mDestination.print();
 
     map2D.map_route( multiRoute, mSource, mDestination );
+    robot.m_route.start_over_at2(mSource);
     robot.m_route.create_from_multi( multiRoute );
     robot.plan_steps            ( );
     robot.gl_register           ( );
@@ -208,24 +224,33 @@ void select_route()
 }
 
 // Index into route.m_right_steps[] and left.
-int  l_step_index = 0;
-int  r_step_index = 0;
+int  l_step_index  = 0;
+int  r_step_index  = 0;
 bool left_leg_turn = true;
 bool last_direction_forward = true;
-bool show_tree = false;
-bool pause = true;
-glArm*  selected_arm = &(robot.m_left_arm);          // 0=left; 1=right;
-glLeg*  selected_leg = &(robot.m_left_leg);          // 0=left; 1=right;
+bool show_tree      = false;
+bool pause          = true;
+glArm*  selected_arm  = &(robot.m_left_arm);          // 0=left; 1=right;
+glLeg*  selected_leg  = &(robot.m_left_leg);          // 0=left; 1=right;
 bool  last_select_leg = true;
 
 void handleKeypress(unsigned char key, int x, int y)
 {
+    static bool result = false;
 	float tmp;
 	switch (key) {
         case 'v':   //show_tree = !show_tree;
                     robot.morph_demos();
+                    robot.reset_limbs_path();
+                    robot.m_interpolated_index = 0;
                     break;
-        case 'b':   robot.play_next();
+        case 'b':   result = robot.play_next();
+                    if (result) {
+                        robot.sample_limbs_path();
+                        robot.gl_unregister_limbs_path();
+                        robot.gl_register_limbs_path();
+                    }
+                    else robot.m_interpolated_index = 0;
                     break;
         case 'z':   select_route();
                     break;
@@ -360,8 +385,8 @@ void handleKeypress(unsigned char key, int x, int y)
                 selected_arm->increase_wrist_rotate_angle  (-2.);    break;
         /* END OF DIRECT LIMB CONTROL */
         
-        case '-': robot.take_step( false);                     break;
-        case '=': robot.take_step( true );                     break;
+        case '-': robot.take_step( false);                           break;
+        case '=': robot.take_step( true );   robot.start_walking();  break;
 
         case 'R':   if (eye_follows_robots==false)
                     {
@@ -372,13 +397,6 @@ void handleKeypress(unsigned char key, int x, int y)
                     break;
             
         // Leg Movements:
-//      case 't': selected_leg->increase_hip_angle 	( +2.); 	 break;
-//		case 'T': selected_leg->increase_hip_angle 	( -2.); 	 break;
-        case 'y': selected_leg->increase_hip_rotate_angle( +2.); break;
-        case 'Y': selected_leg->increase_hip_rotate_angle( -2.); break;
-        case 'u': selected_leg->increase_hip_swing_angle( +2.);  break;
-        case 'U': selected_leg->increase_hip_swing_angle( -2.);  break;
-
 		case 'g': selected_leg->increase_knee_angle  (+2.); 		 break;
 		case 'G': selected_leg->increase_knee_angle  (-2.); 		 break;
 		case 'B': selected_leg->increase_ankle_angle (-2.); 		 break;
@@ -447,13 +465,43 @@ void init_objects()
     Sources.push_back     ( tmp );
     Destinations.push_back( tmp );
 
-    
-//  terra.load_image( "textures/stucco-texture.jpg" );
-//  terra.load_image( "textures/Ireland.jpg"     );
-//  terra.load_image( "textures/heightmap6.jpg"  );
-//  terra.load_image( "textures/heightmap_P.png" );
-//  terra.create();
 
+    ground.width = 5000;
+    ground.depth = 5000;
+    ground.height = 1.0;
+    ground.load_image("textures/grass2.jpg");
+    ground.m_repetitions_x = 50;
+    ground.m_repetitions_y = 50;
+    ground.create();
+
+    cube.width = 10;
+    cube.depth = 10;
+    cube.height= 20.0;
+    cube.set_color( 0xFFFFFF00 );
+    Texture* txt  = cube.load_image("textures/me_in_car.bmp",        FACE_TOP_ID );
+    Texture* txt2 = cube.load_image("textures/sidewalk_painting.jpg",FACE_LEFT_ID);        // 0 = top
+    cube.apply_front( txt);
+    cube.apply_back (txt2);
+//    cube.apply_left (txt2);
+//    cube.apply_right(txt2);
+
+/*    Texture* txt3 = cube.load_image("textures/door_carmelle.jpg",FACE_FRONT_ID);        // 0 = top
+    cube.apply_front(txt3,1);
+    cube.apply_back (txt3,1); */
+    
+    cube.m_R_velocity[1] = 25;
+    cube.is_participating = true;
+    cube.create();
+    cube.relocate( 50, 90, 50 );
+
+    
+ /*   ring.set_color(0xFFFF0000);
+    ring.set_finger_params(9, 40);
+    ring.set_circle_params(0.25, 10);
+    ring.setup();
+    ring.gl_register();
+    ring.relocate( 50, 60, 100 );       */
+    
 	// Fairly well tested units :
     /*fwall.set_length( 22 * 12 );
     struct stSize s;
@@ -511,19 +559,61 @@ void init_objects()
     
     struct stFootPosition LHeel;
     struct stFootPosition RHeel;
+    robot.m_show_paths = true;
     robot.create();
     robot.get_left_foot_location ( &LHeel );
     robot.get_right_foot_location( &RHeel );
     robot.relocate( 20, 50, 20 );
     robot.goto_start_of_path();
-//    robot.zombie_arms();
     robot.hands_on_hip();
-//    robot.arms_down_by_side();
+//  sphere.load_texture("textures/me_in_car.bmp");
     
-//    sphere.load_texture("textures/me_in_car.bmp");
-//    sphere.create  (  );
-//    sphere.relocate( 20, 10, 50 );
+    bball_arena.create();
+    bball_arena.relocate( 0*12, 2, 0*12 );
+    
+    
+    sphere1.is_participating = true;
+    sphere1.coef_of_restitution = COEFF_RESTITUTION_BASKETBALL;
+    sphere1.set_color( 0xFF7F7F00);
+    sphere1.load_texture("textures/basketball_texture.jpg" );
+    sphere1.create  (  );
+    sphere1.m_velocity[0] = 40;
+    sphere1.m_velocity[2] = -10;
+    sphere1.relocate( 60, 70, 100 );
 
+    sphere2.is_participating = true;
+    sphere2.coef_of_restitution = COEFF_RESTITUTION_SOCCERBALL;
+    sphere2.set_color( 0xFFFF0000);
+    sphere2.load_texture("textures/soccer_ball_3.jpg" );
+    sphere2.create  (  );
+    sphere2.m_velocity[0] = -40;
+    sphere2.m_velocity[2] = -20;
+    sphere2.m_R_velocity[0] = 3;
+    sphere2.m_R_velocity[1] = 3;
+    sphere2.relocate( 60, 70, 100 );
+
+    sphere3.is_participating = true;
+    sphere3.coef_of_restitution = COEFF_RESTITUTION_SOCCERBALL;
+    sphere3.set_color( 0xFF5F7F2F);
+    sphere3.load_texture("textures/soccer_ball_world_cup.jpg" );
+    sphere3.create  (  );
+    sphere3.m_velocity[0] =40;
+    sphere3.m_velocity[2] = 10;
+    sphere3.m_R_velocity[0] = 2;
+    sphere3.m_R_velocity[1] = 3;
+    sphere3.relocate( 60, 70, 100 );
+
+    sphere4.is_participating = true;
+    sphere4.coef_of_restitution = COEFF_RESTITUTION_BASEBALL;
+    sphere4.set_color( 0xFF0F0000);
+    sphere4.load_texture("textures/baseball_texture.jpg" );
+    sphere4.create  (  );
+    sphere4.m_velocity[0] = -45;
+    sphere4.m_velocity[2] = 20;
+    sphere4.relocate( 60, 70, 100 );
+    
+    
+    chair.m_name = "dinning room";
     chair.m_R_velocity[1] = 1.;
     chair.m_velocity[0] = 0.25;
     chair.m_y_angle     = 90;
@@ -540,32 +630,31 @@ void init_objects()
 //    brick_wall.create  ( );
 //    brick_wall.relocate( 0. , 0., -150.  );
 
-    float scale = 6.0;
-/*	paper.load_texture    ( "textures/me_in_car.bmp" );
+
+/*    float scale = 6.0;
+	paper.load_texture    ( "textures/me_in_car.bmp" );
     paper.set_width_height( 10*scale, 10*scale       );
     paper.create          (                          );
 	paper.relocate        ( 40., 22.*4., 5.0 );
 	paper.m_x_angle       = 90.;
 	paper.m_y_angle       = 90.; */
-
     
     screen.set_width_height( 1280/10, 700/10 );
     ((CameraTexture*)screen.m_texture)->generate_PBO();
     ((CameraTexture*)(screen.m_texture))->timeslice();
-    
     screen.create          (                      );
     screen.relocate        ( 10., 22.*4., 9.0     );
-    screen.m_x_angle       = 90.;
+    screen.m_x_angle       = 180.;
 
     window.set_params  (50, 48, 48, 1.5 );
-    window.create      (  );
-    window.relocate( 40, 0, 40 );
+//    window.create      (  );
+//    window.relocate( 40, 0, 40 );
     
     printf("\nApartment Create\n\n");
-    /*apartment2.setup();
+    apartment2.setup();
     apartment2.mirror_image_x();
     apartment2.gl_register();
-    apartment2.relocate( 0, 0, 300); */
+    apartment2.relocate( 0, 0, 300);
     
     //Hcomplex.create();
     //house.create();
@@ -585,6 +674,18 @@ void init_objects()
     map2D.m_y       = 0.0;
 
     select_route( );
+    
+    
+    //  terra.load_image( "textures/stucco-texture.jpg" );
+    //  terra.load_image( "textures/Ireland.jpg"     );
+    terra.set_stretch( 10, 10 );
+    terra.m_y_scale = 1.0 ;
+    //terra.load_image( "textures/heightmap6.jpg"  );
+    terra.add_omission(&apartment);
+//    terra.add_omission(&apartment2);
+    //terra.add_omission(&bball_court);
+    //terra.load_image( "textures/heightmap_P.png" );
+    //terra.create();
 
     // Sample door handle path :
     //    (exact same method should be available for drawers, light switches)
@@ -617,15 +718,15 @@ void init_objects()
 	//KitchenSinkCounter.relocate( 144., 0., 160.+36.+95. );
 
 //    picnic.create();
+
+    /*
+    stairs.m_extrusion_length = 25*12;
+    stairs.set_color( 0xFF0000FF);
+    stairs.create();
+    stairs.m_y_angle = 0.;
+    stairs.relocate( 100, 10., -25*12 ); */
     
 /*
-	stairs.generate_VBO();
-	stairs.generate_IBO();
-	stairs.m_angle = 90.;
-	stairs.m_x = - stairs.m_width*2.;
-	stairs.m_y = - stairs.get_height() + 50.;
-	stairs.m_z = - 50.;	
-
 	tray.width  = 18.;
 	tray.height = 5.;
 	tray.depth  = 12.0;
@@ -687,24 +788,22 @@ void drawScene() {
 	glutSwapBuffers();
 }
 
-#define ms_update_rate 6
+#define ms_update_rate 25
 /*
 	Called every 25 milliseconds
 	Runs thru the house along the path specified in "route"
 */
 void update(int value) 
 {
+    float time_period = (ms_update_rate) / 1000.;
 	static int pause_count  = 1;
+    
     respond_to_client_timeslice( );
     static int counter = 0;
     if ((counter++ % 10)==0)
        ((CameraTexture*)screen.m_texture)->timeslice();
     if (eye_follows_robots)
-    {
-        //eye = robot.get_eye_location();
-        //eyeX = eye[0];  eyeY = eye[1];  eyeZ = eye[2];
         assume_robot_view();
-    }
     
     if ((pause==false) && (pause_count==0))
 	{
@@ -714,47 +813,9 @@ void update(int value)
 //        paper.gl_unregister();
 //        paper.wave_it(10, 2, phase );
 //        paper.gl_register();
-        
-        theWorld.time_slice();
-        
-        static float open_fraction=0.5;
-        open_fraction += 0.01;
-        if (open_fraction>=1.0) open_fraction = 0.0;
-        
-        if (tdoor1)
-            tdoor1->open( open_fraction   );
-        if (tdoor2)
-            tdoor2->open( 1-open_fraction );
-
+        theWorld.time_slice( time_period*2 );
         robot.update_animation();
-        /*
-        robot.m_right_arm.move_arms_up_down(15.);
-        robot.m_left_arm.move_arms_up_down(15.);*/
         pause_count = 1;
-
-        /*float F_vec_x = eyeX - centerX;
-		float F_vec_y = eyeY - centerY;
-		float F_vec_z = eyeZ - centerZ; */
-        //robot.m_left_arm.move_arms_up_down(15.);
-		/*eyeX = route.m_vertices[vertex_index].position[0];
-		eyeY = 12.*6.;  			// 6 feet above floor
-		eyeZ = route.m_vertices[vertex_index].position[2];
-
-		centerY = eyeY;
-		size_t size = route.m_vertices.size();
-		// Let's just move ahead 10 steps.
-		if (vertex_index < size-10 )
-		{
-			centerX = route.m_vertices[vertex_index+10].position[0];
-			centerZ = route.m_vertices[vertex_index+10].position[2];
-		} else {
-			centerX = route.m_vertices[size-1].position[0];
-			centerZ = route.m_vertices[size-1].position[2];
-			vertex_index = 0;
-			pause_count = 40;
-		}
-		vertex_index++;  */
-
 	} else if (pause==false) pause_count--;
 
 	glutPostRedisplay();
@@ -829,18 +890,17 @@ int main(int argc, char** argv)
 	glutCreateWindow("Putting It All Together - beyond-kinetics.com");
 	initRendering();
 
-    //delete_all_shm();
-    //sequencer_segment_id = 1310720;  196608
+  //  delete_all_shm();
     seq_allocate_memory();
     seq_attach_memory  ();
+    seq_save_segment_id	("seq_segment_id.txt");
 
-    //simulator_segment_id = 393217;    65537
     sim_allocate_memory();
     sim_attach_memory  ();
-    //sim_fill_memory();
+    sim_fill_memory();
+    sim_save_segment_id( "sim_segment_id.txt");
     
 	init_objects();
-    //theWorld.list_object_ids();
     
     eyeX= 80;       eyeY = 120;     eyeZ = 80;
     eyeX= 1.59;     eyeY=120.00;    eyeZ=157.13;
@@ -855,7 +915,7 @@ int main(int argc, char** argv)
 	glutMouseFunc   (MouseButton   );
 	glutMotionFunc  (MouseMotion   );
 	glutReshapeFunc (handleResize  );
-	glutTimerFunc   (25, update, 0 );
+	glutTimerFunc   (ms_update_rate, update, 0 );
 	
 	glutMainLoop();
     

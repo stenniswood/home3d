@@ -29,15 +29,34 @@ glCylinder::glCylinder( int mNumberSamples )
 void glCylinder::generate_layer_vertices( )
 {	
 	struct Vertex v;
+    set_vertex_color(v);
+    int sin_axis =0;
+    int cos_axis =0;
+    switch(m_extrusion_axis)
+    {
+        case 0: sin_axis = 1;
+                cos_axis = 2;
+                break;
+        case 1:
+            sin_axis = 0;
+            cos_axis = 2;
+            break;
+        case 2:
+            sin_axis = 0;
+            cos_axis = 1;
+            break;
+        default: break;
+    }
+    
 	float TwoPi     = 2.*M_PI;
 	float increment = (TwoPi/((float)m_number_of_samples));
 	int   i;
-	float a=0.;
-	for (i=0; i<m_number_of_samples; a+=increment, i++)
+    float a=0.;
+    v.position[m_extrusion_axis] =  0.;
+    for (i=0; i<m_number_of_samples; a+=increment, i++)
 	{
-		v.position[0] =  m_radius * sin(a);
-		v.position[1] =  0.;
-		v.position[2] =  m_radius * cos(a);
+		v.position[sin_axis] =  m_radius * sin(a);
+		v.position[cos_axis] =  m_radius * cos(a);
 		m_vertices.push_back( v );
 	}
 	m_layer_one_vertices = m_vertices.size();
@@ -66,6 +85,15 @@ void glCylinder::set_height( float mHeight )
 float glCylinder::get_height( )
 {
     return m_extrusion_length;
+}
+
+// see https://en.wikipedia.org/wiki/List_of_moments_of_inertia
+void glCylinder::compute_inertia( float mTotalMass )
+{
+    Inertia[0] = (3*m_radius*m_radius + m_extrusion_length*m_extrusion_length);
+    Inertia[1] = (3*m_radius*m_radius + m_extrusion_length*m_extrusion_length);
+    Inertia[2] = (6*m_radius*m_radius);
+    Inertia *= mTotalMass/12;
 }
 
 void glCylinder::draw_body()

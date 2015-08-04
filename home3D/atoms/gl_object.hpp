@@ -4,14 +4,41 @@
 #include <vector>
 #include "vector.hpp"
 #include "moving_object.h"
+//#include "verbal_object.h"
 
 using namespace std;
+
+#include <OpenGL/OpenGL.h>
+#include <GLUT/glut.h>
+//#include <OpenGL/glext.h>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
 
+struct Vertex_p
+{
+    float position[3];
+};
+struct Vertex_pn
+{
+    float position[3];
+    GLfloat normal[3];
+};
+struct Vertex_pnc
+{
+    float position[3];
+    GLubyte color[4];
+    GLfloat normal[3];
+};
+struct Vertex_pc
+{
+    float position[3];
+    GLubyte color[4];
+};
+
+#define Vertex Vertex_pnc
 
 /* 
     This class serves as a base OpenGL Vertex data

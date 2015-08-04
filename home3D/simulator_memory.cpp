@@ -290,6 +290,7 @@ void sim_write_object_ids( vector<long> mIDs )
     ipc_memory_sim->num_valid_ids = (int)(size&0xFF);
     for (int i=0; i<size; i++)
         ipc_memory_sim->new_object_ids[i] = mIDs[i];
+    
 }
 
 /***********************************************************/
@@ -325,6 +326,7 @@ void sim_read_command( long& mObject_id, long& mObject_type, MathVector& mNewLoc
         case COMMAND_ROBOT_PREDEFINED_SEQ :
             sim_read_robot_predefined_move(  Robot_id, MoveSequenceIndex, Repetitions );
             break;
+            
         default: Acknowledges--;        // No acknowledge!
             break;
     }

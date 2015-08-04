@@ -22,7 +22,7 @@ public:
     glPhysicalWorld( bool hasGravity=false );
     ~glPhysicalWorld();
 
-    void    time_slice();
+    void    time_slice( float time_period=0.01 );
     bool    is_out_of_bounds(MathVector mPos);
     void    check_boundaries();
 
@@ -32,9 +32,17 @@ public:
     void    unblock         ( )       { m_temporarily_block = false; }
     MathVector  get_gravity ( );
     MathVector  snells_law  ( glObject* mObject, MathVector mSurfaceVector );
+    void    adjust_velocity_for_inelasticity( glObject* mObject, float mSpeedBefore );
+    
     void        floor_bounce( glObject* mObject );        // use snells law to calculate resulting velocity.    
     
-    VerbalObject*  find_component ( string&  mRequestedName, string& mTypeName, bool mTypeMustMatch=true );
+    bool        find_component ( string&  mRequestedName, string& mTypeName,
+                                 vector<VerbalObject*>* object_hier,
+                                 bool  mTypeMustMatch=true  );
+                                
+    bool        find_component_by_id( long mObject_id,
+                                 vector<VerbalObject*>* object_hier
+                                   );
     
     glObject*   find_object_id( long mID );
     void        list_object_ids( );    

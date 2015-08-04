@@ -59,14 +59,14 @@ void glExtrusion::extrude_vertices( float mExtrusionLength, int mLoftAxis )
 		m_extrusion_axis = mLoftAxis;
 	if (m_extrusion_axis==-1) return;
 	
-	struct Vertex v;
+	struct Vertex_pnc v;
 	
 	// CEILING (DUPLICATE & SET HEIGHT)
 	// Duplicate all Floor points with ceiling height.	
 	//m_layer_one_vertices = m_vertices.size();
 	for (int i=0; i<m_layer_one_vertices; i++)
 	{
-		memcpy ( &v, &(m_vertices[i]), sizeof (struct Vertex) );
+		memcpy ( &v, &(m_vertices[i]), sizeof (struct Vertex_pnc) );
 		v.position[m_extrusion_axis] = mExtrusionLength;
 		m_vertices.push_back( v );
 	}
@@ -154,7 +154,6 @@ void glExtrusion::generate_indices( )
 }
 
 //======================= END OF INDICES ================================
-
 void glExtrusion::setup( float mLength, int mAxis )
 {
 	if (mLength>0)
@@ -164,7 +163,7 @@ void glExtrusion::setup( float mLength, int mAxis )
 
 	generate_vertices( );
 	extrude_vertices ( m_extrusion_length, m_extrusion_axis );
-	change_vertices_colors( );
+	//change_vertices_colors( );
 	generate_indices ( );
 }
 
@@ -196,6 +195,7 @@ void glExtrusion::draw_body()
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_COLOR_ARRAY ); 
 
+    
 	// Draw Bottom : 
 	glDrawElements(GL_QUAD_STRIP, (int)m_layer_one_indices, GL_UNSIGNED_INT, 0 );
 

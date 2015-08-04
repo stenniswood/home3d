@@ -39,7 +39,6 @@ void CameraTexture::generate_PBO()
 
 void CameraTexture::draw()
 {
-    
     glEnable            (GL_TEXTURE_2D              );
     glBindTexture       (GL_TEXTURE_2D,   m_TBO     );
     glBindBuffer        (GL_ARRAY_BUFFER, m_TBOTexCoords );
@@ -63,10 +62,9 @@ int CameraTexture::timeslice()
         return -1;
 
     cam >> m_image;         // get a new frame from camera
-//  imshow("Video", m_image);
+  //imshow("Video", m_image);
     m_index     = (m_index + 1) % 2;
     m_nextIndex = (m_index + 1) % 2;
-    
     
     glEnable     (GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, m_TBO);
@@ -78,7 +76,7 @@ int CameraTexture::timeslice()
     {
         // update data directly on the mapped buffer
         memcpy( ptr, m_image.data, DATA_SIZE );
-        glUnmapBufferARB(GL_PIXEL_UNPACK_BUFFER_ARB); // release pointer to mapping buffer
+        glUnmapBufferARB(GL_PIXEL_UNPACK_BUFFER_ARB);   // release pointer to mapping buffer
     }
     // it is good idea to release PBOs with ID 0 after use.
     glBindBufferARB(GL_PIXEL_UNPACK_BUFFER_ARB, 0);
@@ -106,7 +104,7 @@ void CameraTexture::stop()
 glCameraScreen::glCameraScreen()
 {
     m_texture = new CameraTexture();
-    m_samples_per_inch  = 1;
+    m_samples_per_inch  = 4;
     Initialize( 10, 10.0);
 
 }

@@ -26,7 +26,7 @@ void glUpstairs::create_vertical_walls   ( )
     // Side 1 :
     w = new glFullWall();
     w->clear( );
-    w->set_length( 50*12.);
+    w->set_length( 44*12.);                 // 24+20= 44 feet long inside
     w->setup    (  );
     w->m_y_angle = 0.0;
     w->m_z = 0.;
@@ -37,7 +37,7 @@ void glUpstairs::create_vertical_walls   ( )
     // Side 2 :
     w = new glFullWall();
     w->clear( );
-    w->set_length( 50*12.);
+    w->set_length( 44*12.);
     tdoor = new glDoor();                   // Door #1
     tdoor->set_params(30.);
     tdoor->set_hinge     (false);
@@ -48,7 +48,7 @@ void glUpstairs::create_vertical_walls   ( )
     w->m_bare_wall.add_door( 122.+40.5+64.5, DEFAULT_DOOR_WIDTH, 79.0, false );
     w->setup    (  );
     w->m_y_angle = 0.0;
-    w->m_z = 275.;
+    w->m_z = 24*12;                         // 288
     w->m_x = 0.;
     m_components.push_back( w );
     m_fwalls.push_back( w );
@@ -56,7 +56,7 @@ void glUpstairs::create_vertical_walls   ( )
     // Hall #1
     w = new glFullWall  ( );
     w->clear            ( );
-    w->set_length( 36.+116.+120.-3.);
+    w->set_length( 24.5*12.);
     tdoor = new glDoor();                   // Door #1 Boys bedroom
     tdoor->set_params(30.);
     tdoor->set_hinge     (false);
@@ -75,26 +75,27 @@ void glUpstairs::create_vertical_walls   ( )
     w->m_bare_wall.add_door( 122.+40.5+64.5, DEFAULT_DOOR_WIDTH, 79.0, false );
     w->setup            (  );
     w->m_y_angle = 0.0;
-    w->m_z = 120.;
-    w->m_x = 144.;
+    w->m_z = 144.;
+    w->m_x = 19*12.;
     m_components.push_back( w );
     m_fwalls.push_back    ( w );
     
     // Kitchen / Living Room (similar to hall #2):
     w = new glFullWall();
     w->clear( );
-    w->set_length( 36.+116.+120.-3.);
+    w->set_length( 144 );
+    w->m_bare_wall.set_texture(4);
     w->setup    (  );
     w->m_y_angle = 0.0;
-    w->m_z = 160.;
-    w->m_x = 144.;
+    w->m_z = 144.+35.;
+    w->m_x = 4*12.;
     m_components.push_back( w );
     m_fwalls.push_back( w );
     
     // Hall #2
     w = new glFullWall();
     w->clear( );
-    w->set_length( 36.+116.+120.-3.);
+    w->set_length( 36.+36+8*12);
     tdoor = new glDoor();                   // Bathroom Door
     tdoor->set_params(30.);
     tdoor->set_hinge     (false);
@@ -105,7 +106,7 @@ void glUpstairs::create_vertical_walls   ( )
     w->m_bare_wall.add_door( 122.+40.5+64.5, DEFAULT_DOOR_WIDTH, 79.0, false );
     w->setup    (  );
     w->m_y_angle = 0.0;
-    w->m_z = 160.;
+    w->m_z = 144.+37.;
     w->m_x = 144.+12*12;
     m_components.push_back( w );
     m_fwalls.push_back( w );
@@ -120,7 +121,7 @@ void glUpstairs::create_horizontal_walls ( )
     // Front :
     w = new glFullWall();
     w->clear( );
-    w->set_length( 36.+116.+120.-3.);
+    w->set_length( 25*12.);
     tdoor = new glDoor();                   // Bathroom Door
     tdoor->set_params(30.);
     tdoor->set_hinge     (false);
@@ -139,33 +140,33 @@ void glUpstairs::create_horizontal_walls ( )
     // Living Room/Boys Bedroom :
     w = new glFullWall();
     w->clear( );
-    w->set_length( 10*12.);
+    w->set_length( 12*12.);         // 88.5 + 54.75 = 143.25
     w->setup    (  );
     w->m_y_angle = -90.0;
     w->m_z = 0.;
-    w->m_x = 144.;
+    w->m_x = 19*12;
     m_components.push_back( w );
     m_fwalls.push_back( w );
 
     // Boys Bedroom/Mom & Dads :
     w = new glFullWall();
     w->clear( );
-    w->set_length( 10*12.);
+    w->set_length( 12*12.);
     w->setup    (  );
     w->m_y_angle = -90.0;
     w->m_z = 0.;
-    w->m_x = 144.+12*12;
+    w->m_x = 19*12.+12*12;
     m_components.push_back( w );
     m_fwalls.push_back( w );
 
     // Back End :
     w = new glFullWall();
     w->clear( );
-    w->set_length( 20*12.);
+    w->set_length( 24*12.);
     w->setup    (  );
     w->m_y_angle = -90.0;
     w->m_z = 0.;
-    w->m_x = 400;
+    w->m_x = 44*12;
     m_components.push_back( w );
     m_fwalls.push_back( w );
 
@@ -177,7 +178,7 @@ void glUpstairs::create_horizontal_walls ( )
     w->setup    (  );
     w->m_y_angle = -90.0;
     w->m_z = 160.;
-    w->m_x = 400-144.;
+    w->m_x = 528-144.;
     m_components.push_back( w );
     m_fwalls.push_back( w );
 
@@ -188,7 +189,7 @@ void glUpstairs::create_horizontal_walls ( )
     w->setup    (  );
     w->m_y_angle = -90.0;
     w->m_z = 160.;
-    w->m_x = 400-144.-6*12;
+    w->m_x = 528-144.-6*12;
     m_components.push_back( w );
     m_fwalls.push_back( w );
 
@@ -206,15 +207,15 @@ void glUpstairs::create_horizontal_walls ( )
     w->m_bare_wall.add_door( 122.+40.5+64.5, DEFAULT_DOOR_WIDTH, 79.0, false );
     w->setup    (  );
     w->m_y_angle = -90.0;
-    w->m_z = 160.;
-    w->m_x = 144.;
+    w->m_z = 144+35.;
+    w->m_x = 19*12.;
     m_components.push_back( w );
     m_fwalls.push_back( w );
 
     // Entryway / Kitchen :
     w = new glFullWall();
     w->clear( );
-    w->set_length( 10*12.);
+    w->set_length( 87+24.);          // add closest depth
     w->setup    (  );
     w->m_y_angle = -90.0;
     w->m_z = 160.;
@@ -264,7 +265,7 @@ glBasement::~glBasement()
 }
 void glBasement::create_vertical_walls   ( )
 {
-    glDoor* tdoor;
+    //glDoor* tdoor;
     static glFullWall* w;
     
     // Side 1 :

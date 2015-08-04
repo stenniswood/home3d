@@ -52,10 +52,10 @@ void glArm::create_components( )
     float offset = m_upper_arm.m_extrusion_length + FORK_CENTER_LENGTH;
     m_upper_arm.add_offset( 0, -offset, 0 );    // ie hold at top
 
-    // Want it to pivot at the elbow :
     offset = m_fore_arm.m_extrusion_length + FORK_CENTER_LENGTH;
     m_fore_arm.add_offset( 0, -offset, 0 );    // ie hold fore arm at its top
-    
+
+    // Want it to pivot at the elbow :
     offset += TONGUE_CENTER_LENGTH;
     m_upper_arm.relocate( 0.0,  0.,    0.0 );
     m_fore_arm.relocate ( 0.0,  -UPPER_ARM_LENGTH,  0.0 );
@@ -288,16 +288,17 @@ void glArm::forward_xyz( float *mX, float *mY, float *mZ )
 }
 
 // forward calculation :
-MathVector glArm::get_wrist_position       (  )
+MathVector glArm::get_wrist_position(  )
 {
     glm::mat4 ua_bm = m_upper_arm.get_body_matrix();
     glm::mat4 fa_bm = m_fore_arm.get_body_matrix();
     glm::mat4 bm = ua_bm * fa_bm;
     
     glm::vec4 wrist_loc;
-    wrist_loc[0] = 0.0;  wrist_loc[1] = m_fore_arm.m_joint_length;  wrist_loc[2] = 0.0;  wrist_loc[3] = 1.0;
+    wrist_loc[0] = 0.0;  wrist_loc[1] = -m_fore_arm.m_joint_length;  wrist_loc[2] = 0.0;  wrist_loc[3] = 1.0;
     
-    wrist_loc = bm * wrist_loc;
+    wrist_loc = fa_bm * wrist_loc;
+    wrist_loc = ua_bm * wrist_loc;
     MathVector arm_coord(3);
     arm_coord[0] = wrist_loc[0];
     arm_coord[1] = wrist_loc[1];

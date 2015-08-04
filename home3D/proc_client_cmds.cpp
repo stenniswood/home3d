@@ -182,8 +182,11 @@ void proc_sim_command()
     glObject*  obj = NULL;
     string searchname    = "master bedroom";
     string searchtypename = "door";
-    VerbalObject* ptr=NULL;
-    
+//    vector<VerbalObject*>* ptr=NULL;
+    char* last_space;
+    long  size;
+    vector<VerbalObject*> object_hier;
+    bool result=false;
 
     printf( "Command=%lx \n", ipc_memory_sim->Command );
     
@@ -194,11 +197,14 @@ void proc_sim_command()
             obj = theWorld.find_object_id( Object_id );
             printf(" MOVE OBJECT %lu - %x\n", Object_id, obj );
             obj->relocate( NewLocation );
-            obj->m_x_angle = NewOrientation[0];
-            obj->m_y_angle = NewOrientation[1];
-            obj->m_z_angle = NewOrientation[2];
             NewLocation.print();
-            NewOrientation.print();
+            
+            if (ipc_memory_sim->object_type==2) {
+                obj->m_x_angle = NewOrientation[0];
+                obj->m_y_angle = NewOrientation[1];
+                obj->m_z_angle = NewOrientation[2];
+                NewOrientation.print();
+            }
             break;
 
         case COMMAND_NEW_OBJECT :
@@ -223,19 +229,28 @@ void proc_sim_command()
             printf(" DELETE OBJECT ");
             sim_read_delete_object ( Object_id );
             obj = theWorld.find_object_id   ( Object_id );
-            if (obj==NULL)
+            if (obj==NULL) {
                 printf(" Object #%lu not found.\n", Object_id );
+                strcpy (ipc_memory_sim->Response, "Object_id not found.");
+                ipc_memory_sim->ResponseCounter++;
+            }
             else {
                 delete obj;
                 //m_scene.remove((glAtom*)obj);  put back in!
+                strcpy (ipc_memory_sim->Response, "Object deleted.");
+                ipc_memory_sim->ResponseCounter++;
             }
             break;
+            
         case COMMAND_ROBOT_MOVE_OBJECT:
+            // Use the robot to move an object.
             sim_read_robot_move_object( Robot_id, Object_id, NewLocation );
             printf(" ROBOT MOVE OBJECT: robot_id=%lu; object_id=%lu\t", Robot_id, Object_id);
             NewLocation.print();
             break;
+
         case COMMAND_ROBOT_MOVE :
+            // Walk to X Y Z:
             uses_source = sim_read_move_robot( Robot_id, Source,  NewLocation );
             printf(" ROBOT MOVE:  ");     NewLocation.print();
             if (uses_source)
@@ -245,11 +260,12 @@ void proc_sim_command()
             } else {
                 MathVector curr(3);
                 curr[0] = robot.m_x;
-                curr[1] = robot.m_y;
+                curr[1] = 0.0;
                 curr[2] = robot.m_z;
                 change_route( curr, NewLocation );
             }
             break;
+            
         case COMMAND_ROBOT_ANGLES :
             sim_read_robot_angles( Robot_id, RobotAngles );
             printf(" ROBOT ANGLES: (%lu) \t", Robot_id );
@@ -260,51 +276,144 @@ void proc_sim_command()
             printf(" ROBOT PREDEFINED SEQ:  (%lu) Seq #%d  Repetition=%d \n", Robot_id, MoveSequenceIndex, Repetitions );            
             break;
             
-        case QUERY_COORDINATE : /* what object is located at XYZ? */
+//        case QUERY_GET_OBJECT_POSITION : /* what object is located at XYZ? */
             // User may request coordinate of bedroom door, or kitchen sink, or living room center.
             // The response will be a variable number of coordinates in shared memory.
-
-            printf(" Coordinate Query: \n" );
+//            printf(" Coordinate Query: \n" );
+  //          break;
+        case QUERY_OBJECT_NAME:
+            
             break;
+            
         case QUERY_GET_OBJECT_ID :
             // User may request coordinate of bedroom door, or kitchen sink, or living room center.
             // The response will be a variable number of coordinates in shared memory.
-            ptr = theWorld.find_component( searchname, searchtypename );
-            if (ptr)
+            last_space  = strrchr(ipc_memory_sim->object_name, ' ' );
+            *last_space = 0;
+            searchname  = ipc_memory_sim->object_name;
+            searchtypename = (last_space+1);
+            result = theWorld.find_component( searchname, searchtypename, &object_hier, true );
+            if (result)
             {
+                /* The hierarchy will be:  [0] is the found object.
+                 [1] is the parent of the found object.
+                 [2] parent of parent, etc. */
                 vector<long> ids;
-                ids.push_back(ptr->m_object_id);
+                // write whole owner hierarchy.
+                size = object_hier.size();
+                for (int i=0; i<size; i++)
+                    ids.push_back( object_hier[i]->m_object_id );
                 sim_write_object_ids( ids );
-                printf(" Find Object ID: %lu \n", ptr->m_object_id );
+                printf(" Found Object ID: %s %s %lu \n", searchname.c_str(),
+                                            searchtypename.c_str(),
+                                            object_hier[0]->m_object_id );
+                // Need to map this to World Coordinates!  How?  we need the wall that it belongs to.
+                // well the find_component search goes based on the hierarchy.  so it should be able to
+                // compile the complete hierarchy.  ie before each recursion, store the ptr.
+
+                // The objects coordinates (ie. the door m_x,y,z are the relative to the wall.
+                MathVector coord(3);
+                coord[0] = object_hier[0]->m_x;
+                coord[1] = object_hier[0]->m_y;
+                coord[2] = object_hier[0]->m_z;
+                for (long i=1; i<size; i++)
+                {
+                    coord = object_hier[i]->map_coords(coord);
+                    // last is the object.
+                    // 2nd to last is the parent of the object.
+                    // 3rd to last is the parent of the parent.
+                }
+                ipc_memory_sim->Location1.x = coord[0];
+                ipc_memory_sim->Location1.y = coord[1];
+                ipc_memory_sim->Location1.z = coord[2];
+                ipc_memory_sim->ResponseCounter++;
+            }
+            else {
+                ipc_memory_sim->num_valid_ids = 0;
+                strcpy (ipc_memory_sim->Response, "Object not found!" );
+                ipc_memory_sim->ResponseCounter++;
             }
             break;
-        case QUERY_GET_OBJECT_COORD :
+        case QUERY_GET_OBJECT_POSITION :
             // User may request coordinate of bedroom door, or kitchen sink, or living room center.
             // The response will be a variable number of coordinates in shared memory
-            ptr = theWorld.find_component( searchname, searchtypename );
-            if (ptr)
-                printf(" Object Coordinate: <%6.1f, %6.1f, %6.1f> \n", ptr->m_x, ptr->m_y, ptr->m_z );
+            result    = theWorld.find_component_by_id( ipc_memory_sim->object_id, &object_hier );
+            if (result)
+            {
+                /* The hierarchy will be:  [0] is the found object.
+                 [1] is the parent of the found object.
+                 [2] parent of parent, etc. */
+                vector<long> ids;
+                // write whole owner hierarchy.
+                size = object_hier.size();
+                for (int i=0; i<size; i++)
+                    ids.push_back( object_hier[i]->m_object_id );
+                sim_write_object_ids( ids );
+                printf(" Found Object ID: %s %s %lu \n", searchname.c_str(),
+                       searchtypename.c_str(),
+                       object_hier[0]->m_object_id );
+                // Need to map this to World Coordinates!  How?  we need the wall that it belongs to.
+                // well the find_component search goes based on the hierarchy.  so it should be able to
+                // compile the complete hierarchy.  ie before each recursion, store the ptr.
+                
+                // The objects coordinates (ie. the door m_x,y,z are the relative to the wall.
+                MathVector coord(3);
+                coord[0] = object_hier[0]->m_x;
+                coord[1] = object_hier[0]->m_y;
+                coord[2] = object_hier[0]->m_z;
+                for (long i=1; i<size; i++)
+                {
+                    coord = object_hier[i]->map_coords(coord);
+                    // last is the object.
+                    // 2nd to last is the parent of the object.
+                    // 3rd to last is the parent of the parent.
+                }
+                ipc_memory_sim->Location1.x = coord[0];
+                ipc_memory_sim->Location1.y = coord[1];
+                ipc_memory_sim->Location1.z = coord[2];
+                ipc_memory_sim->ResponseCounter++;
+            }
+            else {
+                ipc_memory_sim->num_valid_ids = 0;
+                strcpy (ipc_memory_sim->Response, "Object not found!" );
+                ipc_memory_sim->ResponseCounter++;
+            }
             break;
-            
 
-        case ACTION_OPEN_DOOR :
+        case ACTION_OBJECT_OPEN :
             // User may request coordinate of bedroom door, or kitchen sink, or living room center.
             // The response will be a variable number of coordinates in shared memory.
-            
+            result    = theWorld.find_component_by_id( ipc_memory_sim->object_id, &object_hier );
+            if (result)
+            {
+                ((glDoor*)object_hier[0])->open( ipc_memory_sim->servo_angles[0] );
+            }
             printf(" Action Open Door: \n" );
             break;
 
-        case ACTION_LIFT_OBJECT :
+        case ACTION_OBJECT_LIFT :
             // User may request coordinate of bedroom door, or kitchen sink, or living room center.
             // The response will be a variable number of coordinates in shared memory.
             
             printf(" Action Lift Object: \n" );
             break;
-        case ACTION_PUSH_OBJECT :
+        case ACTION_OBJECT_PUSH :
             // User may request coordinate of bedroom door, or kitchen sink, or living room center.
             // The response will be a variable number of coordinates in shared memory.
             
             printf(" Action Push Object: \n" );
+            break;
+        case ACTION_OBJECT_GRAB :
+            // User may request coordinate of bedroom door, or kitchen sink, or living room center.
+            // The response will be a variable number of coordinates in shared memory.
+            
+            printf(" Action Grab Object: \n" );
+            break;
+        case ACTION_OBJECT_RELEASE :
+            // User may request coordinate of bedroom door, or kitchen sink, or living room center.
+            // The response will be a variable number of coordinates in shared memory.
+            
+            printf(" Action Release Object: \n" );
             break;
             
         default:

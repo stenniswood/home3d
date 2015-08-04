@@ -9,8 +9,6 @@
 #include "sign.h"
 #include "all_objects.h"
 
-
-
 glSign::glSign	(  )
 {
     m_object_type_name = "sign";
@@ -26,7 +24,7 @@ void glSign::generate_vertices( )
     v.color[1] = ((m_color & 0x0000FF00)>>8 );
     v.color[2] = ((m_color & 0x000000FF)    );
     v.color[3] = ((m_color & 0xFF000000)>>24);
-    
+
     v.position[0] = 0 ;
     v.position[1] = 2.;
     v.position[2] = 0 ;
@@ -58,13 +56,13 @@ void glSign::setup( )
     m_indices.push_back( 3 );
     
     m_texture = new Texture();    
-    //m_texture->load_image( "textures/me_in_car.bmp" );
+//    m_texture->load_image( "textures/me_in_car.bmp"   );
 //    m_texture->load_image( "textures/light_house.jpg" );
-//    m_texture->load_image( "textures/oak_wood.jpg" );
+//    m_texture->load_image( "textures/oak_wood.jpg"    );
 //    m_texture->load_image( "textures/bambo-fence-texture.jpg" );
 //    m_texture->load_image( "textures/cinder-block-texture.jpg" );
     m_texture->load_image( "textures/drywall-texture.jpg" );
-    m_texture->m_tiles = 2.0;
+    m_texture->m_repetitions_x = 2.0;
     m_texture->generate_texture_coords();
     m_texture->generate_TBO           ();
     m_texture->generate_VBOTexCoords  ();

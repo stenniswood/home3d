@@ -13,19 +13,36 @@
 #include <vector>
 #include "gl_atom.hpp"
 
+const float FIFA_SOCCER_BALL_RADIUS_SIZE5 = 8.75 / 2.;      // dia = 8.75
+const float FIFA_SOCCER_BALL_RADIUS_SIZE4 = 4.14;
+const float FIFA_SOCCER_BALL_RADIUS_SIZE3 = 3.82;
+
+const float NBA_BASKET_BALL_RADIUS = 8.75 / 2.;
+const float BASEBALL_RADIUS        = 1.452;
+
+const float COEFF_RESTITUTION_BASKETBALL = 0.853;
+const float COEFF_RESTITUTION_SOCCERBALL = 0.85;
+const float COEFF_RESTITUTION_TENNISBALL = 0.75;
+const float COEFF_RESTITUTION_BASEBALL   = 0.50;
+
 
 class glSphere : public glAtom
 {
 public:
     glSphere    ( float radius, unsigned int rings, unsigned int sectors);
     ~glSphere   ( );
-    
+
+    /* Texture note:  The textures for a sphere have a warping
+     see: http://www.flashandmath.com/advanced/sphere/exp1.jpg     */
     void            load_texture         ( string mImageFilename );
-    
+
+    void            set_inertia( float mOneAxis );  // applies same to all 3 axes.
     virtual void    generate_vertices   ( );
     virtual void 	generate_indices    ( );
-    
     void            draw_primitive      ( );
+    virtual void            gl_register(  );
+    
+    virtual bool    evaluate_collision( glMovingObject* mOther );
     
     std::vector<GLfloat> m_normals;
     float 	m_radius;

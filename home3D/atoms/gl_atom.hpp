@@ -38,12 +38,12 @@ using namespace std;
  
 	The way to use this class is to derive one from it,	and specify the shape.	
 */
-struct Vertex
+/*struct Vertex
 {
   float position[3];
   //GLfloat normal[3];
   GLubyte color[4];
-};
+};*/
 
 const int GRAB_no_request = 0;
 const int GRAB_top    = 1;
@@ -65,7 +65,9 @@ public:
     virtual void 	create      ( );    // Better to override setup and call gl_register() after.
 
 	void 	change_color        ( long mColor            );
-    void    set_vertex_color    ( struct Vertex& mVertex );
+    void    set_vertex_color    ( struct Vertex_pc& mVertex );
+    void    set_vertex_color    ( struct Vertex_pnc& mVertex );
+    
     void    scale_drawing       ( float mScale           );
     void    map_vertices        ( glm::mat4 mMatrix      );
 
@@ -77,9 +79,10 @@ public:
 	void	grab_back			( 	);
 	void	add_offset          ( float mX, float mY, float mZ ); // to all vertices.
 
-    void	get_max				( 	);
-    void	get_min				( 	);
-    void	get_min_max			( 	);
+    virtual void	compute_max	( 	);
+    virtual void	compute_min	( 	);
+    void	compute_min_max		( 	);
+    
     void	print_min_max		( 	);
     void    print_indexed_vertices( );
 
@@ -94,7 +97,7 @@ public:
     virtual void            generate_vertices( );
 	void 					generate_VBO	( );
 	void					print_vertices	( bool mShowColors = true );
-	vector<struct Vertex>	m_vertices;
+	vector<struct Vertex_pnc>	m_vertices;
 	GLuint					m_VBO;
 
     virtual void	gl_register  (  );
@@ -105,8 +108,8 @@ public:
     int             m_grab_at;                  // Hold caller request for later create()
     
     Texture*       m_texture;                   //
-	struct Vertex  m_max;
-	struct Vertex  m_min;
+	//struct Vertex  m_max;
+	//struct Vertex  m_min;
 };
 
 

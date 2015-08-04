@@ -340,7 +340,7 @@ float abWall::is_on_which_side( MathVector mPoint )
 {
     // Find which side of the wall we are on (with respect to the unit vector):
     MathVector dv = mPoint - m_line.m_origin;
-    float side_projection = dv.dot( m_line.m_vector.get_perp_yz() );
+    float side_projection = dv.dot( m_line.m_vector.get_perp_xz() );
     if (side_projection>=0.0)
     {
         side_projection = 1.0;      printf("is on + side\n");
@@ -354,7 +354,7 @@ MathVector abWall::get_point_away_from( float mDistanceAlong, float mPerpendicul
 {
     MathVector pt("point away from wall", 3);
     pt = m_line.m_origin + m_line.m_vector * mDistanceAlong;
-    pt += m_line.m_vector.get_perp_yz() * mPerpendicularDistance;
+    pt += m_line.m_vector.get_perp_xz() * mPerpendicularDistance;
     return pt;
 }
 
@@ -405,11 +405,11 @@ void abWall::find_paths_around( list<MathVector>& mPoints, float mOffsetAwayFrom
         mPoints.push_back( get_door_center_coord( i, mOffsetAwayFromWall ) );
     
     // LIST END POINTS :
-    MathVector tmp = m_line.m_origin + m_line.m_vector*-WALL_END_OFFSET + m_line.m_vector.get_perp_yz()*mOffsetAwayFromWall;
+    MathVector tmp = m_line.m_origin + m_line.m_vector*-WALL_END_OFFSET + m_line.m_vector.get_perp_xz()*mOffsetAwayFromWall;
     mPoints.push_back(tmp);
     
     tmp = m_line.m_origin + m_line.m_vector * (m_wall_length+WALL_END_OFFSET);
-    tmp += m_line.m_vector.get_perp_yz()*mOffsetAwayFromWall;
+    tmp += m_line.m_vector.get_perp_xz()*mOffsetAwayFromWall;
     mPoints.push_back(tmp);
 }
 

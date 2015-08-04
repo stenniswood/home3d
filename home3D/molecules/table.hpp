@@ -6,6 +6,8 @@
 */
 #include "txt_container.hpp"
 #include <vector>
+#include "cylinder.hpp"
+
 using namespace std;
 
 #ifndef _TABLE_H_

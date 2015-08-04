@@ -133,18 +133,43 @@ void glDoor::set_range( float mMaxAngle )
 	m_max_angle = mMaxAngle;
 }
 
+void glDoor::select_texture  ( int mSelection )
+{
+    Texture* txt = NULL;
+    switch(mSelection)
+    {
+        case 0 : txt = m_door.load_image( "textures/door_carmelle.jpg");
+            break;
+        case 1 : txt = m_door.load_image( "textures/door_lagoon.jpg");
+            break;
+        case 2 : txt = m_door.load_image( "textures/door_steel.jpg");
+            break;
+        case 3 : txt = m_door.load_image( "textures/door_milano_luna.jpg");
+            break;
+        case 4 : txt = m_door.load_image( "textures/door_front.jpg");
+            break;
+        default:
+            break;
+    }
+    m_door.apply_front  (txt,3);
+    m_door.apply_back   (txt,3);
+}
+
 void glDoor::create_components( )
 {
     m_door.width        = m_width;
     m_door.height       = m_height;
     m_door.depth        = m_thickness;
-    m_door.m_is_closed  = true;
     m_door.set_color    ( m_color );
     m_door.setup        ( );
     m_door.grab_bottom  ( );
     m_door.grab_back    ( );
     m_door.grab_right   ( );
     //m_door.set_hinge  ( );
+    /* Note:  memory could be significantly save by holding the textures in the dwelling_level class
+        so that only 1 texture per door style is loaded!
+     */
+    select_texture( 3 );
     m_components.push_back(&m_door);
 
     m_handle.setup();

@@ -53,7 +53,14 @@ void glAtom::change_color( long mColor )
 		m_vertices[i].color[3] = ((mColor & 0xFF000000)>>24);
 	} 
 }
-void glAtom::set_vertex_color( struct Vertex& mVertex )
+void glAtom::set_vertex_color( struct Vertex_pnc& mVertex )
+{
+    mVertex.color[3] = ((m_color & 0xFF000000)>>24);
+    mVertex.color[0] = ((m_color & 0x00FF0000)>>16);
+    mVertex.color[1] = ((m_color & 0x0000FF00)>>8);
+    mVertex.color[2] = ((m_color & 0x000000FF));    
+}
+void glAtom::set_vertex_color( struct Vertex_pc& mVertex )
 {
     mVertex.color[3] = ((m_color & 0xFF000000)>>24);
     mVertex.color[0] = ((m_color & 0x00FF0000)>>16);
@@ -127,13 +134,13 @@ void glAtom::add_offset(float mX, float mY, float mZ)
     }
 }
 
-void glAtom::get_min_max( 	)
+void glAtom::compute_min_max( 	)
 {
-    get_min();
-    get_max();
+    compute_min();
+    compute_max();
 }
 
-void glAtom::get_max( 	)
+void glAtom::compute_max( 	)
 {
     m_max.position[0] = 0;		// zero's since relative to m_x,m_y,m_z
     m_max.position[1] = 0;
@@ -152,7 +159,7 @@ void glAtom::get_max( 	)
     }
 }
 
-void glAtom::get_min( )
+void glAtom::compute_min( )
 {
     m_min.position[0] = 0;		// zero's since relative to m_x,m_y,m_z
     m_min.position[1] = 0;
@@ -274,9 +281,11 @@ void	glAtom::generate_IBO	( )
 void glAtom::setup( )
 {
     generate_vertices();
-    generate_indices();
+    generate_indices ();
+    compute_min_max();
 }
 
+/* For create()  1 grab function may be called prior. */
 void glAtom::create( )
 {
     setup      ();

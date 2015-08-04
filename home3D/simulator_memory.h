@@ -33,9 +33,20 @@ struct Coordinate
 #define COMMAND_CHANGE_VISIBILITY    0x10A       // ie make walls invisible. (half transparency, etc)
 //#define COMMAND_CHANGE_VISIBILITY    0x10A       // ie make walls invisible. (half transparency, etc)
 
-#define QUERY_OBJECT_POSITION               0x201       // string object name, returns MathVector position.
-#define QUERY_OBJECT_POSITION_RELATIVE      0x202       // object name, returns verbal description compared to another object.
+/*const int QUERY_GET_OBJECT_ID       = 0x201;
+const int QUERY_GET_OBJECT_COORD    = 0x202;
+const int QUERY_COORDINATE          = 0x203; */
 
+#define QUERY_GET_OBJECT_ID                 0x201       // string object name, returns MathVector position.
+#define QUERY_GET_OBJECT_POSITION           0x202       // string object name, returns MathVector position.
+#define QUERY_OBJECT_POSITION_RELATIVE      0x203       // object name, returns verbal description compared to another object.
+#define QUERY_OBJECT_NAME                   0x204       // object id, return string object name.
+
+#define ACTION_OBJECT_OPEN                  0x301       // string object name, returns MathVector position.
+#define ACTION_OBJECT_LIFT	                0x302       // string object name, returns MathVector position.
+#define ACTION_OBJECT_PUSH	                0x303       // string object name, returns MathVector position.
+#define ACTION_OBJECT_GRAB	                0x304       // string object name, returns MathVector position.
+#define ACTION_OBJECT_RELEASE               0x305       // string object name, returns MathVector position.
 
 
 #define MAX_IDS 50
@@ -63,6 +74,7 @@ struct simulator_ipc_memory_map
     long     object_datum1;         // depends on the command
     long     object_datum2;         //
     long     object_datum3;         //
+    char	 object_name[255];		// for finding an object by name.
     
     struct Coordinate Location1;
     struct Coordinate Location2;

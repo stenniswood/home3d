@@ -6,6 +6,10 @@
 #define _GL_BOX_
 
 #include "gl_atom.hpp"
+#include "glSphere.h"
+
+
+extern GLubyte q_Indices[];
 
 #define  BUFFER_OFFSET(i) ((GLuint*)NULL + (i))
 
@@ -18,15 +22,20 @@ public:
 	virtual void 	create 		( );
 	void            generate_vertices	( );
 
+    int             get_largest_axis    ();
 	void            change_top_color   	( long mColor );
 	void            change_bottom_color	( long mColor );
-
+    void            compute_inertia     ( float mTotalMass );
+    
 	virtual void	draw_body   ( );
 	void            print_info  ( );
 
-	float 	width;
-	float 	height;
-	float 	depth;
+    bool            evaluate_collision( glSphere* mOther );
+    
+    
+	float 	width;          // X axis
+	float 	height;         // Y axis
+	float 	depth;          // Z axis
 	bool	m_is_closed;
 };
 

@@ -1,6 +1,9 @@
 #ifndef _STAIRWAY_H_
 #define _STAIRWAY_H_
 
+#include "extrusion.hpp"
+//#include "
+
 /* This class will generate OpenGL Vertex data
 	for a box of given width, height, depth. 
 */
@@ -11,25 +14,14 @@ public:
 	glStairway	(  );
 
 	virtual void	generate_layer_vertices  (  );
-	void	generate_side2_vertices ( );
-	void 	generate_vertices_colors( );
-	float	get_height();
-	
+    
+    float	get_height    ( int mstep=-1 );     // default is max height
+    float	get_front_edge( int mstep=-1 );     // default is top step
+    
 	float 	 m_rise;
 	float 	 m_run;		
-	float 	 m_width;
+	//float 	 m_width;           USE m_extrusion_length!
 	int		 m_number_of_steps;
-
-//	GLbyte 	generate_side_IBO	( GLubyte* mptr, GLbyte mStartingVertexIndex );
-//	GLbyte 	generate_side2_IBO	( GLubyte* mptr, GLbyte mStartingVertexIndex );
-//	void 	generate_stair_IBO	( GLubyte* isptr );
-//	void 	generate_IBO( );
-//	void 	generate_VBO( );
-//	void	draw();
-//  GLbyte	 m_floor_indices;
-//	int		 m_total_vertices;
-//	GLbyte   m_number_of_floor_vertices;
-//	Vertex*  m_vertices;
     
 };
 

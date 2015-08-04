@@ -18,7 +18,7 @@ glBarricade::glBarricade( )
 }
 glBarricade::~glBarricade( )
 {
-    
+    glMolecule::~glMolecule( );    
 }
 void glBarricade::Initialize	( )
 {
@@ -39,10 +39,10 @@ void glBarricade::create_components()
     board->height = 10.;
     board->depth  = 1.5;
     board->m_y    = 10;
-    board->grab_right();
     board->change_bottom_color(bcolor);
     board->change_top_color   (bcolor);
-    board->create();
+    board->setup();
+    board->grab_right();
     m_components.push_back( board );
 
     glBox* board2 = new glBox();
@@ -50,10 +50,10 @@ void glBarricade::create_components()
     board2->height = 10.;
     board2->depth  = 1.5;
     board2->m_y    = 30;
-    board2->grab_right();
     board2->change_bottom_color(bcolor);
     board2->change_top_color   (bcolor);
-    board2->create();
+    board2->setup();
+    board2->grab_right();
     m_components.push_back( board2 );
 
     board2 = new glBox();
@@ -61,10 +61,10 @@ void glBarricade::create_components()
     board2->height = 10.;
     board2->depth  = 1.5;
     board2->m_y    = 50;
-    board2->grab_right();
     board2->change_bottom_color(bcolor);
     board2->change_top_color   (bcolor);
-    board2->create();
+    board2->setup();
+    board2->grab_right();
     m_components.push_back( board2 );
     
     //** Two Uprights :
@@ -75,8 +75,8 @@ void glBarricade::create_components()
     bar->m_x    =   10;
     bar->m_y    =   0;
     bar->m_z    =   0;
+    bar->setup();
     bar->grab_bottom();
-    bar->create();
     m_components.push_back( bar );
 
     glBox* bar2 = new glBox();
@@ -87,8 +87,8 @@ void glBarricade::create_components()
     bar2->m_x    =  60;
     bar2->m_y    =   0;
     bar2->m_z    =   0;
+    bar2->setup     ();
     bar2->grab_bottom();
-    bar2->create     ();
     m_components.push_back( bar2 );
 
     //** Two Feet :
@@ -98,8 +98,8 @@ void glBarricade::create_components()
     bar2->width  = 1.;
     bar2->m_x = 10;
     bar2->m_y =  0.;
+    bar2->setup();
     bar2->grab_bottom();
-    bar2->create();
     m_components.push_back( bar2 );
 
     bar2 = new glBox();
@@ -108,8 +108,8 @@ void glBarricade::create_components()
     bar2->width  = 1.;
     bar2->m_x = 60;
     bar2->m_y = 0.;
+    bar2->setup();
     bar2->grab_bottom();
-    bar2->create();
     m_components.push_back( bar2 );
 }
 

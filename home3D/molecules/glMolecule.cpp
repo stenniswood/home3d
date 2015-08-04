@@ -20,7 +20,7 @@ glMolecule::glMolecule( string mName )
 
 glMolecule::~glMolecule( )
 {
-    
+    //VerbalObject::~VerbalObject();
 }
 
 void glMolecule::Initialize	( )
@@ -98,24 +98,40 @@ void glMolecule::set_relative_z( glObject* mObj, float mZ )
     mObj->m_z =  mZ;
 }
 
-void glMolecule::get_max()
-{
-/*    for (int i=0; i<m_components.size(); i++)
-        m_components[i]->get_max();  */
-}
-void glMolecule::get_min()
+void glMolecule::compute_max()
 {
     for (int i=0; i<m_components.size(); i++)
     {
-/*        m_components[i]->get_min();
+        m_components[i]->compute_max();
+    }
+    // The max values have to be mapped thru the components coordinates to get world coords.
+    //  m_components[i]->map_coords();
+    
+    for (int i=0; i<m_components.size(); i++)
+    {
+        if (m_components[i]->m_max.position[0] > m_max.position[0])
+            m_max.position[0] = m_components[i]->m_max.position[0];
+        
+        if (m_components[i]->m_max.position[1] > m_max.position[1])
+            m_max.position[1] = m_components[i]->m_max.position[1];
+
+        if (m_components[i]->m_max.position[2] > m_max.position[2])
+            m_max.position[2] = m_components[i]->m_max.position[2];
+    }
+}
+void glMolecule::compute_min()
+{
+    for (int i=0; i<m_components.size(); i++)
+    {
+        m_components[i]->compute_min();
         if (m_components[i]->m_min.position[0] < m_min.position[0])
-            m_min.position[0] = m_vertices[i].position[0];
+            m_min.position[0] = m_components[i]->m_min.position[0];
         
         if (m_components[i]->m_min.position[1] < m_min.position[1])
-            m_min.position[1] = m_vertices[i].position[1];
-        
+            m_min.position[1] = m_components[i]->m_min.position[1];
+
         if (m_components[i]->m_min.position[2] < m_min.position[2])
-            m_min.position[2] = m_vertices[i].position[2]; */
+            m_min.position[2] = m_components[i]->m_min.position[2];
     }
 }
 void glMolecule::create_components( )
@@ -140,6 +156,7 @@ void glMolecule::gl_register      ( )
     theWorld.block();
     for (int i=0; i<m_components.size(); i++)
         m_components[i]->gl_register();
+    
     if (prev==false) {
         theWorld.unblock();
         theWorld.add_object(this);  // We only want it to draw this object (not all the independant atoms.
@@ -169,9 +186,11 @@ VerbalObject*  glMolecule::get_component( int index )
     return ((VerbalObject*)m_components[index]);
 }
 
-VerbalObject*  glMolecule::find_component( string&  mRequestedName,  string& mTypeName, bool mTypeMustMatch )
+bool  glMolecule::find_component( string&  mRequestedName,  string& mTypeName,
+                                 vector<VerbalObject*>* object_hier,
+                                 bool mTypeMustMatch )
 {
-    VerbalObject* retval=NULL;
+    bool retval=false;
     VerbalObject* ptr=NULL;
     bool match  = false;
     for (int i=0; i<m_components.size(); i++)
@@ -184,15 +203,46 @@ VerbalObject*  glMolecule::find_component( string&  mRequestedName,  string& mTy
         {
             if (mTypeMustMatch)
             {
-                if (mTypeName.compare( ptr->m_object_type_name )==0 )
-                    return ptr;
+                if (mTypeName.compare( ptr->m_object_type_name )==0 ) {
+                    object_hier->push_back(ptr);
+                    return true;
+                }
             }
         }
-        if (ptr->is_a_molecule())
-           retval = ((glMolecule*)ptr)->find_component( mRequestedName, mTypeName, mTypeMustMatch );
-        if (retval)
-            return retval;        
+        if (ptr->is_a_molecule()) {
+            retval = ((glMolecule*)ptr)->find_component( mRequestedName, mTypeName, object_hier, mTypeMustMatch );
+            if (retval) {
+                object_hier->push_back(ptr);
+                return true;
+            }
+        }
     }
-    return NULL;
+    return false;
+}
+
+bool  glMolecule::find_component_by_id( long mObject_id,
+                                 vector<VerbalObject*>* object_hier )
+{
+    bool retval=false;
+    VerbalObject* ptr=NULL;
+    bool match  = false;
+    for (int i=0; i<m_components.size(); i++)
+    {
+        ptr = get_component(i);
+        match  = mObject_id == ptr->m_object_id;
+        if (match)
+        {
+            object_hier->push_back(ptr);
+            return true;
+        }
+        if (ptr->is_a_molecule()) {
+            retval = ((glMolecule*)ptr)->find_component_by_id( mObject_id, object_hier );
+            if (retval) {
+                object_hier->push_back(ptr);
+                return true;
+            }
+        }
+    }
+    return false;
 }
 

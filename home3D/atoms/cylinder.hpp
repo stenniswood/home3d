@@ -15,6 +15,7 @@ public:
 	virtual size_t 	generate_disc_indices  ( GLuint mStart_of_top_index );
     void            set_height( float mHeight   );
     float           get_height(                 );
+    void            compute_inertia( float mTotalMass );
 	virtual void	draw_body (                 );
 
 	float       m_radius;

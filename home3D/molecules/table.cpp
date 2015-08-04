@@ -39,7 +39,10 @@ void glTable::create_components( )
 	m_table_top.depth  = m_table_length;
     set_relative_xyz(  &m_table_top, 0., m_table_height - m_table_top.height/2., 0. );
 	m_table_top.m_is_closed = true;
-    m_table_top.load_image("textures/oak_wood.jpg");
+    Texture* txt = m_table_top.load_image("textures/oak_wood.jpg",1);
+    m_table_top.apply_front( txt);
+    m_table_top.apply_bottom( txt);
+    
     m_table_top.setup();
     m_table_top.grab_bottom();
     m_components.push_back( &m_table_top );

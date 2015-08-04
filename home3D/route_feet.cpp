@@ -33,6 +33,13 @@ glRouteWithFeet::~glRouteWithFeet( )
 {
     
 }
+void glRouteWithFeet::start_over_at( struct Vertex mStart )
+{
+    reset();
+    reset_foot_prints();
+    glRoute::start_over_at( mStart );
+}
+
 void glRouteWithFeet::reset( )
 {
     m_number_steps_indices  = 0;
@@ -42,6 +49,7 @@ void glRouteWithFeet::reset( )
     gl_unregister();
     glRoute::reset();
 }
+
 /* Starts the entire path over */
 void glRouteWithFeet::reset_foot_prints( )
 {

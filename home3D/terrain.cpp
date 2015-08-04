@@ -39,6 +39,12 @@ glTerrain::~glTerrain()
     
 }
 
+void glTerrain::set_stretch( float mStretchX, float mStretchY )
+{
+    m_stretch_x = mStretchX;
+    m_stretch_y = mStretchY;
+}
+
 void glTerrain::load_image( string mFilename )
 {
     printf("TerrainMap::load_image( %s )\n", mFilename.c_str() );
@@ -48,13 +54,56 @@ void glTerrain::load_image( string mFilename )
    // cvtColor( m_image, dst, COLOR_BGR2GRAY );
 }
 
+/* An Omission is a region where the contour is made to skip where the building 
+ (presumably the excavators have bulldozed/dug the basement/terrain to a constant level.  
+ therefore it is set to .1 inch below the floor.
+ */
+void glTerrain::add_omission( glDwellingLevel* mOmitBuilding )
+{
+    struct omission_ranges omr;
+    mOmitBuilding->compute_max();
+    mOmitBuilding->compute_min();
+
+    omr.sx = mOmitBuilding->m_x + mOmitBuilding->m_min.position[0];
+    omr.sz = mOmitBuilding->m_z + mOmitBuilding->m_min.position[2];
+    omr.ex = mOmitBuilding->m_x + mOmitBuilding->m_max.position[0];
+    omr.ez = mOmitBuilding->m_z + mOmitBuilding->m_max.position[2];
+    
+//    omr.ex = mOmitBuilding->get_max_x();
+//    omr.ez = mOmitBuilding->get_max_z();
+    omr.floor = mOmitBuilding->m_y-0.1;
+    m_omissions.push_back( omr );
+}
+
+void glTerrain::add_omission( glBox* mOmitBox )
+{
+    struct omission_ranges omr;
+    omr.sx = mOmitBox->m_x;
+    omr.sz = mOmitBox->m_z;
+    omr.ex = mOmitBox->m_x + mOmitBox->width;
+    omr.ez = mOmitBox->m_z + mOmitBox->depth;
+    omr.floor = mOmitBox->m_y-0.1;
+    m_omissions.push_back( omr );
+}
+
+void glTerrain::compute_normal( )
+{
+    
+}
+void glTerrain::compute_normals( )
+{
+    
+}
 void glTerrain::generate_vertices()
 {
     long x_size = m_image.cols;
     long y_size = m_image.rows;
     long index;
+    long size=0;
     struct Vertex v;
     set_vertex_color(v );
+    float x_offset=x_size/2.*m_stretch_x;
+    float y_offset=y_size/2.*m_stretch_y;
     
     for (int x=0; x<x_size; x++)            // cols
         for (int y=0; y<y_size; y++)        // rows
@@ -65,9 +114,17 @@ void glTerrain::generate_vertices()
             v.color[2] = m_image.data[index] & 0xFF;
             v.color[3] = 0xFF;
             
-            v.position[0] = x*m_stretch_x;
-            v.position[2] = y*m_stretch_y;
+            v.position[0] = x*m_stretch_x - x_offset;
+            v.position[2] = y*m_stretch_y - y_offset;
             v.position[1] = m_image.data[index] * m_y_scale;
+
+            size = m_omissions.size();
+            for (int o=0; o<size; o++)
+            {
+               if   ((v.position[0] > m_omissions[o].sx) && (v.position[0] < m_omissions[o].ex))
+                 if ((v.position[2] > m_omissions[o].sz) && (v.position[2] < m_omissions[o].ez))
+                    v.position[1] = m_omissions[o].floor;
+            }
             m_vertices.push_back( v );
         }
 }

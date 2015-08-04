@@ -21,6 +21,9 @@
 		2C0F512F1B38779F0099A9E1 /* robot_head.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2C0F512D1B38779F0099A9E1 /* robot_head.cpp */; };
 		2C103D7F1B5A1064005EB940 /* gl_window.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2C103D7D1B5A1064005EB940 /* gl_window.cpp */; };
 		2C161D371B3C774F00711E6A /* sign.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2C161D351B3C774F00711E6A /* sign.cpp */; };
+		2C1E49161B6FCBE5008FEAB9 /* sports_bench.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2C1E49141B6FCBE5008FEAB9 /* sports_bench.cpp */; };
+		2C1E49191B703330008FEAB9 /* room_of_tables.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2C1E49171B703330008FEAB9 /* room_of_tables.cpp */; };
+		2C5088301B6FC91100363341 /* basketball_arena.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2C50882E1B6FC91100363341 /* basketball_arena.cpp */; };
 		2C5FB8A01B65204E00CC50B6 /* frame.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2C5FB89E1B65204E00CC50B6 /* frame.cpp */; };
 		2C615ED21B4F750200227941 /* terrain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2C615ED01B4F750200227941 /* terrain.cpp */; };
 		2C615ED51B5158EC00227941 /* stats.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2C615ED31B5158EC00227941 /* stats.cpp */; };
@@ -63,6 +66,10 @@
 		2CA501AB1B55729300DCA2D0 /* robot_interpolator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2CA501A91B55729300DCA2D0 /* robot_interpolator.cpp */; };
 		2CA501AE1B5757FF00DCA2D0 /* hampton_complex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2CA501AC1B5757FF00DCA2D0 /* hampton_complex.cpp */; };
 		2CA78FCA1B4F2C8600B109EC /* robot_moves.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2CA78FC81B4F2C8600B109EC /* robot_moves.cpp */; };
+		2CB725951B6A663500282277 /* basket_ball_court.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2CB725931B6A663400282277 /* basket_ball_court.cpp */; };
+		2CB725981B6A765000282277 /* floor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2CB725961B6A765000282277 /* floor.cpp */; };
+		2CB7259C1B6B183900282277 /* ring.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2CB7259A1B6B183900282277 /* ring.cpp */; };
+		2CB7259F1B6D66EA00282277 /* face_box.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2CB7259D1B6D66EA00282277 /* face_box.cpp */; };
 		2CC8A7781B53591C00BC874F /* quarter_629.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2CC8A7761B53591C00BC874F /* quarter_629.cpp */; };
 		2CC8C5811A91001400B941FD /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CC8C5801A91001400B941FD /* OpenGL.framework */; };
 		2CC8C5841A93C1C300B941FD /* route_feet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2CC8C5821A93C1C300B941FD /* route_feet.cpp */; };
@@ -121,6 +128,15 @@
 		2C103D7E1B5A1064005EB940 /* gl_window.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = gl_window.h; path = molecules/gl_window.h; sourceTree = "<group>"; };
 		2C161D351B3C774F00711E6A /* sign.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sign.cpp; sourceTree = "<group>"; };
 		2C161D361B3C774F00711E6A /* sign.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sign.h; sourceTree = "<group>"; };
+		2C1E49141B6FCBE5008FEAB9 /* sports_bench.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = sports_bench.cpp; path = ../sports_bench.cpp; sourceTree = "<group>"; };
+		2C1E49151B6FCBE5008FEAB9 /* sports_bench.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = sports_bench.h; path = ../sports_bench.h; sourceTree = "<group>"; };
+		2C1E49171B703330008FEAB9 /* room_of_tables.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = room_of_tables.cpp; sourceTree = "<group>"; };
+		2C1E49181B703330008FEAB9 /* room_of_tables.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = room_of_tables.h; sourceTree = "<group>"; };
+		2C50882B1B6D8E3F00363341 /* building_objects.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = building_objects.h; sourceTree = "<group>"; };
+		2C50882C1B6D8E4F00363341 /* atom_objects.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = atom_objects.h; sourceTree = "<group>"; };
+		2C50882D1B6D8E5D00363341 /* molecule_objects.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = molecule_objects.h; sourceTree = "<group>"; };
+		2C50882E1B6FC91100363341 /* basketball_arena.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = basketball_arena.cpp; path = molecules/basketball_arena.cpp; sourceTree = "<group>"; };
+		2C50882F1B6FC91100363341 /* basketball_arena.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = basketball_arena.h; path = molecules/basketball_arena.h; sourceTree = "<group>"; };
 		2C5FB89E1B65204E00CC50B6 /* frame.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = frame.cpp; sourceTree = "<group>"; };
 		2C5FB89F1B65204E00CC50B6 /* frame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = frame.h; sourceTree = "<group>"; };
 		2C615ED01B4F750200227941 /* terrain.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = terrain.cpp; sourceTree = "<group>"; };
@@ -206,6 +222,14 @@
 		2CA501AD1B5757FF00DCA2D0 /* hampton_complex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = hampton_complex.h; path = molecules/hampton_complex.h; sourceTree = "<group>"; };
 		2CA78FC81B4F2C8600B109EC /* robot_moves.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = robot_moves.cpp; path = home3D/molecules/robot_moves.cpp; sourceTree = "<group>"; };
 		2CA78FC91B4F2C8600B109EC /* robot_moves.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = robot_moves.h; path = home3D/molecules/robot_moves.h; sourceTree = "<group>"; };
+		2CB725931B6A663400282277 /* basket_ball_court.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = basket_ball_court.cpp; sourceTree = "<group>"; };
+		2CB725941B6A663500282277 /* basket_ball_court.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = basket_ball_court.h; sourceTree = "<group>"; };
+		2CB725961B6A765000282277 /* floor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = floor.cpp; sourceTree = "<group>"; };
+		2CB725971B6A765000282277 /* floor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = floor.h; sourceTree = "<group>"; };
+		2CB7259A1B6B183900282277 /* ring.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ring.cpp; sourceTree = "<group>"; };
+		2CB7259B1B6B183900282277 /* ring.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ring.h; sourceTree = "<group>"; };
+		2CB7259D1B6D66EA00282277 /* face_box.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = face_box.cpp; sourceTree = "<group>"; };
+		2CB7259E1B6D66EA00282277 /* face_box.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = face_box.h; sourceTree = "<group>"; };
 		2CC8A7761B53591C00BC874F /* quarter_629.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = quarter_629.cpp; path = molecules/quarter_629.cpp; sourceTree = "<group>"; };
 		2CC8A7771B53591C00BC874F /* quarter_629.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = quarter_629.h; path = molecules/quarter_629.h; sourceTree = "<group>"; };
 		2CC8C5801A91001400B941FD /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
@@ -256,7 +280,7 @@
 			name = "Large Objects";
 			sourceTree = "<group>";
 		};
-		2C77323D1B601782005A646E /* Building */ = {
+		2C77323D1B601782005A646E /* Building Structures */ = {
 			isa = PBXGroup;
 			children = (
 				2C8C09411A8FE9030074FE1D /* abstract_wall.cpp */,
@@ -271,14 +295,14 @@
 				2C9719E21B4C92EA008B6F6C /* dwelling_level.h */,
 				2C9719E41B4C94D7008B6F6C /* dwelling.cpp */,
 				2C9719E51B4C94D7008B6F6C /* dwelling.h */,
+				2CB725961B6A765000282277 /* floor.cpp */,
+				2CB725971B6A765000282277 /* floor.h */,
 				2C0330F41B45D0DC00B6B92A /* full_wall.cpp */,
 				2C0330F51B45D0DC00B6B92A /* full_wall.h */,
-				2C0330F71B46293E00B6B92A /* glComputableWall.cpp */,
-				2C0330F81B46293E00B6B92A /* glComputableWall.h */,
 				2C103D7D1B5A1064005EB940 /* gl_window.cpp */,
 				2C103D7E1B5A1064005EB940 /* gl_window.h */,
-				2CA501AC1B5757FF00DCA2D0 /* hampton_complex.cpp */,
-				2CA501AD1B5757FF00DCA2D0 /* hampton_complex.h */,
+				2C0330F71B46293E00B6B92A /* glComputableWall.cpp */,
+				2C0330F81B46293E00B6B92A /* glComputableWall.h */,
 				2C0330F11B45B62700B6B92A /* hinge.cpp */,
 				2C0330F21B45B62700B6B92A /* hinge.h */,
 				2C8C09561A8FE9030074FE1D /* ibeam.cpp */,
@@ -287,16 +311,12 @@
 				2C8C095A1A8FE9030074FE1D /* light_switch.hpp */,
 				2C8C095B1A8FE9030074FE1D /* Map2D.cpp */,
 				2C8C095C1A8FE9030074FE1D /* Map2D.hpp */,
-				2C9719E71B4C9596008B6F6C /* apartment.cpp */,
-				2C9719E81B4C9596008B6F6C /* apartment.h */,
-				2CC8A7761B53591C00BC874F /* quarter_629.cpp */,
-				2CC8A7771B53591C00BC874F /* quarter_629.h */,
 				2C8C09641A8FE9030074FE1D /* stairway.cpp */,
 				2C8C09651A8FE9030074FE1D /* stairway.hpp */,
 				2C8C096F1A8FE9030074FE1D /* wall.cpp */,
 				2C8C09701A8FE9030074FE1D /* wall.hpp */,
 			);
-			name = Building;
+			name = "Building Structures";
 			sourceTree = "<group>";
 		};
 		2C77323E1B60186E005A646E /* Utilities classes */ = {
@@ -334,8 +354,9 @@
 		2C8C091F1A8FD3C70074FE1D /* home3D */ = {
 			isa = PBXGroup;
 			children = (
+				2CB725991B6A76D600282277 /* Buildings */,
 				2C77323E1B60186E005A646E /* Utilities classes */,
-				2C77323D1B601782005A646E /* Building */,
+				2C77323D1B601782005A646E /* Building Structures */,
 				2C77323C1B601650005A646E /* Large Objects */,
 				2CEB3F6D1B3F7D6700ED3EFF /* framework */,
 				2CEB3F661B3F560D00ED3EFF /* Robot */,
@@ -354,24 +375,28 @@
 				2C0629161B59884F00031BEE /* camera_screen.h */,
 				2C8C09441A8FE9030074FE1D /* cylinder.cpp */,
 				2C8C09451A8FE9030074FE1D /* cylinder.hpp */,
-				2CF0B7481B3D8AD500B1A482 /* txt_cylinder.cpp */,
-				2CF0B7491B3D8AD500B1A482 /* txt_cylinder.h */,
 				2C8C094A1A8FE9030074FE1D /* extrusion.cpp */,
 				2C8C094B1A8FE9030074FE1D /* extrusion.hpp */,
+				2CB7259D1B6D66EA00282277 /* face_box.cpp */,
+				2CB7259E1B6D66EA00282277 /* face_box.h */,
 				2C8C09501A8FE9030074FE1D /* gl_container.cpp */,
 				2C8C09511A8FE9030074FE1D /* gl_container.hpp */,
-				2C8C095E1A8FE9030074FE1D /* paper.cpp */,
-				2C8C095F1A8FE9030074FE1D /* paper.hpp */,
+				2C0330EB1B459C9800B6B92A /* glSphere.cpp */,
+				2C0330EC1B459C9800B6B92A /* glSphere.h */,
 				2C77324B1B630FDB005A646E /* painting.cpp */,
 				2C77324C1B630FDB005A646E /* painting.h */,
+				2C8C095E1A8FE9030074FE1D /* paper.cpp */,
+				2C8C095F1A8FE9030074FE1D /* paper.hpp */,
+				2CB7259A1B6B183900282277 /* ring.cpp */,
+				2CB7259B1B6B183900282277 /* ring.h */,
 				2C161D351B3C774F00711E6A /* sign.cpp */,
 				2C161D361B3C774F00711E6A /* sign.h */,
 				2C8C09671A8FE9030074FE1D /* Texture.cpp */,
 				2C8C09681A8FE9030074FE1D /* Texture.hpp */,
 				2C8C096A1A8FE9030074FE1D /* txt_container.cpp */,
 				2C8C096B1A8FE9030074FE1D /* txt_container.hpp */,
-				2C0330EB1B459C9800B6B92A /* glSphere.cpp */,
-				2C0330EC1B459C9800B6B92A /* glSphere.h */,
+				2CF0B7481B3D8AD500B1A482 /* txt_cylinder.cpp */,
+				2CF0B7491B3D8AD500B1A482 /* txt_cylinder.h */,
 			);
 			path = atoms;
 			sourceTree = "<group>";
@@ -401,8 +426,29 @@
 				2C8C09A61A8FE95B0074FE1D /* table.hpp */,
 				2C5FB89E1B65204E00CC50B6 /* frame.cpp */,
 				2C5FB89F1B65204E00CC50B6 /* frame.h */,
+				2C1E49141B6FCBE5008FEAB9 /* sports_bench.cpp */,
+				2C1E49151B6FCBE5008FEAB9 /* sports_bench.h */,
 			);
 			path = molecules;
+			sourceTree = "<group>";
+		};
+		2CB725991B6A76D600282277 /* Buildings */ = {
+			isa = PBXGroup;
+			children = (
+				2C9719E71B4C9596008B6F6C /* apartment.cpp */,
+				2C9719E81B4C9596008B6F6C /* apartment.h */,
+				2CB725931B6A663400282277 /* basket_ball_court.cpp */,
+				2CB725941B6A663500282277 /* basket_ball_court.h */,
+				2C50882E1B6FC91100363341 /* basketball_arena.cpp */,
+				2C50882F1B6FC91100363341 /* basketball_arena.h */,
+				2CA501AC1B5757FF00DCA2D0 /* hampton_complex.cpp */,
+				2CA501AD1B5757FF00DCA2D0 /* hampton_complex.h */,
+				2CC8A7761B53591C00BC874F /* quarter_629.cpp */,
+				2CC8A7771B53591C00BC874F /* quarter_629.h */,
+				2C1E49171B703330008FEAB9 /* room_of_tables.cpp */,
+				2C1E49181B703330008FEAB9 /* room_of_tables.h */,
+			);
+			name = Buildings;
 			sourceTree = "<group>";
 		};
 		2CEB3F661B3F560D00ED3EFF /* Robot */ = {
@@ -463,6 +509,9 @@
 				2CF531FE1B239C02003FE086 /* proc_client_cmds.cpp */,
 				2CF531FF1B239C02003FE086 /* proc_client_cmds.h */,
 				2C8C092B1A8FD5FA0074FE1D /* all_objects.h */,
+				2C50882B1B6D8E3F00363341 /* building_objects.h */,
+				2C50882C1B6D8E4F00363341 /* atom_objects.h */,
+				2C50882D1B6D8E5D00363341 /* molecule_objects.h */,
 			);
 			name = framework;
 			sourceTree = "<group>";
@@ -533,6 +582,7 @@
 				2C0F512C1B385CB60099A9E1 /* robot_gripper.cpp in Sources */,
 				2C8C09AE1A8FE95B0074FE1D /* drawer.cpp in Sources */,
 				2CDC28B41B2B62BC0038D87C /* bookcase.cpp in Sources */,
+				2C1E49161B6FCBE5008FEAB9 /* sports_bench.cpp in Sources */,
 				2C0629171B59884F00031BEE /* camera_screen.cpp in Sources */,
 				2CF532061B261A2A003FE086 /* construction_barricade.cpp in Sources */,
 				2C8C09761A8FE9030074FE1D /* door.cpp in Sources */,
@@ -541,6 +591,7 @@
 				2C8C09741A8FE9030074FE1D /* cylinder.cpp in Sources */,
 				2C77324A1B6021D7005A646E /* verbal_object.cpp in Sources */,
 				2C8C097E1A8FE9030074FE1D /* gl_object.cpp in Sources */,
+				2C5088301B6FC91100363341 /* basketball_arena.cpp in Sources */,
 				2C8C09A81A8FE95B0074FE1D /* brickwall.cpp in Sources */,
 				2C8C09821A8FE9030074FE1D /* light_switch.cpp in Sources */,
 				2CF532091B2624D1003FE086 /* glMolecule.cpp in Sources */,
@@ -555,6 +606,7 @@
 				2C0330F91B46293E00B6B92A /* glComputableWall.cpp in Sources */,
 				2C8C09781A8FE9030074FE1D /* extrusion.cpp in Sources */,
 				2C8C097A1A8FE9030074FE1D /* gl_atom.cpp in Sources */,
+				2C1E49191B703330008FEAB9 /* room_of_tables.cpp in Sources */,
 				2C8C09B01A8FE95B0074FE1D /* palette.cpp in Sources */,
 				2CF0B74A1B3D8AD500B1A482 /* txt_cylinder.cpp in Sources */,
 				2C8C09851A8FE9030074FE1D /* paper.cpp in Sources */,
@@ -567,6 +619,8 @@
 				2CEB3F6C1B3F7D5700ED3EFF /* physical_world.cpp in Sources */,
 				2C0330F01B45AAC200B6B92A /* door_handle.cpp in Sources */,
 				2C615ED51B5158EC00227941 /* stats.cpp in Sources */,
+				2CB725981B6A765000282277 /* floor.cpp in Sources */,
+				2CB725951B6A663500282277 /* basket_ball_court.cpp in Sources */,
 				2C77324D1B630FDB005A646E /* painting.cpp in Sources */,
 				2C8C093D1A8FD5FA0074FE1D /* imageloader.cpp in Sources */,
 				2CD269201B207A3A0060E9B7 /* vector.cpp in Sources */,
@@ -586,9 +640,11 @@
 				2C8C09B71A8FEA0A0074FE1D /* main.cpp in Sources */,
 				2CF531FD1B2398AD003FE086 /* table_pole.cpp in Sources */,
 				2CF531FA1B2345F9003FE086 /* simulator_memory.cpp in Sources */,
+				2CB7259C1B6B183900282277 /* ring.cpp in Sources */,
 				2C7732411B601B6B005A646E /* instant_ipc.cpp in Sources */,
 				2C0F51261B3740DC0099A9E1 /* walking_robot.cpp in Sources */,
 				2CC8C5841A93C1C300B941FD /* route_feet.cpp in Sources */,
+				2CB7259F1B6D66EA00282277 /* face_box.cpp in Sources */,
 				2CEB3F691B3F695C00ED3EFF /* moving_object.cpp in Sources */,
 				2C161D371B3C774F00711E6A /* sign.cpp in Sources */,
 				2C8C098B1A8FE9030074FE1D /* Texture.cpp in Sources */,

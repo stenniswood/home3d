@@ -34,6 +34,8 @@ public:
     glRouteWithFeet ( glRouteWithFeet& mCopy );
     ~glRouteWithFeet( );
 
+    virtual void			 start_over_at          ( struct Vertex mStart );
+    
     void            reset                      ( );
 
     // FOOT PRINTS :

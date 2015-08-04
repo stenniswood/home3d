@@ -23,8 +23,9 @@ public:
     glFrame();
     ~glFrame();
     virtual void    create_components();
-    void        set_params( float mWidth, float mHeight, float mThick);
+    void        set_params( float mWidth, float mHeight, float mBorderWidth, float mThick);
     
+    float   m_frame_thickness;
     float   m_border_width;
     float    m_width;       // inside width
     float    m_height;      // inside height

@@ -29,11 +29,10 @@ public:
     
     glPaper* m_painting;
     glFrame* m_frame;
+    glFrame* m_matting;
     
-    /*glBox*   m_left_side;
-    glBox*   m_right_side;
-    glBox*   m_top_side;
-    glBox*   m_bottom_side; */
+    float   m_frame_width;
+    float   m_matting_width;
 };
 
 

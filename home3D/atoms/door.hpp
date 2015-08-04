@@ -24,10 +24,10 @@ const float DEFAULT_HALLOW_CORE_WEIGHT = 25;    // lbs
 
 #include "routing.hpp"
 #include "door_handle.h"
-#include "gl_container.hpp"
+//#include "gl_container.hpp"
 #include "hinge.h"
 #include "route.hpp"
-
+#include "face_box.h"
 
 /* 
 The drawer positioning code could go either on the drawer, or on the cabinet.
@@ -56,11 +56,12 @@ public:
 	float			get_angle       (                 );                    // interpolates based on fraction open
 	void			open            ( float mFraction );
 	void			close           ( float mFraction );
-
+    void            select_texture  ( int mSelection );
+    
+    
     void            create_components( );
 
-
-    glBox               m_door;
+    glFaceBox           m_door;
     glDoorHandle	 	m_handle;
     glHinge             m_hinge;
 

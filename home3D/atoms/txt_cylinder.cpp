@@ -23,7 +23,6 @@ void glTextureCylinder::setup ()
     glExtrusion::setup( );
     
     m_texture->load_image( "textures/me_in_car.bmp" );
-    m_texture->m_tiles                  = 1.0;
     generate_text_coords();
     m_texture->generate_TBO           ();
     m_texture->generate_VBOTexCoords  ();
@@ -32,13 +31,13 @@ void glTextureCylinder::setup ()
 void glTextureCylinder::generate_text_coords()
 {
     struct stTextCoord tc;
-    float increment = ((float)m_texture->m_tiles / ((float)m_number_of_samples));
+    float increment = ((float)m_texture->m_repetitions_x / ((float)m_number_of_samples));
     int   i;
     float a=0.;
     for (i=0; i<m_number_of_samples; a+=increment, i++)
     {
         tc.u =  a;
-        tc.v =  m_texture->m_tiles;
+        tc.v =  m_texture->m_repetitions_x;
         m_texture->m_TexCoords.push_back(tc);
     }
 
@@ -50,6 +49,7 @@ void glTextureCylinder::generate_text_coords()
         m_texture->m_TexCoords.push_back(tc);
     }
 }
+
 void	glTextureCylinder::draw_body( )
 {
     glAtom::draw_body();

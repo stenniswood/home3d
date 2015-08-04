@@ -59,7 +59,7 @@ float glComputeableWall::is_on_which_side( MathVector mPoint )
 {
     // Find which side of the wall we are on (with respect to the unit vector):
     MathVector dv = mPoint - m_line.m_origin;
-    float side_projection = dv.dot( m_line.m_vector.get_perp_yz() );
+    float side_projection = dv.dot( m_line.m_vector.get_perp_xz() );
     if (side_projection>=0.0)
     {
         side_projection = 1.0;      printf("is on + side\n");
@@ -92,11 +92,11 @@ void glComputeableWall::find_paths_around( list<MathVector>& mPoints, float mOff
         mPoints.push_back( get_door_center_coord( i, mOffsetAwayFromWall ) );
     
     // LIST END POINTS :
-    MathVector tmp = m_line.m_origin + m_line.m_vector * -WALL_END_OFFSET + m_line.m_vector.get_perp_yz()*mOffsetAwayFromWall;
+    MathVector tmp = m_line.m_origin + m_line.m_vector * -WALL_END_OFFSET + m_line.m_vector.get_perp_xz()*mOffsetAwayFromWall;
     mPoints.push_back(tmp);
     
     tmp = m_line.m_origin + m_line.m_vector * (m_wall_length + WALL_END_OFFSET);
-    tmp += m_line.m_vector.get_perp_yz()*mOffsetAwayFromWall;
+    tmp += m_line.m_vector.get_perp_xz()*mOffsetAwayFromWall;
     mPoints.push_back(tmp);
 }
 
@@ -171,7 +171,7 @@ MathVector glComputeableWall::get_point_away_from( float mDistanceAlong, float m
     
     //    if (mPositiveSide)
         
-    pt += m_line.m_vector.get_perp_yz() * mPerpendicularDistance;
+    pt += m_line.m_vector.get_perp_xz() * mPerpendicularDistance;
     return pt;
 }
 
@@ -193,10 +193,54 @@ MathVector glComputeableWall::get_door_far_coord(  int mDoorIndex, float mPerpDi
     return get_point_away_from( distance, mPerpDistance );
 }
 
+MathVector	glComputeableWall::get_origin (  )
+{
+    return m_line.m_origin;
+}
 
 MathVector	glComputeableWall::get_far_end (  )
 {
     MathVector end = m_line.m_origin + (m_line.m_vector * m_wall_length);
     return end;
+}
+
+//bool glComputeableWall::evaluate_collision( glMovingObject* mOther )
+bool glComputeableWall::evaluate_collision( glSphere* mOther )
+{
+    // for now we assume it's a sphere:
+
+    // IS IT ABOVE/BELOW the WALL?
+    //bool candidate = false;
+    float extent = mOther->m_position[1] + mOther->m_radius;
+    if (extent < m_y)                return false;
+    extent = mOther->m_position[1] - mOther->m_radius;
+    if (extent > m_y+m_wall_height)  return false;
+
+    // IS IT PAST THE START or END of the WALL?
+    MathVector delta = mOther->m_position - m_line.m_origin;
+    float distance_along_wall = m_line.m_vector.dot(delta);
+    if (distance_along_wall < -mOther->m_radius) return false;
+    if (distance_along_wall > (m_wall_length+mOther->m_radius)) return false;
+
+    
+    // We are now within the extents of the wall.  Check the actual distance away:
+    MathVector perp = m_line.m_vector.get_perp_xz();
+    float distance_away_from_wall = fabs(perp.dot( delta ));
+    
+    if (distance_away_from_wall > mOther->m_radius)
+        return false;
+    
+    // Only chance of no collision now is in a doorway:
+    long size = m_doorways.size();
+    for(int d=0; d<size; d++)
+    {
+        // If it's in the doorway, let it pass.
+        if ((distance_along_wall > m_doorways[d].position_lengthwise) &&
+            (distance_along_wall < (m_doorways[d].position_lengthwise+m_doorways[d].width)) )
+            if (mOther->m_y < (m_doorways[d].height-mOther->m_radius))
+                return false;
+    }
+    
+    return true;
 }
 

@@ -22,8 +22,9 @@ using namespace std;
 
 Texture::Texture()
 {    
-    m_TBO = 0;
-    m_tiles = 1.0;  // 1 image per object
+    m_TBO   =   0;
+    m_repetitions_x = 1;        // 1 image per object default
+    m_repetitions_y = 1;
 }
 
 Texture::~Texture()
@@ -91,9 +92,8 @@ GLuint	Texture::generate_TBO	( )
 GLuint	Texture::generate_grid_coords( int mWidth, int mHeight )
 {
     struct stTextCoord tc;
-    float x_incr = m_tiles / mWidth;
-    float y_incr = m_tiles / mHeight;
-    
+    float x_incr = (float)m_repetitions_x / mWidth;
+    float y_incr = (float)m_repetitions_y / mHeight;
     for (int y=0; y<mHeight; y++)
     {
         tc.v = y*y_incr;
@@ -106,19 +106,52 @@ GLuint	Texture::generate_grid_coords( int mWidth, int mHeight )
     return (GLuint)m_TexCoords.size();
 }
 
-GLuint	Texture::generate_texture_coords	( )
+
+GLuint	Texture::generate_texture_coords( int mRotation )
 {
     /* Fill in in derived class.  
        Here only a simple square coordinates.
      */
-    float fs = m_tiles;
-    struct stTextCoord tc;
+    const float fsx = m_repetitions_x;
+    const float fsy = m_repetitions_y;    
+    struct stTextCoord tc[4];
 
     // U								V
-    tc.u = 0.0;      tc.v = 0.0;    m_TexCoords.push_back( tc );
-    tc.u = fs;       tc.v = 0.0;    m_TexCoords.push_back( tc );
-    tc.u = fs;       tc.v = fs;     m_TexCoords.push_back( tc );
-    tc.u = 0.0;      tc.v = fs;     m_TexCoords.push_back( tc );
+    tc[0].u = 0.0;      tc[0].v = 0.0;
+    tc[1].u = 0.0;      tc[1].v = fsy;
+    tc[2].u = fsx;      tc[2].v = fsy;
+    tc[3].u = fsx;      tc[3].v = 0.0;
+    switch (mRotation)
+    {
+        case 0: m_TexCoords.push_back( tc[0] );
+            m_TexCoords.push_back( tc[1] );
+            m_TexCoords.push_back( tc[2] );
+            m_TexCoords.push_back( tc[3] );
+            break;
+        case 1:
+            m_TexCoords.push_back( tc[1] );
+            m_TexCoords.push_back( tc[2] );
+            m_TexCoords.push_back( tc[3] );
+            m_TexCoords.push_back( tc[0] );
+            break;
+        case 2:
+            m_TexCoords.push_back( tc[2] );
+            m_TexCoords.push_back( tc[3] );
+            m_TexCoords.push_back( tc[0] );
+            m_TexCoords.push_back( tc[1] );
+            break;
+        case 3:
+            m_TexCoords.push_back( tc[3] );
+            m_TexCoords.push_back( tc[0] );
+            m_TexCoords.push_back( tc[1] );
+            m_TexCoords.push_back( tc[2] );
+            break;
+        default:m_TexCoords.push_back( tc[0] );
+            m_TexCoords.push_back( tc[1] );
+            m_TexCoords.push_back( tc[2] );
+            m_TexCoords.push_back( tc[3] );
+            break;
+    }
     return (GLuint)m_TexCoords.size();
 }
 
@@ -141,7 +174,7 @@ void Texture::draw()
     glTexCoordPointer   (2, GL_FLOAT,   0, NULL     );
 }
 
-void	Texture::after_draw()
+void Texture::after_draw()
 {
     glDisableClientState(GL_TEXTURE_COORD_ARRAY);
     glDisable           (GL_TEXTURE_2D);

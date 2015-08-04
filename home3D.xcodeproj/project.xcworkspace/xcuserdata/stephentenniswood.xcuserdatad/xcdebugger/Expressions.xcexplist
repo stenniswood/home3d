@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VariablesViewState
+   version = "1.0">
+   <ContextStates>
+      <ContextState
+         contextName = "glSphere::draw_primitive():glSphere.cpp">
+      </ContextState>
+      <ContextState
+         contextName = "glPhysicalWorld::find_component(std::__1::basic_string&lt;char, std::__1::char_traits&lt;char&gt;, std::__1::allocator&lt;char&gt; &gt;&amp;, std::__1::basic_string&lt;char, std::__1::char_traits&lt;char&gt;, std::__1::allocator&lt;char&gt; &gt;&amp;, bool, bool):physical_world.cpp">
+      </ContextState>
+      <ContextState
+         contextName = "glOurHouse::create_components():quarter_629.cpp">
+      </ContextState>
+      <ContextState
+         contextName = "glTerrain::generate_vertices():terrain.cpp">
+         <PersistentStrings>
+            <PersistentString
+               value = "m_omissions[o]">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "glAtom::compute_max():gl_atom.cpp">
+         <PersistentStrings>
+            <PersistentString
+               value = "m_vertices">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "init_objects():main.cpp">
+      </ContextState>
+      <ContextState
+         contextName = "glUpstairs::add_light_switches():quarter_629.cpp">
+      </ContextState>
+      <ContextState
+         contextName = "glMolecule::draw_body():glMolecule.cpp">
+         <PersistentStrings>
+            <PersistentString
+               value = "i">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "glMolecule::find_component(std::__1::basic_string&lt;char, std::__1::char_traits&lt;char&gt;, std::__1::allocator&lt;char&gt; &gt;&amp;, std::__1::basic_string&lt;char, std::__1::char_traits&lt;char&gt;, std::__1::allocator&lt;char&gt; &gt;&amp;, std::__1::vector&lt;VerbalObject*, std::__1::allocator&lt;VerbalObject*&gt; &gt;*, bool):glMolecule.cpp">
+         <PersistentStrings>
+            <PersistentString
+               value = "ptr">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "glDwellingLevel::get_max_z():dwelling_level.cpp">
+      </ContextState>
+      <ContextState
+         contextName = "glRing::generate_vertices():ring.cpp">
+         <PersistentStrings>
+            <PersistentString
+               value = "Translate">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "glWalkingRobot::sample_limbs_path():walking_robot.cpp">
+      </ContextState>
+      <ContextState
+         contextName = "glMolecule::compute_max():glMolecule.cpp">
+         <PersistentStrings>
+            <PersistentString
+               value = "i">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "glObject::draw():gl_object.cpp">
+      </ContextState>
+      <ContextState
+         contextName = "proc_sim_command():proc_client_cmds.cpp">
+         <PersistentStrings>
+            <PersistentString
+               value = "last_space">
+            </PersistentString>
+            <PersistentString
+               value = "(last_space+1)">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "glComputeableWall::evaluate_collision(glSphere*):glComputableWall.cpp">
+      </ContextState>
+      <ContextState
+         contextName = "glExtrusion::generate_disc_indices(unsigned int):extrusion.cpp">
+      </ContextState>
+      <ContextState
+         contextName = "glTerrain::add_omission(glBox*):terrain.cpp">
+      </ContextState>
+      <ContextState
+         contextName = "glObject::~glObject():gl_object.cpp">
+         <PersistentStrings>
+            <PersistentString
+               value = "theWorld">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "glDwellingLevel::get_max_x():dwelling_level.cpp">
+      </ContextState>
+      <ContextState
+         contextName = "glPhysicalWorld::time_slice():physical_world.cpp">
+         <PersistentStrings>
+            <PersistentString
+               value = "**iter">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "glSphere::generate_vertices():glSphere.cpp">
+      </ContextState>
+      <ContextState
+         contextName = "glBasketballCourt::create_vertical_walls():basket_ball_court.cpp">
+      </ContextState>
+      <ContextState
+         contextName = "glMovingObject::add_force(MathVector):moving_object.cpp">
+      </ContextState>
+      <ContextState
+         contextName = "glPhysicalWorld::draw():physical_world.cpp">
+      </ContextState>
+      <ContextState
+         contextName = "glDoor::open(float):door.cpp">
+      </ContextState>
+      <ContextState
+         contextName = "sim_write_object_ids(std::__1::vector&lt;long, std::__1::allocator&lt;long&gt; &gt;):simulator_memory.cpp">
+      </ContextState>
+      <ContextState
+         contextName = "glUpstairs::create_components():quarter_629.cpp">
+      </ContextState>
+      <ContextState
+         contextName = "glPhysicalWorld::find_component(std::__1::basic_string&lt;char, std::__1::char_traits&lt;char&gt;, std::__1::allocator&lt;char&gt; &gt;&amp;, std::__1::basic_string&lt;char, std::__1::char_traits&lt;char&gt;, std::__1::allocator&lt;char&gt; &gt;&amp;, bool):physical_world.cpp">
+      </ContextState>
+      <ContextState
+         contextName = "glObject::relocate(MathVector):gl_object.cpp">
+      </ContextState>
+      <ContextState
+         contextName = "glArm::get_wrist_position():robot_arm.cpp">
+      </ContextState>
+      <ContextState
+         contextName = "glDwellingLevel::evaluate_collision(glSphere*):dwelling_level.cpp">
+      </ContextState>
+      <ContextState
+         contextName = "glTerrain::add_omission(glDwellingLevel*):terrain.cpp">
+      </ContextState>
+      <ContextState
+         contextName = "glRing::draw_primitive():ring.cpp">
+      </ContextState>
+      <ContextState
+         contextName = "txtContainer::draw_body():txt_container.cpp">
+      </ContextState>
+   </ContextStates>
+</VariablesViewState>

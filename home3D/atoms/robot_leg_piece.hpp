@@ -95,7 +95,6 @@ const float MIN_ANKLE_ANGLE      = -45.0;
 #define m_knee_angle           m_lower_leg.m_x_angle
 #define m_ankle_angle          m_foot.m_x_angle
 
-
 class glLeg : public glMolecule     // was glObject!
 {
 public:
@@ -105,7 +104,7 @@ public:
 	virtual void	draw_body           ( );
 
 	bool			check_angle_limits  ( );
-	
+
 	bool			set_hip_angle		( float mDegrees );
 	bool			set_hip_rotate_angle( float mDegrees );
     bool			set_hip_swing_angle ( float mDegrees );
@@ -131,7 +130,9 @@ public:
     float           get_fore_aft        ( bool mHeelOnly=true );      // distance from hip to heel horizontally
     void            make_foot_level     (                     );      // with ground
 
-    void            move_heel_to        ( MathVector mheel    );
+//    void            move_heel_to        ( MathVector mheel    );
+    void            place_heel_at       ( float mheel[3]    );
+
     
     // STANDARD POSITIONS :
     void            standing_position       ( );

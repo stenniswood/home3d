@@ -35,8 +35,8 @@ public:
     void        set_relative_z( glObject* mObj, float mZ );
     void        set_relative_xyz( glObject* mObj, float mX, float mY, float mZ);
 
-    void            get_max();
-    void            get_min();
+    virtual void    compute_max();
+    virtual void    compute_min();
     
     virtual void	setup            ( );
     virtual void	create_components( );
@@ -51,8 +51,6 @@ public:
      */
     vector<VerbalObject*> m_components;
 
-    struct Vertex   m_max;
-    struct Vertex   m_min;
 
     virtual bool    is_a_molecule()     { return true; }
     
@@ -61,8 +59,14 @@ public:
     // Q:  How do we know if the component is a molecule derived object??
     // Ans:     in VerbalObject class put a virtual function which answers that.
     
-    VerbalObject*  find_component ( string&  mRequestedName, string& mTypeName, bool mTypeMustMatch=true );
+    bool           find_component ( string&  mRequestedName, string& mTypeName,
+                                   vector<VerbalObject*>* object_hier,
+                                   bool mTypeMustMatch=true );    
     VerbalObject*  get_component  ( int index );
+    
+    bool           find_component_by_id( long mObject_id,
+                                        vector<VerbalObject*>* object_hier
+                                         );
     // ie "door", "window", etc.  the requested name may be an adjective to this.
     // ie. "master bedroom door"
 };

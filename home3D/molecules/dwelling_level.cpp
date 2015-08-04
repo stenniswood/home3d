@@ -7,7 +7,9 @@
 //
 
 #include "dwelling_level.h"
-#include "all_objects.h"
+//#include "all_objects.h"
+#include "glComputableWall.h"
+#include "physical_world.h"
 
 
 glDwellingLevel::glDwellingLevel( )
@@ -25,25 +27,61 @@ glDwellingLevel::~glDwellingLevel( )
 /* Gives the max z for a wall origin, not necessarily the max z vertex! */
 float glDwellingLevel::get_max_x()
 {
+    MathVector tmp(3);
     long size = m_fwalls.size();
     float max_x = 0.0;
     for (int w=0; w<size; w++)
     {
         if (m_fwalls[w]->m_x > max_x)
             max_x = m_fwalls[w]->m_x;
+        tmp = m_fwalls[w]->m_bare_wall.get_far_end();
+        if (tmp[0] > max_x)
+            max_x = tmp[0];
+    }
+    if (m_floor)
+    {
+        m_floor->compute_min();
+        m_floor->compute_max();
+        float tmpx;
+        tmpx = m_x + m_floor->m_max.position[0];
+        if (tmpx > max_x)
+            max_x = tmpx;
     }
     return max_x;
 }
 
+
+void glDwellingLevel::generate_exterior_walls()
+{
+  //  glComputeableWall* ewall = new glComputeableWall();
+  //  *ewall = (m_fwalls[0]->m_bare_wall);
+  //  m_ext_walls.push_back(ewall); 
+}
+
+
 /* Gives the max z for a wall origin, not necessarily the max z vertex! */
 float glDwellingLevel::get_max_z()
 {
+    MathVector tmp(3);
     long size = m_fwalls.size();
     float max_z = 0.0;
     for (int w=0; w<size; w++)
     {
         if (m_fwalls[w]->m_z > max_z)
             max_z = m_fwalls[w]->m_z;
+
+        tmp = m_fwalls[w]->m_bare_wall.get_far_end();
+        if (tmp[2] > max_z)
+            max_z = tmp[2];
+    }
+    if (m_floor)
+    {
+        m_floor->compute_min();
+        m_floor->compute_max();
+        float tmpz;
+        tmpz = m_z + m_floor->m_max.position[2];
+        if (tmpz > max_z)
+           max_z = tmpz;
     }
     return max_z;
 }
@@ -63,9 +101,7 @@ void glDwellingLevel::mirror_image_x          ( )
         len = m_fwalls[w]->m_bare_wall.m_line.m_vector * m_fwalls[w]->m_bare_wall.m_wall_length;
         m_fwalls[w]->m_z -= len[2];
         
-        // Now mirrow image the door/window/fixture locations:
-        
-        
+        // Now mirrow image the door/window/fixture locations:        
     }
 }
 
@@ -152,10 +188,20 @@ void glDwellingLevel::create_map( glMap2D& mMap )
     }
 }
 
+void glDwellingLevel::create_floor()        // to cover all.
+{
+    struct room  dimen;
+    dimen.sx = 0;
+    dimen.sz = 0;
+    dimen.ex = get_max_x();
+    dimen.ez = get_max_z();
+    m_floor->cover_all( dimen );
+}
+
 glDwellingLevel* glDwellingLevel::create_copy()
 {
     glDwellingLevel* dl = new glDwellingLevel();
-    long fsize = m_fwalls.size();
+ /*   long fsize = m_fwalls.size();
     glFullWall* wptr = NULL;
     for (int w=0; w<fsize; w++)
     {
@@ -163,7 +209,8 @@ glDwellingLevel* glDwellingLevel::create_copy()
         *wptr = *m_fwalls[w];       // copy contents
         // this should create duplicate fixtures, doors, windows, etc.
         dl->m_fwalls.push_back(wptr);
-    }
+    } */
+    
     // DONT COPY THE FURNITURE:
     /*fsize = m_furniture.size();
      for (int f=0; f<fsize; f++)
@@ -183,7 +230,7 @@ glDwellingLevel* glDwellingLevel::create_copy()
 glDwellingLevel* glDwellingLevel::create_mirror_image( )
 {
     glDwellingLevel* dl = new glDwellingLevel();
-    long fsize = m_fwalls.size();
+ /*   long fsize = m_fwalls.size();
     glFullWall* wptr = NULL;
     for (int w=0; w<fsize; w++)
     {
@@ -191,7 +238,8 @@ glDwellingLevel* glDwellingLevel::create_mirror_image( )
         *wptr = *m_fwalls[w];       // copy contents
                 // this should create duplicate fixtures, doors, windows, etc.
         dl->m_fwalls.push_back(wptr);
-    }
+    } */
+    
     // All of the angles will stay the same.  just the locations swapped (ie. m_x,m_y,m_z)
     //   swap with which though.
     //
@@ -213,4 +261,21 @@ glDwellingLevel* glDwellingLevel::create_mirror_image( )
     return dl;
 }
 
+bool glDwellingLevel::evaluate_collision( glSphere* mOther )
+{
+    long size = m_fwalls.size();
+    bool result = false;
+    for (int w=0; w<size; w++)
+    {
+        result = m_fwalls[w]->m_bare_wall.evaluate_collision(mOther);
+        if (result) {
+            MathVector normal(3);
+            normal = m_fwalls[w]->m_bare_wall.m_line.m_vector.get_perp_xz();
+            theWorld.snells_law( mOther, normal );
+            mOther->m_position = mOther->m_prev_position;            
+            return true;
+        }
+    }
+    return false;
+}
 

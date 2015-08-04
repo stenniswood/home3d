@@ -16,6 +16,13 @@ MathVector::MathVector ( int mDimension )
 	dimension( mDimension );
 }
 
+MathVector::MathVector ( float* mValues, int mDimension )
+{
+    m_name = "";
+    for (int i=0; i<mDimension; i++)
+        m_elements.push_back( mValues[i] );
+}
+
 MathVector::MathVector( string mName, int mDimension )
 {
 	m_name = mName;
@@ -143,7 +150,15 @@ MathVector MathVector::operator/( double mScaler )
         v[i] = m_elements[i] / mScaler;
     return v;
 }
-
+// element by element scaling.
+MathVector MathVector::operator*( MathVector rhs )
+{
+    int size = (int)m_elements.size();
+    MathVector v(size);
+    for (int i=0; i<size; i++)
+        v[i] = m_elements[i] * rhs[i];
+    return v;
+}
 MathVector MathVector::operator*( double mScaler )
 {
 	int size = (int)m_elements.size();
@@ -181,7 +196,7 @@ MathVector MathVector::cross( MathVector lhs,  MathVector rhs)
     return r;
 }
 
-MathVector	MathVector::get_perp_yz()
+MathVector	MathVector::get_perp_xz()
 {
     MathVector perp( (int)m_elements.size() );
     perp[0] = m_elements[2];

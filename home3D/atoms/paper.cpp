@@ -32,15 +32,15 @@ glPaper::glPaper( int mSamples_per_inch )
 
 void glPaper::Initialize( float mWidthInches, float mHeightInches )
 {
-    printf("samples_per_inch=%d\n", m_samples_per_inch );
+    //printf("samples_per_inch=%d\n", m_samples_per_inch );
     m_object_class  = 8;
     m_width    = mWidthInches;
     m_height   = mHeightInches;
     m_Xsamples = m_samples_per_inch * mWidthInches ;
     m_Ysamples = m_samples_per_inch * mHeightInches;
-    printf("samps_per_inch=%d\n",           m_samples_per_inch      );
-    printf("xsamples=%d;  ysamples=%d  \n", m_Xsamples, m_Ysamples  );
-    printf("mWidth=%6.1f; mHeight=%6.1f\n", mWidthInches, mHeightInches );
+    //printf("samps_per_inch=%d\n",           m_samples_per_inch      );
+    //printf("xsamples=%d;  ysamples=%d  \n", m_Xsamples, m_Ysamples  );
+    //printf("mWidth=%6.1f; mHeight=%6.1f\n", mWidthInches, mHeightInches );
 }
 
 void glPaper::set_width_height( float mWidth, float mHeight )
@@ -144,7 +144,6 @@ void glPaper::setup( )
     generate_indices ( );
     //wave_it( 10, 2, 0.0 );
     
-    m_texture->m_tiles = 1.0;
     m_texture->generate_grid_coords( m_Xsamples, m_Ysamples);
     m_texture->generate_TBO( );
     m_texture->generate_VBOTexCoords();

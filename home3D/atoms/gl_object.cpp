@@ -9,6 +9,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include "gl_object.hpp"
 #include "all_objects.h"
 
 
@@ -38,7 +39,7 @@ glObject::~glObject( )
 
 void glObject::relocate( MathVector mNewLocation )
 {
-    relocate( mNewLocation[0], mNewLocation[1], mNewLocation[2] );
+    relocate( (float)mNewLocation[0], (float)mNewLocation[1], (float)mNewLocation[2] );
 }
 
 void glObject::setup           ( )
@@ -209,7 +210,6 @@ glm::vec4 glObject::get_position()
 
 void glObject::gl_register()
 {
-    m_registered = true;
     theWorld.add_object(this);
 }
 

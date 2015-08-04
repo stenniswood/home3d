@@ -68,11 +68,10 @@ bool glRobotInterpolator::play_next()
 {
     if (m_interpolated_sequence.size())
         set_robot_position( &m_interpolated_sequence[m_interpolated_index] );
-    
-    m_interpolated_index++;
-    if (m_interpolated_index>m_interpolated_sequence.size())
+    if (m_interpolated_index < m_interpolated_sequence.size())
     {
-        m_interpolated_index = 0;
+        m_interpolated_index++;
+        //m_interpolated_index = 0;
         return true;
     }
     return false;

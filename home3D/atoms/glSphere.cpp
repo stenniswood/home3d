@@ -28,6 +28,13 @@ void glSphere::load_texture( string mImageFilename )
     m_texture->load_image(mImageFilename);
 }
 
+void glSphere::set_inertia( float mOneAxis )  // applies same to all 3 axes.
+{
+    Inertia[0] = mOneAxis;
+    Inertia[1] = mOneAxis;
+    Inertia[2] = mOneAxis;
+}
+
 void glSphere::generate_vertices( )
 {
     float const R = 1./(float)(m_rings-1);
@@ -35,22 +42,29 @@ void glSphere::generate_vertices( )
     int r, s;
     struct Vertex tmp;
     struct stTextCoord ttmp;
+    //float image_center_x=0.5;
+    //float image_center_z=0.5;
+    
     tmp.color[0] = (m_color & 0x00FF0000) >> 16;
     tmp.color[1] = (m_color & 0x0000FF00) >>  8;
     tmp.color[2] = (m_color & 0x000000FF) ;
     tmp.color[3] = (m_color & 0xFF000000) >> 24;
-    
+    //float t_radius;
+
     //m_vertices.resize(m_rings * m_sectors * 3);
     //m_normals.resize (m_rings * m_sectors * 3);
     for(r = 0; r < m_rings; r++) for(s = 0; s < m_sectors; s++) {
         float const y = sin( -M_PI_2 + M_PI * r * R );
         float const x = cos(2*M_PI * s * S) * sin( M_PI * r * R );
         float const z = sin(2*M_PI * s * S) * sin( M_PI * r * R );
-
         if (m_texture)
         {
+//            t_radius = r*R;
+//            ttmp.v = image_center_x + 0.5*t_radius*cos(2*M_PI * s * S);
+//            ttmp.u = image_center_z + 0.5*t_radius*sin(2*M_PI * s * S);
             ttmp.u = s*S;
             ttmp.v = r*R;
+
             m_texture->m_TexCoords.push_back( ttmp );
         }
         
@@ -83,4 +97,22 @@ void glSphere::generate_indices( )
             m_indices.push_back( (r+1) * m_sectors + s      );
     }
 }
+
+void glSphere::gl_register(  )
+{
+    glAtom::gl_register();       // Base class
+
+    if (m_texture) {
+        m_texture->generate_TBO();
+        m_texture->generate_VBOTexCoords();
+    }
+}
+
+bool glSphere::evaluate_collision( glMovingObject* mOther )
+{
+    if (m_y<m_radius)
+        return true;
+    return false;
+}
+
 

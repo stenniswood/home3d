@@ -14,6 +14,7 @@ class MathVector
 public:
 	MathVector ( );
 	MathVector ( int mDimension );
+    MathVector ( float* mValues, int mDimension );
 	MathVector ( string mName, int mDimension );	
 	~MathVector( );
 
@@ -32,10 +33,11 @@ public:
     MathVector      operator/( double mScaler );
     void			operator/=( double mScaler );
     MathVector 		operator*( double mScaler );
+    MathVector 		operator*( MathVector mScaler );        // element by element scaling.
 	MathVector	 	operator+(const MathVector &rhs);		
 	MathVector	 	operator-(const MathVector &rhs);
 	MathVector		get_perp_2d();
-    MathVector	    get_perp_yz();
+    MathVector	    get_perp_xz();
 
     void            unitize  ( ) { *this /= magnitude(); }
     

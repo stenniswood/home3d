@@ -28,15 +28,14 @@ const int CMD_ROBOT_CMD         = 4;
 const int CMD_CREATE_SHAPE      = 5;
 const int CMD_CREATE_FILE_OBJ   = 6;
 
-const int QUERY_COORDINATE          = 7;
-const int QUERY_GET_OBJECT_ID       = 8;
-const int QUERY_GET_OBJECT_COORD    = 9;
 
+/*const int QUERY_GET_OBJECT_ID       = 0x201;
+const int QUERY_GET_OBJECT_COORD    = 0x202;
+const int QUERY_COORDINATE          = 0x203;
 
-const int ACTION_OPEN_DOOR      = 10;
-const int ACTION_LIFT_OBJECT    = 11;
-const int ACTION_PUSH_OBJECT    = 12;
-
+const int ACTION_OPEN_DOOR      = 0x301;
+const int ACTION_LIFT_OBJECT    = 0x302;
+const int ACTION_PUSH_OBJECT    = 0x303; */
 
 
 // Looks to IPC sim memory.
