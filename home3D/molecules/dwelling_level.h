@@ -16,6 +16,7 @@
 #include "glMolecule.h"
 #include "floor.h"
 #include "glComputableWall.h"
+#include "vector.hpp"
 
 
 struct room {
@@ -53,17 +54,24 @@ public:
     
     // FOR 2D Drawing (and maze solving):
     void            create_map         ( glMap2D& mMap );
-
+    // LOCATION FUNCTIONS (from visual & other means to find the location) :
+    void            create_linesegs( float mLinearDistance, float mWallAngleRadians, float mHeight );
+    
+    void            find_all_possibilies( float mLinearDistance, float mWallAngle, float mHeight );
+    void            accept_heading_measurement( float mAngleToNorth );
+    
+    
     // Not implemented yet... but not difficult.
     vector<Texture*>        m_door_textures;     // hold here instead of each door for memory savings.
     
+    vector<LineSegment>     m_line_segs;
+    
     glFloor*                m_floor;
     vector<glFullWall*>     m_fwalls;
-  //  vector<glComputeableWall*>     m_ext_walls;
     vector<glObject*>       m_furniture;
     vector<glObject*>       m_things;
 };
-
+//    vector<glComputeableWall*>     m_ext_walls;
 // Find_object ( "asdfs", "door", true );
 // Find_object ( "asdfs", "window", true );
 

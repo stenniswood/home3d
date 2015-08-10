@@ -178,11 +178,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "home3D/main.cpp"
-            timestampString = "460326291.752892"
+            timestampString = "460895158.517604"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "763"
-            endingLineNumber = "763"
+            startingLineNumber = "707"
+            endingLineNumber = "707"
             landmarkName = "drawScene()"
             landmarkType = "7">
          </BreakpointContent>
@@ -492,11 +492,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "home3D/atoms/extrusion.cpp"
-            timestampString = "460318055.865939"
+            timestampString = "460901291.420821"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "178"
-            endingLineNumber = "178"
+            startingLineNumber = "179"
+            endingLineNumber = "179"
             landmarkName = "glExtrusion::create( float mLength, int mAxis )"
             landmarkType = "5">
          </BreakpointContent>
@@ -524,11 +524,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "home3D/main.cpp"
-            timestampString = "460326291.752892"
+            timestampString = "460847849.130962"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "550"
-            endingLineNumber = "550"
+            startingLineNumber = "518"
+            endingLineNumber = "518"
             landmarkName = "init_objects()"
             landmarkType = "7">
          </BreakpointContent>
@@ -856,11 +856,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "home3D/main.cpp"
-            timestampString = "460326291.752892"
+            timestampString = "460847849.130962"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "200"
-            endingLineNumber = "200"
+            startingLineNumber = "204"
+            endingLineNumber = "204"
             landmarkName = "change_route( MathVector mSource, MathVector mDestination )"
             landmarkType = "7">
          </BreakpointContent>
@@ -872,11 +872,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "home3D/main.cpp"
-            timestampString = "460326291.752892"
+            timestampString = "460895158.517604"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "857"
-            endingLineNumber = "857"
+            startingLineNumber = "803"
+            endingLineNumber = "803"
             landmarkName = "MouseMotion(int x, int y)"
             landmarkType = "7">
          </BreakpointContent>
@@ -1000,11 +1000,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "home3D/main.cpp"
-            timestampString = "460326291.752892"
+            timestampString = "460847849.130962"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "195"
-            endingLineNumber = "195"
+            startingLineNumber = "199"
+            endingLineNumber = "199"
             landmarkName = "change_route( MathVector mSource, MathVector mDestination )"
             landmarkType = "7">
          </BreakpointContent>
@@ -1080,11 +1080,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "home3D/main.cpp"
-            timestampString = "460326291.752892"
+            timestampString = "460847849.130962"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "196"
-            endingLineNumber = "196"
+            startingLineNumber = "200"
+            endingLineNumber = "200"
             landmarkName = "change_route( MathVector mSource, MathVector mDestination )"
             landmarkType = "7">
          </BreakpointContent>
@@ -1096,11 +1096,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "home3D/molecules/walking_robot.cpp"
-            timestampString = "460037807.775966"
+            timestampString = "460481407.403921"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "638"
-            endingLineNumber = "638">
+            startingLineNumber = "661"
+            endingLineNumber = "661">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1110,11 +1110,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "home3D/molecules/walking_robot.cpp"
-            timestampString = "460037807.775966"
+            timestampString = "460481407.403921"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "642"
-            endingLineNumber = "642">
+            startingLineNumber = "665"
+            endingLineNumber = "665">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1124,11 +1124,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "home3D/molecules/walking_robot.cpp"
-            timestampString = "459887227.064764"
+            timestampString = "460481407.403921"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "416"
-            endingLineNumber = "416"
+            startingLineNumber = "418"
+            endingLineNumber = "418"
             landmarkName = "glWalkingRobot::take_step( bool mForward )"
             landmarkType = "5">
          </BreakpointContent>
@@ -1188,11 +1188,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "home3D/molecules/walking_robot.cpp"
-            timestampString = "459887227.064764"
+            timestampString = "460481407.403921"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "442"
-            endingLineNumber = "442">
+            startingLineNumber = "444"
+            endingLineNumber = "444">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1202,11 +1202,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "home3D/main.cpp"
-            timestampString = "460326291.752892"
+            timestampString = "460895158.517604"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "868"
-            endingLineNumber = "868"
+            startingLineNumber = "814"
+            endingLineNumber = "814"
             landmarkName = "MouseMotion(int x, int y)"
             landmarkType = "7">
          </BreakpointContent>
@@ -1218,11 +1218,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "home3D/main.cpp"
-            timestampString = "460326291.752892"
+            timestampString = "460895158.517604"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "866"
-            endingLineNumber = "866"
+            startingLineNumber = "812"
+            endingLineNumber = "812"
             landmarkName = "MouseMotion(int x, int y)"
             landmarkType = "7">
          </BreakpointContent>
@@ -1472,11 +1472,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "home3D/main.cpp"
-            timestampString = "460326291.752892"
+            timestampString = "460895158.517604"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "865"
-            endingLineNumber = "865"
+            startingLineNumber = "811"
+            endingLineNumber = "811"
             landmarkName = "MouseMotion(int x, int y)"
             landmarkType = "7">
          </BreakpointContent>
@@ -1502,11 +1502,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "home3D/main.cpp"
-            timestampString = "460326291.752892"
+            timestampString = "460847849.130962"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "548"
-            endingLineNumber = "548"
+            startingLineNumber = "516"
+            endingLineNumber = "516"
             landmarkName = "init_objects()"
             landmarkType = "7">
          </BreakpointContent>
@@ -2090,11 +2090,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "home3D/main.cpp"
-            timestampString = "460326291.752892"
+            timestampString = "460847849.130962"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "560"
-            endingLineNumber = "560"
+            startingLineNumber = "528"
+            endingLineNumber = "528"
             landmarkName = "init_objects()"
             landmarkType = "7">
          </BreakpointContent>
@@ -2170,11 +2170,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "home3D/molecules/walking_robot.cpp"
-            timestampString = "460037807.775966"
+            timestampString = "460481407.403921"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "648"
-            endingLineNumber = "648">
+            startingLineNumber = "671"
+            endingLineNumber = "671">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -2223,22 +2223,6 @@
             endingLineNumber = "79"
             landmarkName = "glRobot::create_components()"
             landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "home3D/main.cpp"
-            timestampString = "460326291.752892"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "531"
-            endingLineNumber = "531"
-            landmarkName = "init_objects()"
-            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -2390,11 +2374,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "home3D/main.cpp"
-            timestampString = "460326291.752892"
+            timestampString = "460895158.517604"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "626"
-            endingLineNumber = "626"
+            startingLineNumber = "595"
+            endingLineNumber = "595"
             landmarkName = "init_objects()"
             landmarkType = "7">
          </BreakpointContent>
@@ -2406,11 +2390,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "home3D/main.cpp"
-            timestampString = "460326291.752892"
+            timestampString = "460895158.517604"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "628"
-            endingLineNumber = "628"
+            startingLineNumber = "597"
+            endingLineNumber = "597"
             landmarkName = "init_objects()"
             landmarkType = "7">
          </BreakpointContent>
@@ -2438,11 +2422,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "home3D/main.cpp"
-            timestampString = "460326291.752892"
+            timestampString = "460895158.517604"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "624"
-            endingLineNumber = "624"
+            startingLineNumber = "593"
+            endingLineNumber = "593"
             landmarkName = "init_objects()"
             landmarkType = "7">
          </BreakpointContent>
@@ -2486,11 +2470,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "home3D/main.cpp"
-            timestampString = "460326291.752892"
+            timestampString = "460847849.130962"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "437"
-            endingLineNumber = "437"
+            startingLineNumber = "440"
+            endingLineNumber = "440"
             landmarkName = "draw_objects()"
             landmarkType = "7">
          </BreakpointContent>
@@ -2518,11 +2502,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "home3D/route.cpp"
-            timestampString = "458416835.331073"
+            timestampString = "460895645.790811"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "157"
-            endingLineNumber = "157"
+            startingLineNumber = "156"
+            endingLineNumber = "156"
             landmarkName = "glRoute::compute_slopes( )"
             landmarkType = "5">
             <Locations>
@@ -2564,11 +2548,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "home3D/main.cpp"
-            timestampString = "460326291.752892"
+            timestampString = "460847849.130962"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "198"
-            endingLineNumber = "198"
+            startingLineNumber = "202"
+            endingLineNumber = "202"
             landmarkName = "change_route( MathVector mSource, MathVector mDestination )"
             landmarkType = "7">
          </BreakpointContent>
@@ -2580,11 +2564,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "home3D/main.cpp"
-            timestampString = "460326291.752892"
+            timestampString = "460847849.130962"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "197"
-            endingLineNumber = "197"
+            startingLineNumber = "201"
+            endingLineNumber = "201"
             landmarkName = "change_route( MathVector mSource, MathVector mDestination )"
             landmarkType = "7">
          </BreakpointContent>
@@ -2980,11 +2964,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "home3D/molecules/walking_robot.cpp"
-            timestampString = "460037807.775966"
+            timestampString = "460481407.403921"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "606"
-            endingLineNumber = "606"
+            startingLineNumber = "629"
+            endingLineNumber = "629"
             landmarkName = "glWalkingRobot::draw_body()"
             landmarkType = "5">
          </BreakpointContent>
@@ -3236,11 +3220,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "home3D/main.cpp"
-            timestampString = "460326291.752892"
+            timestampString = "460895158.517604"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "804"
-            endingLineNumber = "804"
+            startingLineNumber = "748"
+            endingLineNumber = "748"
             landmarkName = "update(int value)"
             landmarkType = "7">
          </BreakpointContent>
@@ -3596,11 +3580,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "home3D/main.cpp"
-            timestampString = "460326291.752892"
+            timestampString = "460895158.517604"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "665"
-            endingLineNumber = "665"
+            startingLineNumber = "634"
+            endingLineNumber = "634"
             landmarkName = "init_objects()"
             landmarkType = "7">
          </BreakpointContent>
@@ -3706,11 +3690,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "home3D/main.cpp"
-            timestampString = "460326291.752892"
+            timestampString = "460895158.517604"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "666"
-            endingLineNumber = "666"
+            startingLineNumber = "635"
+            endingLineNumber = "635"
             landmarkName = "init_objects()"
             landmarkType = "7">
          </BreakpointContent>
@@ -3770,11 +3754,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "home3D/main.cpp"
-            timestampString = "460326291.752892"
+            timestampString = "460847849.130962"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "395"
-            endingLineNumber = "395"
+            startingLineNumber = "399"
+            endingLineNumber = "399"
             landmarkName = "handleKeypress(unsigned char key, int x, int y)"
             landmarkType = "7">
          </BreakpointContent>
@@ -3850,7 +3834,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "home3D/atoms/stairway.cpp"
-            timestampString = "460317514.220742"
+            timestampString = "460902033.805477"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "55"
@@ -3914,11 +3898,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "home3D/main.cpp"
-            timestampString = "460326291.752892"
+            timestampString = "460847849.130962"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "388"
-            endingLineNumber = "388"
+            startingLineNumber = "392"
+            endingLineNumber = "392"
             landmarkName = "handleKeypress(unsigned char key, int x, int y)"
             landmarkType = "7">
          </BreakpointContent>
@@ -3930,11 +3914,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "home3D/main.cpp"
-            timestampString = "460326291.752892"
+            timestampString = "460847849.130962"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "389"
-            endingLineNumber = "389"
+            startingLineNumber = "393"
+            endingLineNumber = "393"
             landmarkName = "handleKeypress(unsigned char key, int x, int y)"
             landmarkType = "7">
          </BreakpointContent>
@@ -3946,11 +3930,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "home3D/main.cpp"
-            timestampString = "460326291.752892"
+            timestampString = "460895158.517604"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "817"
-            endingLineNumber = "817"
+            startingLineNumber = "763"
+            endingLineNumber = "763"
             landmarkName = "update(int value)"
             landmarkType = "7">
          </BreakpointContent>
@@ -3962,11 +3946,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "home3D/molecules/walking_robot.cpp"
-            timestampString = "460037807.775966"
+            timestampString = "460481407.403921"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "581"
-            endingLineNumber = "581"
+            startingLineNumber = "603"
+            endingLineNumber = "603"
             landmarkName = "glWalkingRobot::update_animation( )"
             landmarkType = "5">
          </BreakpointContent>
@@ -4346,11 +4330,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "home3D/main.cpp"
-            timestampString = "460326291.752892"
+            timestampString = "460895158.517604"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "815"
-            endingLineNumber = "815"
+            startingLineNumber = "761"
+            endingLineNumber = "761"
             landmarkName = "update(int value)"
             landmarkType = "7">
          </BreakpointContent>
@@ -4758,11 +4742,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "home3D/molecules/walking_robot.cpp"
-            timestampString = "460038851.500868"
+            timestampString = "460481407.403921"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "478"
-            endingLineNumber = "478"
+            startingLineNumber = "480"
+            endingLineNumber = "480"
             landmarkName = "glWalkingRobot::sample_limbs_path( )"
             landmarkType = "5">
          </BreakpointContent>
@@ -4774,11 +4758,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "home3D/molecules/walking_robot.cpp"
-            timestampString = "460038894.556559"
+            timestampString = "460481407.403921"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "483"
-            endingLineNumber = "483"
+            startingLineNumber = "485"
+            endingLineNumber = "485"
             landmarkName = "glWalkingRobot::sample_limbs_path( )"
             landmarkType = "5">
          </BreakpointContent>
@@ -4797,22 +4781,6 @@
             endingLineNumber = "300"
             landmarkName = "glArm::get_wrist_position( )"
             landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "home3D/main.cpp"
-            timestampString = "460326291.752892"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "501"
-            endingLineNumber = "501"
-            landmarkName = "init_objects()"
-            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -4998,11 +4966,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "home3D/main.cpp"
-            timestampString = "460326291.752892"
+            timestampString = "460895158.517604"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "643"
-            endingLineNumber = "643"
+            startingLineNumber = "612"
+            endingLineNumber = "612"
             landmarkName = "init_objects()"
             landmarkType = "7">
          </BreakpointContent>
@@ -5046,11 +5014,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "home3D/main.cpp"
-            timestampString = "460326291.752892"
+            timestampString = "460895158.517604"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "684"
-            endingLineNumber = "684"
+            startingLineNumber = "653"
+            endingLineNumber = "653"
             landmarkName = "init_objects()"
             landmarkType = "7">
          </BreakpointContent>
@@ -5142,11 +5110,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "home3D/atoms/extrusion.cpp"
-            timestampString = "460318105.646603"
+            timestampString = "460901291.420821"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "164"
-            endingLineNumber = "164"
+            startingLineNumber = "165"
+            endingLineNumber = "165"
             landmarkName = "glExtrusion::setup( float mLength, int mAxis )"
             landmarkType = "5">
          </BreakpointContent>
@@ -5158,7 +5126,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "home3D/atoms/extrusion.cpp"
-            timestampString = "460318892.77714"
+            timestampString = "460901291.420821"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "203"
@@ -5189,13 +5157,125 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "home3D/molecules/basketball_arena.cpp"
-            timestampString = "460332609.996313"
+            filePath = "home3D/molecules/walking_robot.cpp"
+            timestampString = "460481432.261594"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "43"
-            endingLineNumber = "43"
-            landmarkName = "glArena::create_team1 ( )"
+            startingLineNumber = "592"
+            endingLineNumber = "592"
+            landmarkName = "glWalkingRobot::update_animation( )"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "home3D/molecules/walking_robot.cpp"
+            timestampString = "460481531.289375"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "566"
+            endingLineNumber = "566"
+            landmarkName = "glWalkingRobot::glide_thru_path ( )"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "home3D/molecules/walking_robot.cpp"
+            timestampString = "460481585.482706"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "567"
+            endingLineNumber = "567"
+            landmarkName = "glWalkingRobot::glide_thru_path ( )"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "home3D/molecules/basketball_arena.cpp"
+            timestampString = "460895158.517604"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "55"
+            endingLineNumber = "55"
+            landmarkName = "glArena::create_cam_routes ( )"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "home3D/molecules/basketball_arena.cpp"
+            timestampString = "460894644.247918"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "45"
+            endingLineNumber = "45"
+            landmarkName = "glArena::create_cam_routes ( )"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "home3D/main.cpp"
+            timestampString = "460895158.517604"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "751"
+            endingLineNumber = "751"
+            landmarkName = "update(int value)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "home3D/atoms/stairway.cpp"
+            timestampString = "460902033.805477"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "104"
+            endingLineNumber = "104"
+            landmarkName = "glStairway::draw_body()"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "home3D/atoms/stairway.cpp"
+            timestampString = "460902033.805477"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "107"
+            endingLineNumber = "107"
+            landmarkName = "glStairway::draw_body()"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

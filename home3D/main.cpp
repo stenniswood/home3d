@@ -38,21 +38,7 @@
 /*
 Palette         palette;
 glCabinet       cabinet;
-
-
-glBox           box;
-glBox           box2;
-glBox           tray;
-glBox           tray2;
-glCylinder      cyl (12);
-glCylinder      cyl2(24);
-glDrawer        drawer;
-glBarricade         barricade;
-glBookcase          bookcase;
-glRouteWithFeet     route;
-glComputeableWall   wall;
-glFullWall          fwall;
-
+glDrawer            drawer;
 glIbeam             ibeam(12.*8.);
 */
 glFaceBox           cube;
@@ -163,6 +149,24 @@ void move_sideways( float mAmount )
     eyeZ    += perp[2];
     centerX += perp[0];
     centerZ += perp[2];
+}
+
+void eye_follow_route(glRoute& mRoute)
+{
+    static int v=0;
+    struct Vertex tmp  = mRoute.m_vertices[v];
+    eyeX = tmp.position[0];
+    eyeY = tmp.position[1];
+    eyeZ = tmp.position[2];
+
+//  glm::vec4 center_world = robot.get_eye_target();
+    tmp = mRoute.m_vertices[v+5];
+    centerX = tmp.position[0];
+    centerY = tmp.position[1];
+    centerZ = tmp.position[2];
+    v++;
+    if (v > mRoute.m_vertices.size())
+        v = 0;
 }
 
 void assume_robot_view()
@@ -431,7 +435,6 @@ void handleResize(int w, int h) {
 	glViewport(0, 0, w, h);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	//gluPerspective(45.0, (float)w / (float)h, 1.0, 200.0);
 	gluPerspective(45.0, (float)w / (float)h, 1.0, 5000.0);
 }
 void draw_objects()
@@ -465,13 +468,12 @@ void init_objects()
     Sources.push_back     ( tmp );
     Destinations.push_back( tmp );
 
-
     ground.width = 5000;
     ground.depth = 5000;
     ground.height = 1.0;
     ground.load_image("textures/grass2.jpg");
-    ground.m_repetitions_x = 50;
-    ground.m_repetitions_y = 50;
+    ground.m_repetitions_x = 100;
+    ground.m_repetitions_y = 100;
     ground.create();
 
     cube.width = 10;
@@ -495,12 +497,6 @@ void init_objects()
     cube.relocate( 50, 90, 50 );
 
     
- /*   ring.set_color(0xFFFF0000);
-    ring.set_finger_params(9, 40);
-    ring.set_circle_params(0.25, 10);
-    ring.setup();
-    ring.gl_register();
-    ring.relocate( 50, 60, 100 );       */
     
 	// Fairly well tested units :
     /*fwall.set_length( 22 * 12 );
@@ -510,34 +506,6 @@ void init_objects()
     twin->m_height = s.height;
     twin->m_size   = s;
 
-    tdoor1  = new glDoor();
-    tdoor1->set_params    ( 33.5 );
-    tdoor1->set_hinge     (true);
-    tdoor1->set_swing_side(false);
-    tdoor1->create        (     );
-    tdoor1->open          ( 0.5 );
-    fwall.add_door        ( 2*12, tdoor1 );
-
-    tdoor2 = new glDoor   ( );
-    tdoor2->set_params    ( 33.5 );
-    tdoor2->set_hinge     (false);
-    tdoor2->set_swing_side(false);
-    tdoor2->setup();
-    tdoor2->open( 0.5 );
-    fwall.add_door( 6*12, tdoor2 );
-	fwall.add_window( 12*12.,  3.*12., twin );
-    fwall.create  (               );
-    fwall.relocate( 0.,  0., 275. );
-
-    wall.m_wall_length = 22*12;
-    wall.set_length_height( 22.*12., 10.*12. );
-	wall.add_door     ( 2.*12., 33.     );
-	wall.add_door     ( 6.*12., 33.     );
-	wall.add_door     ( 10.*12., 28.    );
-	wall.add_window   ( 12. * 12., s, 3.*12. );
-	wall.create       (  );
-	wall.relocate     ( 0.,  0., 475.    );
-	wall.m_y_angle = 30.0;  */
     
 	/* drawer.Initialize( 21., 14., 3.5 );
  	drawer.initialize_faceplate(16., 5.75, 0.75 );
@@ -567,10 +535,10 @@ void init_objects()
     robot.goto_start_of_path();
     robot.hands_on_hip();
 //  sphere.load_texture("textures/me_in_car.bmp");
-    
+
     bball_arena.create();
-    bball_arena.relocate( 0*12, 2, 0*12 );
-    
+    bball_arena.relocate( -40*12, 2, -94*12 );
+    bball_arena.create_cam_routes();
     
     sphere1.is_participating = true;
     sphere1.coef_of_restitution = COEFF_RESTITUTION_BASKETBALL;
@@ -726,31 +694,6 @@ void init_objects()
     stairs.m_y_angle = 0.;
     stairs.relocate( 100, 10., -25*12 ); */
     
-/*
-	tray.width  = 18.;
-	tray.height = 5.;
-	tray.depth  = 12.0;
-	tray.m_y = tray.height+2.;
-	tray.generate_vertices();		
-	tray.generate_VBO(); 
-	tray.generate_IBO(); 	
-
-	box2.width  = 4.;
-	box2.height = 2.;
-	box2.depth  = 2.0;
-	box2.m_x 	= 12.;
-	box2.m_is_closed = true;
-	box2.generate_vertices();
-	box2.generate_VBO();
-	box2.generate_IBO();
-
-	cyl.m_radius = 4.;
-	cyl.m_height = 8.;
-	cyl.generate_vertices();	
-	cyl.generate_VBO();
-	cyl.generate_IBO();
-	printf("=============================\n");
- */
 }
 
 void drawScene() {
@@ -804,6 +747,8 @@ void update(int value)
        ((CameraTexture*)screen.m_texture)->timeslice();
     if (eye_follows_robots)
         assume_robot_view();
+    
+    //eye_follow_route( *bball_arena.bball_court->m_routes[0] );
     
     if ((pause==false) && (pause_count==0))
 	{
@@ -952,3 +897,66 @@ void init_construction_objects()
      brick_wall.Relocate( -150. , 0., -150.); */
 }
 
+
+/*
+ tdoor1  = new glDoor();
+ tdoor1->set_params    ( 33.5 );
+ tdoor1->set_hinge     (true);
+ tdoor1->set_swing_side(false);
+ tdoor1->create        (     );
+ tdoor1->open          ( 0.5 );
+ fwall.add_door        ( 2*12, tdoor1 );
+ 
+ tdoor2 = new glDoor   ( );
+ tdoor2->set_params    ( 33.5 );
+ tdoor2->set_hinge     (false);
+ tdoor2->set_swing_side(false);
+ tdoor2->setup();
+ tdoor2->open( 0.5 );
+ fwall.add_door( 6*12, tdoor2 );
+	fwall.add_window( 12*12.,  3.*12., twin );
+ fwall.create  (               );
+ fwall.relocate( 0.,  0., 275. );
+ 
+ wall.m_wall_length = 22*12;
+ wall.set_length_height( 22.*12., 10.*12. );
+	wall.add_door     ( 2.*12., 33.     );
+	wall.add_door     ( 6.*12., 33.     );
+	wall.add_door     ( 10.*12., 28.    );
+	wall.add_window   ( 12. * 12., s, 3.*12. );
+	wall.create       (  );
+	wall.relocate     ( 0.,  0., 475.    );
+	wall.m_y_angle = 30.0;  
+ */
+/*   ring.set_color(0xFFFF0000);
+ ring.set_finger_params(9, 40);
+ ring.set_circle_params(0.25, 10);
+ ring.setup();
+ ring.gl_register();
+ ring.relocate( 50, 60, 100 );       */
+
+/*
+	tray.width  = 18.;
+	tray.height = 5.;
+	tray.depth  = 12.0;
+	tray.m_y = tray.height+2.;
+	tray.generate_vertices();
+	tray.generate_VBO();
+	tray.generate_IBO();
+ 
+	box2.width  = 4.;
+	box2.height = 2.;
+	box2.depth  = 2.0;
+	box2.m_x 	= 12.;
+	box2.m_is_closed = true;
+	box2.generate_vertices();
+	box2.generate_VBO();
+	box2.generate_IBO();
+ 
+	cyl.m_radius = 4.;
+	cyl.m_height = 8.;
+	cyl.generate_vertices();
+	cyl.generate_VBO();
+	cyl.generate_IBO();
+	printf("=============================\n");
+ */

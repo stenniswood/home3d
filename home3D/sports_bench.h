@@ -24,8 +24,9 @@ public:
     virtual void    add_light_switches      ( );
     virtual void    create_components       ( );
     
-    float m_length;
-    float m_height;
+    float       m_length;
+    float       m_height;
+//    Texture*    m_texture;        // is applied always to the first m_component[]
     
 };
 

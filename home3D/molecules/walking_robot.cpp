@@ -24,6 +24,7 @@
 
 glWalkingRobot::glWalkingRobot( )
 {
+    m_glide_over_path_mode = true;
     m_show_paths = false;
     m_is_walking = false;
     m_left_step_index  = 0;
@@ -60,6 +61,7 @@ void glWalkingRobot::add_standing_feet_position(int mIndex)       // for start a
 {
     place_over_vertex( m_route.m_vertices[mIndex], m_route.m_vertices[mIndex+1] );
     angle_body_vertex( mIndex, mIndex+1 );
+    
     
     struct stFootPosition foot;
     stand();
@@ -557,6 +559,24 @@ void glWalkingRobot::move_to_stand( bool mMoveLeftLeg )
     printf("new toe  at %6.3f %6.3f %6.3f \n", new_loc.toe[0],  new_loc.toe[1],  new_loc.toe[2]  );
 }
 
+void glWalkingRobot::glide_thru_path         ( )        // no leg/arm movements.
+{
+    static int increment = 1;
+    static int position = 0;
+    if (position<(m_route.m_number_path_vertices-1))
+        place_over_vertex( m_route.m_vertices[position], m_route.m_vertices[position+1] );
+    
+    m_y_angle = m_route.get_angle_degrees( 0 );
+
+    position += increment;
+    if (position>m_route.m_number_path_vertices)
+        increment = -1;
+    if (position<0) {
+        increment = +1;
+        position=0;
+    }
+}
+
 const float HEAD_LOOK_INCREMENT = 5.0;
 float head_delta = HEAD_LOOK_INCREMENT;
 
@@ -569,16 +589,19 @@ void glWalkingRobot::update_animation( )
     if (delay_counter)  return;
     delay_counter = DELAYS;
 
-    // SCAN HEAD (look ahead for path):
-    static float head_angle = 0;
-//    head_angle += head_delta;
-    if (head_angle>80.0)
-        head_delta = -HEAD_LOOK_INCREMENT;
-    if (head_angle<-80.0)
-        head_delta = HEAD_LOOK_INCREMENT;
-    m_head.look_left( head_angle );
-
-    walk_phases();
+    if (m_glide_over_path_mode)
+        glide_thru_path();
+    else {
+        // SCAN HEAD (look ahead for path):
+        static float head_angle = 0;
+    //    head_angle += head_delta;
+        if (head_angle>80.0)
+            head_delta = -HEAD_LOOK_INCREMENT;
+        if (head_angle<-80.0)
+            head_delta = HEAD_LOOK_INCREMENT;
+        m_head.look_left( head_angle );
+        walk_phases();
+    }
 }
 
 

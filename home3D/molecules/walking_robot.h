@@ -35,6 +35,7 @@ public:
 
     void            move_to_stand           ( bool mMoveLeftLeg       );    // brings forward leg back together
     void            start_walking           ( );
+    void            glide_thru_path         ( );        // no leg/arm movements.
     void            update_animation        ( );
     
     // PATH PLANNING :
@@ -86,6 +87,7 @@ public:
     void            gl_register_limbs_path  ( );     // store in the m_*_arm_path variables.
     void            gl_unregister_limbs_path( );
     
+    bool                m_glide_over_path_mode;
     bool                m_show_paths;
     glRoute             m_left_arm_path;
     glRoute             m_right_arm_path;

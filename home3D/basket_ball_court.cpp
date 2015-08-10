@@ -33,7 +33,7 @@ void  glBackboard::create_components( )
     backboard->set_color( 0xFFFFFFFF);
     backboard->width  = BACKBOARD_WIDTH;
     backboard->height = 42;
-    backboard->depth = 1.0;
+    backboard->depth  = 1.0;
     backboard->setup();
     backboard->grab_bottom();
     backboard->relocate( 0, 0, 0.5+BACKBOARD_FORWARD_FROM_POLE_DISTANCE );
@@ -128,12 +128,9 @@ void  glBackboard::create_components( )
 
 }
 
-
-
 /****************************************************************/
 
 /****************************************************************/
-
 glBasketballCourt::glBasketballCourt ()
 {
     
@@ -212,6 +209,54 @@ void  glBasketballCourt::create_floor( )
     m_components.push_back( tmpw );
 }
 
+void glBasketballCourt::create_cam_routes       ( )
+{
+    glRoute* rt = new  glRoute();
+    MathVector pt(3);
+    pt[0]= -NBA_COURT_WIDTH/3;
+    pt[1]= 8*12;
+    pt[2]= NBA_COURT_LENGTH/3;
+    MathVector wpt = map_coords(pt);
+    rt->start_over_at2(wpt);
+
+    pt[0]= -NBA_COURT_WIDTH/3;
+    pt[1]= 10*12;
+    pt[2]= 0;
+    wpt = map_coords(pt);
+    rt->add_way_point2(wpt);
+
+    pt[0]=  -NBA_COURT_WIDTH /10;
+    pt[1]= 8*12;
+    pt[2]= -NBA_COURT_LENGTH/3;
+    wpt = map_coords(pt);
+    rt->add_way_point2(wpt);
+    
+    pt[0]= 0 ;                      // far end center pole
+    pt[1]= 6*12;
+    pt[2]= -NBA_COURT_LENGTH/3;
+    wpt = map_coords(pt);
+    rt->add_way_point2(wpt);
+    
+    pt[0]= NBA_COURT_WIDTH/10;
+    pt[1]= 6*12;
+    pt[2]= -NBA_COURT_LENGTH/3;
+    wpt = map_coords(pt);
+    rt->add_way_point2(wpt);
+    
+    pt[0]= NBA_COURT_WIDTH/3;
+    pt[1]= 6*12;
+    pt[2]= 0;
+    wpt = map_coords(pt);
+    rt->add_way_point2(wpt);
+
+    pt[0]= NBA_COURT_WIDTH/3;
+    pt[1]= 6*12;
+    pt[2]= NBA_COURT_LENGTH/3;
+    wpt = map_coords(pt);
+    rt->add_way_point2(wpt);
+    
+    m_routes.push_back(rt);
+}
 
 void    glBasketballCourt::create_baskets ( )
 {
@@ -262,6 +307,111 @@ void    glBasketballCourt::create_baskets ( )
     
 }
 
+void glBasketballCourt::create_team1( )
+{
+    glStaticMovesRobot* p;
+    p = new glStaticMovesRobot();
+    p->setup();
+    p->hands_on_hip();
+    m_team1.push_back(p);
+    m_components.push_back(p);
+    
+    p = new glStaticMovesRobot();
+    p->setup();
+    p->hands_on_hip();
+    m_team1.push_back(p);
+    m_components.push_back(p);
+    
+    p = new glStaticMovesRobot();
+    p->setup();
+    p->hands_on_hip();
+    m_team1.push_back(p);
+    m_components.push_back(p);
+    
+    p = new glStaticMovesRobot();
+    p->setup();
+    p->hands_on_hip();
+    m_team1.push_back(p);
+    m_components.push_back(p);
+    
+    p = new glStaticMovesRobot();
+    p->setup();
+    p->hands_on_hip();
+    m_team1.push_back(p);
+    m_components.push_back(p);
+}
+
+void glBasketballCourt::create_team2            ( )
+{
+    glStaticMovesRobot* p;
+    p = new glStaticMovesRobot();
+    p->setup();
+    p->hands_on_hip();
+    m_team2.push_back(p);
+    m_components.push_back(p);
+    
+    p = new glStaticMovesRobot();
+    p->setup();
+    p->hands_on_hip();
+    m_team2.push_back(p);
+    m_components.push_back(p);
+    
+    p = new glStaticMovesRobot();
+    p->setup();
+    p->hands_on_hip();
+    m_team2.push_back(p);
+    m_components.push_back(p);
+    
+    p = new glStaticMovesRobot();
+    p->setup();
+    p->hands_on_hip();
+    m_team2.push_back(p);
+    m_components.push_back(p);
+    
+    p = new glStaticMovesRobot();
+    p->setup();
+    p->hands_on_hip();
+    m_team2.push_back(p);
+    m_components.push_back(p);
+}
+
+void glBasketballCourt::position_lineup_tunnel   ( )
+{
+    m_team1[0]->relocate(  CENTER_COURT_X+0,   50, -CENTER_COURT_Y-5*12 );
+    m_team1[1]->relocate(  CENTER_COURT_X+100, 50, -CENTER_COURT_Y-5*12 );
+    m_team1[2]->relocate(  CENTER_COURT_X+200, 50, -CENTER_COURT_Y-5*12 );
+    m_team1[3]->relocate(  CENTER_COURT_X-100, 50, -CENTER_COURT_Y-5*12 );
+    m_team1[4]->relocate(  CENTER_COURT_X-200, 50, -CENTER_COURT_Y-5*12 );
+    
+    m_team2[0]->relocate(  CENTER_COURT_X-0,   50, -CENTER_COURT_Y+5*12 );
+    m_team2[1]->relocate(  CENTER_COURT_X+100, 50, -CENTER_COURT_Y+5*12 );
+    m_team2[2]->relocate(  CENTER_COURT_X+200, 50, -CENTER_COURT_Y+5*12 );
+    m_team2[3]->relocate(  CENTER_COURT_X-100, 50, -CENTER_COURT_Y+5*12 );
+    m_team2[4]->relocate(  CENTER_COURT_X-200, 50, -CENTER_COURT_Y+5*12 );
+    for (int i=0; i<5; i++)
+        m_team2[i]->m_y_angle = 180;
+}
+
+void glBasketballCourt::position_team_initial   ( )
+{
+    
+    m_team1[0]->relocate(  CENTER_COURT_X-0, 50,   -CENTER_COURT_Y-NBA_COURT_LENGTH/12 );
+    m_team1[1]->relocate(  CENTER_COURT_X+150, 50, -CENTER_COURT_Y-NBA_COURT_LENGTH/6 );
+    m_team1[2]->relocate(  CENTER_COURT_X-100, 50, -CENTER_COURT_Y-NBA_COURT_LENGTH/6 );
+    m_team1[3]->relocate(  CENTER_COURT_X+NBA_COURT_WIDTH/5, 50, -CENTER_COURT_Y-2*NBA_COURT_LENGTH/6 );
+    m_team1[4]->relocate(  CENTER_COURT_X-NBA_COURT_WIDTH/5, 50, -CENTER_COURT_Y-2*NBA_COURT_LENGTH/8 );
+    
+    m_team2[0]->relocate(  CENTER_COURT_X-0,  50,  -CENTER_COURT_Y+NBA_COURT_LENGTH/12 );
+    m_team2[1]->relocate(  CENTER_COURT_X+150, 50, -CENTER_COURT_Y+NBA_COURT_LENGTH/6 );
+    m_team2[2]->relocate(  CENTER_COURT_X-100, 50, -CENTER_COURT_Y+NBA_COURT_LENGTH/6 );
+    m_team2[3]->relocate(  CENTER_COURT_X+NBA_COURT_WIDTH/5, 50, -CENTER_COURT_Y+2*NBA_COURT_LENGTH/6 );
+    m_team2[4]->relocate(  CENTER_COURT_X-NBA_COURT_WIDTH/5, 50, -CENTER_COURT_Y+2*NBA_COURT_LENGTH/8 );
+    
+    for (int i=0; i<5; i++)
+        m_team2[i]->m_y_angle = 180;
+}
+
+
 void    glBasketballCourt::add_light_switches      ( )
 {
     
@@ -271,6 +421,21 @@ void    glBasketballCourt::create_components       ( )
 {
     create_floor();
     create_baskets();
+    
+    // AND ONE BASKET BALL :
+    glSphere* ball = new glSphere(NBA_BASKET_BALL_RADIUS, 10, 64);
+    ball->is_participating = true;
+    ball->coef_of_restitution = COEFF_RESTITUTION_BASKETBALL;
+    ball->set_color( 0xFF7F7F00);
+    ball->load_texture("textures/basketball_texture.jpg" );
+    ball->create  (  );
+    ball->relocate( 0, 8*12, 0 );
+    m_balls.push_back(ball);
+    m_components.push_back(ball);
+
+    create_team1();
+    create_team2();
+    position_lineup_tunnel();
 }
 
 

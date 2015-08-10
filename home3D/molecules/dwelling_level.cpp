@@ -198,6 +198,56 @@ void glDwellingLevel::create_floor()        // to cover all.
     m_floor->cover_all( dimen );
 }
 
+/* For 1 wall.  */
+void glDwellingLevel::create_linesegs( float mLinearDistance, float mWallAngleRadians, float mHeight )
+{
+    // break at each door opening.
+    
+    //
+    
+}
+/*
+ mWallAngle is the horizontal angle away from the wall.
+ */
+void glDwellingLevel::find_all_possibilies( float mLinearDistance, float mWallAngleRadians, float mHeight )
+{
+    float perp_distance     = mLinearDistance * sin( mWallAngleRadians );
+    float parallel_distance = mLinearDistance * cos( mWallAngleRadians );
+    
+    // now go around all the wall and create a line segment set so far away from the wall.
+    // if another wall passes within that distance, then cut the line there.
+    long wsize = m_fwalls.size();
+    LineSegment lseg;
+    
+    for (int w=0; w<wsize; w++)
+    {
+        long num_doorways   = m_fwalls[w]->m_bare_wall.m_doorways.size();
+        MathVector start_pt = m_fwalls[w]->m_bare_wall.m_line.m_origin;
+        MathVector end_pt   = m_fwalls[w]->m_bare_wall.get_far_end();
+        MathVector offset = m_fwalls[w]->m_bare_wall.m_line.m_vector.get_perp_xz();
+        offset.unitize();
+        offset *= perp_distance;
+        start_pt += offset;
+        end_pt   += offset;
+        
+        // now take parallel_distance off of 1 end.
+        MathVector end_retraction = m_fwalls[w]->m_bare_wall.m_line.m_vector * parallel_distance;
+        if (mWallAngleRadians>M_PI/2)
+            end_pt -= end_retraction;
+        else
+            start_pt += end_retraction;
+        
+        LineSegment lseg( start_pt, end_pt );
+        m_line_segs.push_back(lseg);
+    }
+}
+
+void glDwellingLevel::accept_heading_measurement( float mAngleToNorth )
+{
+    
+}
+
+
 glDwellingLevel* glDwellingLevel::create_copy()
 {
     glDwellingLevel* dl = new glDwellingLevel();
@@ -278,4 +328,7 @@ bool glDwellingLevel::evaluate_collision( glSphere* mOther )
     }
     return false;
 }
+
+
+
 

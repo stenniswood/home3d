@@ -31,8 +31,8 @@ class glExtrusion : public glAtom
 {
 public:
 	glExtrusion( );
-	void			setup (float mLength = -1, int mAxis=-1);
-	void			create(float mLength = -1, int mAxis=2 );
+	void                setup (float mLength = -1, int mAxis=-1);
+	void                create(float mLength = -1, int mAxis=2 );
 
 	virtual void        generate_layer_vertices	( );
 	void                extrude_vertices		( float mExtrusionLength, int mLoftAxis=-1 );

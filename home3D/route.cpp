@@ -72,7 +72,6 @@ void glRoute::start_over_at2( MathVector    mStart )
 void glRoute::add_way_point( struct Vertex mWay )
 {
 	int    lsize = (int)m_vertices.size();
-//    assert(
 	struct Vertex    v;
 
 	// Initialize with Last Known Position : 

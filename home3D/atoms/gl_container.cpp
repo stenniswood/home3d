@@ -125,6 +125,22 @@ void glBox::create( )
 	gl_register();	 
 }
 
+glMolecule* glBox::join_closest_sides( glBox* mNeighbor )
+{
+    static glMolecule* ptr = new glMolecule();
+    ptr->setup();
+    ptr->m_components.push_back(this     );
+    ptr->m_components.push_back(mNeighbor);
+    
+    // move the neighbor for proper alignment.
+    // forward & backward.  Side to side.
+    //mNeighbor->relocate( m_x+width, m_y, m_z );
+
+    // Remove this & neighbor from theWorld.
+    // Add the parent molecule.
+    return ptr;
+}
+
 void glBox::print_info()
 {
 	printf("glBox()  <x,y,z> = <%6.3f %6.3f %6.3f> \n", m_x,m_y,m_z );
@@ -160,6 +176,8 @@ void glBox::compute_inertia     ( float mTotalMass )
     Inertia *= mTotalMass/12.;
     
 }
+
+
 
 bool glBox::evaluate_collision( glSphere* mOther )
 {

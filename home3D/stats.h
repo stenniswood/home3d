@@ -23,7 +23,7 @@ public:
     double   average();
     double   stddev();
     double   population();       // sqrt of variance.
-    
+    void     crunch();
     
     string			m_name;		// for debug, showing calculations.
     vector<double>  m_elements;

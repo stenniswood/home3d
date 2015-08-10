@@ -36,108 +36,29 @@ void glArena::add_light_switches      ( )
     
 }
 
-void glArena::create_team1            ( )
-{
-    glStaticMovesRobot* p;
-    p = new glStaticMovesRobot();
-    p->setup();
-    p->hands_on_hip();
-    m_team1.push_back(p);
-    m_components.push_back(p);
-    
-    p = new glStaticMovesRobot();
-    p->setup();
-    p->hands_on_hip();
-    m_team1.push_back(p);
-    m_components.push_back(p);
-    
-    p = new glStaticMovesRobot();
-    p->setup();
-    p->hands_on_hip();
-    m_team1.push_back(p);
-    m_components.push_back(p);
-    
-    p = new glStaticMovesRobot();
-    p->setup();
-    p->hands_on_hip();
-    m_team1.push_back(p);
-    m_components.push_back(p);
-    
-    p = new glStaticMovesRobot();
-    p->setup();
-    p->hands_on_hip();
-    m_team1.push_back(p);
-    m_components.push_back(p);
-}
 
-void glArena::create_team2            ( )
-{
-    glStaticMovesRobot* p;
-    p = new glStaticMovesRobot();
-    p->setup();
-    p->hands_on_hip();
-    m_team2.push_back(p);
-    m_components.push_back(p);
-    
-    p = new glStaticMovesRobot();
-    p->setup();
-    p->hands_on_hip();
-    m_team2.push_back(p);
-    m_components.push_back(p);
-    
-    p = new glStaticMovesRobot();
-    p->setup();
-    p->hands_on_hip();
-    m_team2.push_back(p);
-    m_components.push_back(p);
-    
-    p = new glStaticMovesRobot();
-    p->setup();
-    p->hands_on_hip();
-    m_team2.push_back(p);
-    m_components.push_back(p);
-    
-    p = new glStaticMovesRobot();
-    p->setup();
-    p->hands_on_hip();
-    m_team2.push_back(p);
-    m_components.push_back(p);
-}
 
-void glArena::position_lineup_tunnel   ( )
+void glArena::create_cam_routes       ( )
 {
-    m_team1[0]->relocate(  CENTER_COURT_X+0,   50, -CENTER_COURT_Y-5*12 );
-    m_team1[1]->relocate(  CENTER_COURT_X+100, 50, -CENTER_COURT_Y-5*12 );
-    m_team1[2]->relocate(  CENTER_COURT_X+200, 50, -CENTER_COURT_Y-5*12 );
-    m_team1[3]->relocate(  CENTER_COURT_X-100, 50, -CENTER_COURT_Y-5*12 );
-    m_team1[4]->relocate(  CENTER_COURT_X-200, 50, -CENTER_COURT_Y-5*12 );
+    bball_court->create_cam_routes();
     
-    m_team2[0]->relocate(  CENTER_COURT_X-0,   50, -CENTER_COURT_Y+5*12 );
-    m_team2[1]->relocate(  CENTER_COURT_X+100, 50, -CENTER_COURT_Y+5*12 );
-    m_team2[2]->relocate(  CENTER_COURT_X+200, 50, -CENTER_COURT_Y+5*12 );
-    m_team2[3]->relocate(  CENTER_COURT_X-100, 50, -CENTER_COURT_Y+5*12 );
-    m_team2[4]->relocate(  CENTER_COURT_X-200, 50, -CENTER_COURT_Y+5*12 );
-    for (int i=0; i<5; i++)
-        m_team2[i]->m_y_angle = 180;
-}
+    glRoute* tmpR = bball_court->m_routes[0];
+    long size = tmpR->m_vertices.size();
+    MathVector tmpV(3);
+    MathVector wpt (3);
+    for (int v=0; v<size; v++)
+    {
+        struct Vertex vertex = tmpR->m_vertices[v];
+        tmpV[0] = vertex.position[0];
+        tmpV[1] = vertex.position[1];
+        tmpV[2] = vertex.position[2];
 
-void glArena::position_team_initial   ( )
-{
-
-    m_team1[0]->relocate(  CENTER_COURT_X-0, 50,   -CENTER_COURT_Y-NBA_COURT_LENGTH/12 );
-    m_team1[1]->relocate(  CENTER_COURT_X+150, 50, -CENTER_COURT_Y-NBA_COURT_LENGTH/6 );
-    m_team1[2]->relocate(  CENTER_COURT_X-100, 50, -CENTER_COURT_Y-NBA_COURT_LENGTH/6 );
-    m_team1[3]->relocate(  CENTER_COURT_X+NBA_COURT_WIDTH/5, 50, -CENTER_COURT_Y-2*NBA_COURT_LENGTH/6 );
-    m_team1[4]->relocate(  CENTER_COURT_X-NBA_COURT_WIDTH/5, 50, -CENTER_COURT_Y-2*NBA_COURT_LENGTH/8 );
-    
-    m_team2[0]->relocate(  CENTER_COURT_X-0,  50,  -CENTER_COURT_Y+NBA_COURT_LENGTH/12 );
-    m_team2[1]->relocate(  CENTER_COURT_X+150, 50, -CENTER_COURT_Y+NBA_COURT_LENGTH/6 );
-    m_team2[2]->relocate(  CENTER_COURT_X-100, 50, -CENTER_COURT_Y+NBA_COURT_LENGTH/6 );
-    m_team2[3]->relocate(  CENTER_COURT_X+NBA_COURT_WIDTH/5, 50, -CENTER_COURT_Y+2*NBA_COURT_LENGTH/6 );
-    m_team2[4]->relocate(  CENTER_COURT_X-NBA_COURT_WIDTH/5, 50, -CENTER_COURT_Y+2*NBA_COURT_LENGTH/8 );
-    
-    for (int i=0; i<5; i++)
-        m_team2[i]->m_y_angle = 180;
+            // arena has to be located first! so can't do at setup.
+        wpt = map_coords( tmpV );
+        tmpR->m_vertices[v].position[0] = wpt[0];
+        tmpR->m_vertices[v].position[1] = wpt[1];
+        tmpR->m_vertices[v].position[2] = wpt[2];
+    }
 }
 
 void glArena::create_stands           ( )
@@ -146,9 +67,9 @@ void glArena::create_stands           ( )
     tmp->m_run = 24.;
     tmp->m_extrusion_length = 94*12;
     tmp->set_color( 0xFFFF00FF );
-    tmp->m_number_of_steps = 2*NUMBER_STEPS;
+    tmp->m_number_of_steps = NUMBER_STEPS;
     tmp->setup();
-    tmp->relocate( 25*12+24, 0, -tmp->m_extrusion_length );
+    tmp->relocate( 25*12+24, 0, -tmp->m_extrusion_length+NBA_COURT_LENGTH/2 );
     m_components.push_back( tmp );
     
     // Audience benches:
@@ -159,8 +80,9 @@ void glArena::create_stands           ( )
         tmpB->m_length = 50*12;
         tmpB->m_height = 2*12;
         tmpB->setup();
+        ((glFaceBox*)(tmpB->m_components[0]))->apply_top( m_bench_texture );     // set pointer
         tmpB->m_y_angle = 90;
-        tmpB->relocate( tmp->get_front_edge(i)+tmp->m_run*1.5+25*12, tmp->get_height(i), -94*12/4 );
+        tmpB->relocate( tmp->get_front_edge(i)+tmp->m_run*1.5+25*12, tmp->get_height(i), -94*12/4+NBA_COURT_LENGTH/2 );
         m_components.push_back( tmpB );
     }
 
@@ -168,10 +90,10 @@ void glArena::create_stands           ( )
     tmp->m_run = 24.;
     tmp->m_extrusion_length = 94*12;
     tmp->set_color( 0xFFFF00FF );
-    tmp->m_number_of_steps = 2*NUMBER_STEPS;
+    tmp->m_number_of_steps = NUMBER_STEPS;
     tmp->setup();
     tmp->m_y_angle = 180;
-    tmp->relocate( -25*12+24, 0, -0 );
+    tmp->relocate( -25*12+24, 0, NBA_COURT_LENGTH/2 );
     m_components.push_back( tmp );
     
     // Audience benches:
@@ -183,7 +105,7 @@ void glArena::create_stands           ( )
         tmpB->m_height = 2*12;
         tmpB->setup();
         tmpB->m_y_angle = 90;
-        tmpB->relocate( -(tmp->get_front_edge(i)+tmp->m_run*1.5+25*12), tmp->get_height(i), -94*12/4 );
+        tmpB->relocate( -(tmp->get_front_edge(i)+tmp->m_run*1.5+25*12), tmp->get_height(i), -94*12/4+NBA_COURT_LENGTH/2 );
         m_components.push_back( tmpB );
     }
 }
@@ -194,10 +116,10 @@ void glArena::create_stands_ends( )
     tmp->m_run = 24.;
     tmp->m_extrusion_length = 50*12;
     tmp->set_color( 0xFFFF00FF );
-    tmp->m_number_of_steps = 2*NUMBER_STEPS;
+    tmp->m_number_of_steps = NUMBER_STEPS;
     tmp->setup();
     tmp->m_y_angle = -90;
-    tmp->relocate( NBA_COURT_WIDTH/2, 0, 0*12 );
+    tmp->relocate( NBA_COURT_WIDTH/2, 0, NBA_COURT_LENGTH/2 );
     m_components.push_back( tmp );
 
     // Audience benches:
@@ -209,7 +131,7 @@ void glArena::create_stands_ends( )
         tmpB->m_height = 2*12;
         tmpB->setup();
         tmpB->m_y_angle = 0;
-        tmpB->relocate( -25*12, tmp->get_height(i), tmp->get_front_edge(i)+tmp->m_run*1.5 );
+        tmpB->relocate( -25*12, tmp->get_height(i), tmp->get_front_edge(i)+tmp->m_run*1.5+NBA_COURT_LENGTH/2 );
         m_components.push_back( tmpB );
     }
     
@@ -217,10 +139,10 @@ void glArena::create_stands_ends( )
     tmp->m_run = 24.;
     tmp->m_extrusion_length = 50*12;
     tmp->set_color( 0xFFFF00FF );
-    tmp->m_number_of_steps = 2*NUMBER_STEPS;
+    tmp->m_number_of_steps = NUMBER_STEPS;
     tmp->setup();
     tmp->m_y_angle = 90;
-    tmp->relocate( -tmp->m_extrusion_length/2, 0, -94*12 );
+    tmp->relocate( -tmp->m_extrusion_length/2, 0, -NBA_COURT_LENGTH/2 );
     m_components.push_back( tmp );
     
     // Audience benches:
@@ -232,10 +154,9 @@ void glArena::create_stands_ends( )
         tmpB->m_height = 2*12;
         tmpB->setup();
         tmpB->m_y_angle = 0;
-        tmpB->relocate( -25*12, tmp->get_height(i), -(tmp->get_front_edge(i)+tmp->m_run*1.5)-94*12 );
+        tmpB->relocate( -25*12, tmp->get_height(i), -(tmp->get_front_edge(i)+tmp->m_run*1.5)-NBA_COURT_LENGTH/2 );
         m_components.push_back( tmpB );
     }
-    
 }
 
 void glArena::create_components       ( )
@@ -244,32 +165,19 @@ void glArena::create_components       ( )
     create_stands_ends();
     
     // CREATE COURT:
-    glBasketballCourt* bball_court = new glBasketballCourt();
+    bball_court = new glBasketballCourt();
     bball_court->setup();
-    bball_court->relocate( 0*12, 2, -47*12 );   // centered
+    bball_court->relocate( 0*12, 1, -0*12 );   // centered
     m_components.push_back( bball_court);
-    
-    // AND ONE BASKET BALL :
-    glSphere* ball = new glSphere(NBA_BASKET_BALL_RADIUS, 10, 64);
-    ball->is_participating = true;
-    ball->coef_of_restitution = COEFF_RESTITUTION_BASKETBALL;
-    ball->set_color( 0xFF7F7F00);
-    ball->load_texture("textures/basketball_texture.jpg" );
-    ball->create  (  );
-    ball->relocate( 0, 8*12, -94*12/2 );
-    m_balls.push_back(ball);
-    m_components.push_back(ball);
 }
 
 void glArena::setup( )
 {
-    glMolecule::setup();
+    m_bench_texture = new Texture();
+    //m_bench_texture->setup( "textures/corrogated_aluminum.jpg" );
+    m_bench_texture->load_image( "textures/corrogated_steel_metal.jpg" );
 
-    create_team1();
-    create_team2();
-//    position_team_initial();
-    position_lineup_tunnel();
-    
+    glMolecule::setup();
     
 }
 

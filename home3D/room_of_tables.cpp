@@ -7,3 +7,33 @@
 //
 
 #include "room_of_tables.h"
+
+
+
+glRestaurant::glRestaurant ()
+{
+    
+}
+glRestaurant::~glRestaurant()
+{
+    
+}
+void    glRestaurant::create_vertical_walls   ( )
+{
+    
+}
+void    glRestaurant::create_horizontal_walls ( )
+{
+    
+}
+void    glRestaurant::add_light_switches      ( )
+{
+    
+}
+void    glRestaurant::create_components       ( )
+{
+    
+}
+
+
+

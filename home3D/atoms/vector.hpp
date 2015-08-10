@@ -88,7 +88,7 @@ public:
     vector<MathVector>  m_samples;
 };
 
-
+/* Represents a node comprise an entire tree */
 class MathVectorTree
 {
 public:

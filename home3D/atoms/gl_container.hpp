@@ -7,6 +7,7 @@
 
 #include "gl_atom.hpp"
 #include "glSphere.h"
+#include "glMolecule.h"
 
 
 extern GLubyte q_Indices[];
@@ -26,6 +27,10 @@ public:
 	void            change_top_color   	( long mColor );
 	void            change_bottom_color	( long mColor );
     void            compute_inertia     ( float mTotalMass );
+    
+    // two Boxes in close proximity.  Join the sides, so that they operate as a unit.
+    // ie creates a parent molecule of which both this and Neighbor are components.
+    glMolecule*     join_closest_sides( glBox* mNeighbor );
     
 	virtual void	draw_body   ( );
 	void            print_info  ( );

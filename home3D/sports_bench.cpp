@@ -9,6 +9,7 @@
 #include "sports_bench.h"
 #include "gl_container.hpp"
 #include "cylinder.hpp"
+#include "face_box.h"
 
 
 const float LEG_SPACING = 4*12;
@@ -24,13 +25,14 @@ glBench::~glBench()
 
 void glBench::create_vertical_walls( )
 {
-    glBox* tmp = new glBox();
-    tmp->width = m_length;             // length of bench
+    glFaceBox* tmp = new glFaceBox();
+    tmp->width  = m_length;     // length of bench
     tmp->height = 1.0;          // 1 inch deep
     tmp->depth  = 18;           // 18 inches wide
     tmp->setup();
-    tmp->relocate( 0, m_height-tmp->height/2, 0);
-    tmp->grab_right();
+    //tmp->load_image("textures/corrogated_steel_metal.jpg");
+    tmp->relocate  ( 0, m_height-tmp->height/2, 0);
+    tmp->grab_right( );
     m_components.push_back(tmp);
     
     int num_legs = m_length / (LEG_SPACING);           // every 5 feet.

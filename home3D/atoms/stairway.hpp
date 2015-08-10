@@ -18,6 +18,8 @@ public:
     float	get_height    ( int mstep=-1 );     // default is max height
     float	get_front_edge( int mstep=-1 );     // default is top step
     
+    virtual void	draw_body (                 );
+    
 	float 	 m_rise;
 	float 	 m_run;		
 	//float 	 m_width;           USE m_extrusion_length!

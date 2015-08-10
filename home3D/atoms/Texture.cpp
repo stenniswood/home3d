@@ -155,7 +155,6 @@ GLuint	Texture::generate_texture_coords( int mRotation )
     return (GLuint)m_TexCoords.size();
 }
 
-
 void Texture::generate_VBOTexCoords()
 {
 	// Generate And Bind The Texture Coordinate Buffer
@@ -185,8 +184,3 @@ void Texture::print_info()
 
 }
 
-
-//      glTexEnvf      (GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);	// or GL_MODULATE.
-//		glTexEnvi	   (GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
-//		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-//		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);

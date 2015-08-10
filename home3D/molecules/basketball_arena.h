@@ -14,12 +14,8 @@
 #include "glMolecule.h"
 #include "glSphere.h"
 #include "walking_robot.h"
+#include "basket_ball_court.h"
 
-const float NBA_COURT_WIDTH  = 50*12;
-const float NBA_COURT_LENGTH = 94*12;
-
-const float CENTER_COURT_X = 0.0;
-const float CENTER_COURT_Y = 94*12/2;
 
 /* Origin is :
  */
@@ -36,18 +32,14 @@ public:
     void            create_stands           ( );
     void            create_stands_ends      ( );
     
-    void            create_team1            ( );
-    void            create_team2            ( );
-
-    void            position_lineup_tunnel  ( );
-    void            position_team_initial   ( );
     
+    void            create_cam_routes       ( );
     virtual void    add_light_switches      ( );
     virtual void    create_components       ( );
     
-    vector<glSphere*>          m_balls;
-    vector<glRobot*>    m_team1;
-    vector<glRobot*>    m_team2;
+    glBasketballCourt* bball_court;
+    
+    Texture*        m_bench_texture;        // load once here and applied to all benches to save memory.
     
 };
 

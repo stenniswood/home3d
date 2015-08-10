@@ -45,6 +45,12 @@ double q_stat::population()
     return sqrt(m_stddev);
 } // sqrt of variance
 
+void q_stat::crunch()
+{
+    average();
+    stddev();
+    population();
+}
 
 
 /*********************************************************************/
