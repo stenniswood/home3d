@@ -156,11 +156,12 @@ void  glBasketballCourt::select_floor( int mIndex )
 void  glBasketballCourt::create_floor( )
 {
     m_floor = new glFloor();
-    m_floor->m_cover[0]->width  = 50*12;
+    m_floor->cover_region(-25*12, 94*12/2, +25*12, 94*12/2 );
+/*    m_floor->m_cover[0]->width  = 50*12;
     m_floor->m_cover[0]->height = 1.0  ;
-    m_floor->m_cover[0]->depth  = 94*12;
+    m_floor->m_cover[0]->depth  = 94*12; */
     select_floor( 1 );
-    m_floor->m_cover[0]->setup();
+    //m_floor->m_cover[0]->setup();
     m_components.push_back( (m_floor->m_cover[0]));
 
     // wall around court (with advertisements)
@@ -428,7 +429,7 @@ void    glBasketballCourt::create_components       ( )
     ball->coef_of_restitution = COEFF_RESTITUTION_BASKETBALL;
     ball->set_color( 0xFF7F7F00);
     ball->load_texture("textures/basketball_texture.jpg" );
-    ball->create  (  );
+    ball->setup  (  );
     ball->relocate( 0, 8*12, 0 );
     m_balls.push_back(ball);
     m_components.push_back(ball);

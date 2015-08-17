@@ -4,6 +4,11 @@
 #include "vector.hpp"
 
 
+float radians( float Degrees)
+{
+    return Degrees * M_PI / 180.0;
+}
+
 
 MathVector::MathVector ( )
 {
@@ -226,8 +231,16 @@ double& MathVector::operator[](int index)
 	return m_elements[index];	
 }
 
+
 Line::Line()
 {
+}
+
+Line::Line( MathVector pt1, MathVector pt2 )
+{
+    m_origin = pt1;
+    m_vector = pt2-pt1;
+    m_vector.unitize();
 }
 
 /*Line::Line( Line const &mline )
@@ -355,7 +368,11 @@ int	Line::line_intersection_2D( Line mLine2, float& mt, float& ms )
 //            1=intersect  in unique point I0
 //            2=overlap  in segment from I0 to I1
 
-/* Works for 3D lines.   */
+
+/* Works for 3D lines.   
+    mt is the distance along mLine2
+    ms is distance along this
+ */
 int	Line::line_intersection( Line mLine2, float& mt, float& ms )
 {
     int num_var_solved = 0;
@@ -364,7 +381,7 @@ int	Line::line_intersection( Line mLine2, float& mt, float& ms )
 
     // 3 Equations(x,y,z) - 2 Unknowns (s,t)
 	MathVector mv1 = ( m_origin - mLine2.m_origin );
-    
+
     // Colinear:
     if ((m_vector[0] == mLine2.m_vector[0])  && (m_vector[1] == mLine2.m_vector[1])  && (m_vector[2] == mLine2.m_vector[2]))
     {
@@ -440,6 +457,14 @@ int	Line::line_intersection( Line mLine2, float& mt, float& ms )
         return 0;
 }
 
+MathVector Line::line_intersection_point( )
+{
+    m_vector.unitize();
+    MathVector inter = m_origin + m_vector*t;
+    return inter;
+}
+
+
 LineSegment::LineSegment ()
 {
     m_origin.dimension(3);
@@ -467,6 +492,16 @@ bool LineSegment::is_in_segment( MathVector mPoint)
     return false;
 }
 
+/* 
+ Parameters are:
+    x,y indicate the axis.
+    A => Origin of line.
+    B => Vector of the line (not unitized!  full length!)
+ 
+    C => Origin of 2nd line.
+    D => Vector of 2nd line.
+ 
+ */
 bool lineSegmentIntersection(double Ax, double Ay,
                              double Bx, double By,
                              double Cx, double Cy,
@@ -522,7 +557,12 @@ bool lineSegmentIntersection(double Ax, double Ay,
 /* 
  This checks if the lines intersect at all.  And if they do, then is it within the length of this
  line segment.  mLine2 is assumed to be an infinite line.  To check it for a max length, compare 
-   if (ss < Line2.m_length)
+ 
+ if (ss>0) && (ss < Line2.m_length)
+ float mX,mY  - intersection point.
+
+ Return:    1   intersects
+            0   no intersection
  */
 int LineSegment::line_seg_intersection( LineSegment mLine2, float& ss, double* mX, double* mY )
 {
@@ -540,19 +580,6 @@ int LineSegment::line_seg_intersection( LineSegment mLine2, float& ss, double* m
         return 1;
     }
     return 0;
-/*    float tt;
-    bool within_seg1=true;
-    bool within_seg2=true;
-    int result = Line::line_intersection( mLine2, tt, ss );
-    if (result)
-    {
-        within_seg1 = ((tt>0) && (tt<m_length));
-        //within_seg2 = ((ss>0) && (ss<mLine2.m_length));
-        if (within_seg1 && within_seg2)    // if is within the length of the line segment!
-            return 1;
-        else
-            return 0;
-    } */
     return result;
 }
 
@@ -659,3 +686,109 @@ void MathVectorTree::extract_path_pointers( vector<MathVectorTree*>& mVector )
 }
 
 
+
+
+#define SMALL_NUM   0.00000001 
+
+// intersect3D_SegmentPlane(): find the 3D intersection of a segment and a plane
+//    Input:  S = a segment, and Pn = a plane = {Point V0;  Vector n;}
+//    Output: *I0 = the intersect point (when it exists)
+//    Return: 0 = disjoint (no intersection)
+//            1 =  intersection in the unique point *I0
+//            2 = the  segment lies in the plane
+int intersect3D_SegmentPlane( MathVector S_start, MathVector S_end, MathVector Plane_Pt, MathVector Plane_vector, MathVector* I )
+{
+    MathVector    u = S_end - S_start;
+    MathVector    w = S_start - Plane_Pt;
+    
+    float     D = Plane_vector.dot(u);
+    float     N = Plane_vector.dot(w);
+
+    if (fabs(D) < SMALL_NUM) {           // segment is parallel to plane
+        if (N == 0)                      // segment lies in plane
+            return 2;
+        else
+            return 0;                    // no intersection
+    }
+    // they are not parallel
+    // compute intersect param
+    float sI = N / D;
+    if (sI < 0 || sI > 1)
+        return 0;                        // no intersection
+
+    *I = S_start + u*sI;                  // compute segment intersect point
+    return 1;
+}
+//===================================================================
+
+
+
+// intersect3D_2Planes(): find the 3D intersection of two planes
+//    Input:  two planes Pn1 and Pn2
+//    Output: *L = the intersection line (when it exists)
+//    Return: 0 = disjoint (no intersection)
+//            1 = the two  planes coincide
+//            2 =  intersection in the unique line *L
+int
+intersect3D_2Planes( MathVector P1_pt, MathVector P1_vec, MathVector P2_pt, MathVector P2_vec, Line* L )
+{
+    MathVector   u = P1_vec * P2_vec;          // cross product
+    float    ax = (u[0] >= 0 ? u[0] : -u[0]);
+    float    ay = (u[1] >= 0 ? u[1] : -u[1]);
+    float    az = (u[2] >= 0 ? u[2] : -u[2]);
+    
+    // test if the two planes are parallel
+    if ((ax+ay+az) < SMALL_NUM) {        // Pn1 and Pn2 are near parallel
+        // test if disjoint or coincide
+        MathVector   v = P2_pt -  P1_pt;
+        if (P1_vec.dot(v) == 0)          // Pn2.V0 lies in Pn1
+            return 1;                    // Pn1 and Pn2 coincide
+        else
+            return 0;                    // Pn1 and Pn2 are disjoint
+    }
+    
+    // Pn1 and Pn2 intersect in a line
+    // first determine max abs coordinate of cross product
+    int      maxc;                       // max coordinate
+    if (ax > ay) {
+        if (ax > az)
+            maxc =  1;
+        else maxc = 3;
+    }
+    else {
+        if (ay > az)
+            maxc =  2;
+        else maxc = 3;
+    }
+    
+    // next, to get a point on the intersect line
+    // zero the max coord, and solve for the other two
+    MathVector    iP;                // intersect point
+    float    d1, d2;            // the constants in the 2 plane equations
+    d1 = - P1_vec.dot( P1_pt );  // note: could be pre-stored  with plane
+    d2 = - P2_vec.dot( P2_pt );  // ditto
+    
+    switch (maxc) {             // select max coordinate
+        case 1:                     // intersect with x=0
+            iP[0] = 0;
+            iP[1] = (d2*P1_vec[2] - d1*P2_vec[2]) /  u[0];
+            iP[2] = (d1*P2_vec[1] - d2*P1_vec[1]) /  u[0];
+            break;
+        case 2:                     // intersect with y=0
+            iP[0] = (d1*P2_vec[2] - d2*P1_vec[2]) /  u[1];
+            iP[1] = 0;
+            iP[2] = (d2*P1_vec[0] - d1*P2_vec[0]) /  u[1];
+            break;
+        case 3:                     // intersect with z=0
+            iP[0] = (d2*P1_vec[1] - d1*P2_vec[1]) /  u[2];
+            iP[1] = (d1*P2_vec[0] - d2*P1_vec[0]) /  u[2];
+            iP[2] = 0;
+    }
+    MathVector R0(3);
+    MathVector R1(3);
+    R0 = iP;
+    R1 = iP + u;
+    Line R(R0, R1);
+    *L = R;
+    return 2;
+}

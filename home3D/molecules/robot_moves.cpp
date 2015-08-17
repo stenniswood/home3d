@@ -136,14 +136,12 @@ void glStaticMovesRobot::stand(  )
     m_left_leg.set_hip_angle          ( 0.0 );
     m_left_leg.set_hip_rotate_angle   ( 0.0 );
     m_left_leg.set_hip_swing_angle    ( 0.0 );
-    
     m_left_leg.set_knee_angle         ( 0.0 );
     m_left_leg.set_ankle_angle        ( 0.0 );
     
     m_right_leg.set_hip_angle         ( 0.0 );
     m_right_leg.set_hip_rotate_angle  ( 0.0 );
-    m_left_leg.set_hip_swing_angle    ( 0.0 );
-    
+    m_right_leg.set_hip_swing_angle   ( 0.0 );
     m_right_leg.set_knee_angle        ( 0.0 );
     m_right_leg.set_ankle_angle       ( 0.0 );
 
@@ -153,14 +151,12 @@ void glStaticMovesRobot::sit(  )
     m_left_leg.set_hip_angle          ( 0.0 );
     m_left_leg.set_hip_rotate_angle   ( 0.0 );
     m_left_leg.set_hip_swing_angle    ( 0.0 );
-    
     m_left_leg.set_knee_angle         ( 0.0 );
     m_left_leg.set_ankle_angle        ( 0.0 );
     
     m_right_leg.set_hip_angle         ( 0.0 );
     m_right_leg.set_hip_rotate_angle  ( 0.0 );
-    m_left_leg.set_hip_swing_angle    ( 0.0 );
-    
+    m_right_leg.set_hip_swing_angle   ( 0.0 );
     m_right_leg.set_knee_angle        ( 0.0 );
     m_right_leg.set_ankle_angle       ( 0.0 );
     

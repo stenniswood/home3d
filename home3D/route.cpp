@@ -72,11 +72,11 @@ void glRoute::start_over_at2( MathVector    mStart )
 void glRoute::add_way_point( struct Vertex mWay )
 {
 	int    lsize = (int)m_vertices.size();
-	struct Vertex    v;
+	struct Vertex_pnc    v;
 
 	// Initialize with Last Known Position : 
-	memcpy( v.position, m_vertices[lsize-1].position, sizeof(struct Vertex) );
-
+	memcpy( &v, &m_vertices[lsize-1], sizeof(struct Vertex_pnc) );
+    
 	MathVector delta(3);
 	delta[0] = ( mWay.position[0] - v.position[0] );
     delta[1] = ( mWay.position[1] - v.position[1] );
@@ -133,7 +133,7 @@ void glRoute::create_from_multi( glMultiRoute& mMulti )
     
     long size = mMulti.FinalPath.size();
     for (long i=0; i<size; i++)
-        add_way_point2      ( mMulti.FinalPath[i] );
+        add_way_point2( mMulti.FinalPath[i] );
     
     compute_slopes         ( );
     m_number_path_vertices = m_vertices.size();

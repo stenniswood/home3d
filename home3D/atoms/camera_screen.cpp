@@ -5,7 +5,6 @@
 //  Created by Stephen Tenniswood on 7/17/15.
 //  Copyright (c) 2015 Stephen Tenniswood. All rights reserved.
 //
-
 #include "camera_screen.h"
 #include "all_objects.h"
 
@@ -82,14 +81,7 @@ int CameraTexture::timeslice()
     glBindBufferARB(GL_PIXEL_UNPACK_BUFFER_ARB, 0);
     glDisable       (GL_TEXTURE_2D);
     
- /* glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0,
-                    m_image.cols, m_image.rows, format, type,
-                    pixelPtr);
-    glTexImage2D(GL_TEXTURE_2D, 0, format,
-                 m_image.cols, m_image.rows,
-                 0, format2,	 type,
-                 pixelPtr );
-    glGenerateMipmap(GL_TEXTURE_2D);
+ /* glGenerateMipmap(GL_TEXTURE_2D);
     glTexEnvf       (GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL); */
     return 1;
 }

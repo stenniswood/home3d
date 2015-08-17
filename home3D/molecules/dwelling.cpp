@@ -13,6 +13,7 @@
 glDwelling::glDwelling()
 {
     m_object_type_name = "dwelling";
+    m_level_height = 0*12;        // start with a basement.
 }
 
 glDwelling::~glDwelling()
@@ -20,6 +21,15 @@ glDwelling::~glDwelling()
     
 }
 
+void glDwelling::add_level( glDwellingLevel* mLevel )
+{
+    mLevel->m_y = m_level_height;
+    m_components.push_back( mLevel );
+    m_levels.push_back(mLevel);
+
+    
+    m_level_height += 10*12;
+}
 
 /*glDoor* glDwelling::get_door( string mName   )
 {

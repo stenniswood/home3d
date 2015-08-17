@@ -27,7 +27,7 @@ glIbeam::glIbeam( float mExtrusionLength )
 	m_layer_one_indices	= 0;
 }
 
-void	glIbeam::generate_layer_vertices( )
+void	glIbeam::generate_vertices( )
 {
 	struct Vertex v;
 	

@@ -13,7 +13,7 @@ class glStairway : public glExtrusion
 public:
 	glStairway	(  );
 
-	virtual void	generate_layer_vertices  (  );
+	virtual void	generate_vertices  (  );
     
     float	get_height    ( int mstep=-1 );     // default is max height
     float	get_front_edge( int mstep=-1 );     // default is top step

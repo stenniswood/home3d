@@ -462,7 +462,7 @@ float abWall::get_door_far	 (  int mDoorIndex  )
 }
 
 
-MathVector abWall::get_door_coord( int mDoorIndex, float mPerpDistance )
+MathVector abWall::get_door_near_coord( int mDoorIndex, float mPerpDistance )
 {
     float  distance = get_door_near(mDoorIndex);
     return get_point_away_from( distance, mPerpDistance );

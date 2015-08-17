@@ -38,7 +38,7 @@ public:
     
     void            select_floor( int mIndex );
     
-    void            create_floor   ( );
+    virtual void    create_floor   ( );
     void            create_baskets ( );
     void            create_cam_routes       ( );
 

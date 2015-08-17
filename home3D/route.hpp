@@ -28,7 +28,7 @@ ALTERNATIVELY:
 
 using namespace std;
 
-
+ 
 // See Robot.hpp : m_torso.width!
 const float RobotFeetSeparation = 18.0;		// distance between legs at hip.
 const float RobotFeetLength 	= 11.0;		// distance from heel to toe.
@@ -62,7 +62,6 @@ public:
 	struct stRiseRun compute_perpendicular	( int mIndex );
     MathVector       get_perpendicular      ( int mIndex, float mPerpendicular_Distance );
     
-	//virtual void	 generate_layer_vertices( );
 	//void 			 change_vertices_colors	( );	// makes robot feet in red.
 	//virtual void	 generate_vertices		( );
 

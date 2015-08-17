@@ -612,10 +612,10 @@ glm::vec4 glLeg::get_toe_in_robot_coords( )
 }
 
 
-static float radians( float degrees)
+/*static float radians( float degrees)
 {
     return (M_PI * degrees / 180.0);
-}
+}*/
 
 // distance from hip to heel vertically
 float glLeg::get_vertical_height( bool mHeelOnly )

@@ -18,6 +18,7 @@ public:
 	glCabinetEndPiece( float mDepth, float mWidth, float mHeight );
 	virtual void	generate_vertices( );
 	virtual size_t 	generate_disc_indices( GLuint mStartingVertexIndex );
+    
 	float 	m_height;
 	float	m_depth;
 	float	m_Thick;

@@ -10,10 +10,6 @@
 
 const float TOE_HEIGHT = 4.;
 
-float radians( float Degrees)
-{
-	return Degrees * M_PI / 180.0;	
-}
 
 glCabinetEndPiece::glCabinetEndPiece( float mDepth, float mWidth, float mHeight  )
 {
@@ -240,19 +236,21 @@ void glCabinet::create( )
 	generate_vertices();
 	colorize();
 	
-	m_end1.create(WOOD_THICKNESS, 0);
+    m_end1.m_extrusion_length = WOOD_THICKNESS;
+    m_end1.m_extrusion_axis = 0;
+	m_end1.create();
 	m_end1.m_x = 0.;
 	m_end1.m_y = 0.;
 	m_end1.m_z = 0.;
 
-	m_end2.create(WOOD_THICKNESS, 0);
+    m_end2.m_extrusion_length = WOOD_THICKNESS;
+    m_end2.m_extrusion_axis = 0;
+	m_end2.create();
 	m_end2.m_x = m_width-WOOD_THICKNESS;
 	m_end2.m_y = 0.;
 	m_end2.m_z = 0.;
 
     gl_register();    
-	//generate_VBO();
-	//generate_IBO();
 }
 
 void 	glCabinet::generate_VBO( )

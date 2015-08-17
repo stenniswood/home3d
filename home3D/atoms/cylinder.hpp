@@ -11,7 +11,7 @@ class glCylinder : public glExtrusion
 public:
 	glCylinder( int mNumberSamples );
 
-	virtual void	generate_layer_vertices( );	
+	virtual void	generate_vertices( );	
 	virtual size_t 	generate_disc_indices  ( GLuint mStart_of_top_index );
     void            set_height( float mHeight   );
     float           get_height(                 );

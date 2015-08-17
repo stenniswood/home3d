@@ -25,6 +25,8 @@ Texture::Texture()
     m_TBO   =   0;
     m_repetitions_x = 1;        // 1 image per object default
     m_repetitions_y = 1;
+    m_width_in_inches  = 12;
+    m_height_in_inches = 12;
 }
 
 Texture::~Texture()

@@ -34,6 +34,32 @@ const int FACE_TOP_ID    = 4;
 const int FACE_BOTTOM_ID = 5;
 
 
+class CuboidTexture : public Texture
+{
+public:
+    CuboidTexture();
+    ~CuboidTexture();
+
+    Mat*			load_image				( string mFilename, int side, char mOrientation=0);
+    GLuint          generate_TBO           ( int mSide );
+    // After all 6 images are loaded, call :
+    void            generate_TBO_allsides  ( );
+    void            generate_texture_coords_allsides( );		// handle
+    void            draw                    (int mSide);
+
+    void			apply_front				( Mat* mImage, char mOrientation=0 );
+    void			apply_back				( Mat* mImage, char mOrientation=0 );
+    void			apply_top				( Mat* mImage, char mOrientation=0 );
+    void			apply_bottom			( Mat* mImage, char mOrientation=0 );
+    void			apply_left				( Mat* mImage, char mOrientation=0 );
+    void			apply_right				( Mat* mImage, char mOrientation=0 );
+    
+    
+    GLuint			m_TBOs[6];				// The image
+	Mat 			m_images[6];
+    char            m_orientations[6];
+};
+
 /*  This "cube" stores duplicate vertices for each face.
     This allows normals on each face, and independant textures.
  
@@ -47,13 +73,7 @@ public:
     virtual void            generate_indices ( );
 
     // Show the texture just on 1 side ()
-    Texture*        load_image				(string mFilename, int mSide=1);
-    void			apply_front				( Texture* mTexture, char mOrientation=0 );
-    void			apply_back				( Texture* mTexture, char mOrientation=0 );
-    void			apply_top				( Texture* mTexture, char mOrientation=0 );
-    void			apply_bottom			( Texture* mTexture, char mOrientation=0 );
-    void			apply_left				( Texture* mTexture, char mOrientation=0 );
-    void			apply_right				( Texture* mTexture, char mOrientation=0 );
+    Mat*            load_image				(string mFilename, int mSide=1);
     
     GLuint			generate_texture_coords_4_side_stretch( );
     GLuint			generate_texture_coords	( int mSide );
@@ -73,7 +93,7 @@ public:
     
     vector<struct stTextCoord>	m_TexCoords;    
     char             m_orientations[6];
-    Texture*         m_side[6];     // each face can have a different texture    
+//    Texture*         m_side[6];     // each face can have a different texture
 };
 
 /*

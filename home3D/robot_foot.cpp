@@ -24,7 +24,7 @@ glFootShape::glFootShape()
 	m_extrusion_axis = 3.;
 }
 
-void	glFootShape::generate_layer_vertices( )
+void	glFootShape::generate_vertices( )
 {
 	struct Vertex v;
 	v.position[1] =  0.0;

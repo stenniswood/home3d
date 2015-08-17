@@ -24,7 +24,7 @@
 
 glWalkingRobot::glWalkingRobot( )
 {
-    m_glide_over_path_mode = true;
+    m_glide_over_path_mode = false;
     m_show_paths = false;
     m_is_walking = false;
     m_left_step_index  = 0;
@@ -61,7 +61,6 @@ void glWalkingRobot::add_standing_feet_position(int mIndex)       // for start a
 {
     place_over_vertex( m_route.m_vertices[mIndex], m_route.m_vertices[mIndex+1] );
     angle_body_vertex( mIndex, mIndex+1 );
-    
     
     struct stFootPosition foot;
     stand();
@@ -142,19 +141,19 @@ void glWalkingRobot::compute_robot_steps( float mStride, bool mLeftFootFirst )
 void glWalkingRobot::compute_full_path( float mStride, bool mLeftFootFirst )
 {
     // Start by standing in the m_start position
-    add_standing_feet_position( 0 );
+    add_standing_feet_position( 1 );
     
     // WALK TO DESTINATION :
     compute_robot_steps( mStride, true );
     // ONE EXTRA on the RIght Foot here!!
     
     // END STANDING POSITION :
-    add_standing_feet_position( m_route.m_number_path_vertices-2 );
+    add_standing_feet_position( m_route.m_number_path_vertices-5 );
 }
 
 void glWalkingRobot::plan_steps(   )
 {
-    calc_world_feet_positions(  );                      // from current angles
+    calc_world_feet_positions(  );                      // from current angles (stored in feet)
     
     compute_full_path( 30., true );     //
     m_route.generate_steps_vertices();                  //
@@ -182,11 +181,13 @@ void glWalkingRobot::walk_phase_i(  )       /* HEEL STRIKE PHASE! */
             during the single support phases.
             Thus the robot is propelled forward.
      */
-    if (m_stance_left) {
+    if (m_stance_left)
+    {
         m_stance_fp = m_route.m_left_steps [m_left_step_index];
         m_swing_fp  = m_route.m_right_steps[m_right_step_index];
         // place_left_heel_at( m_stance_fp.heel );
         place_feet_at(m_route.m_left_steps [m_left_step_index], m_route.m_right_steps[m_right_step_index], m_stance_left);
+        
         
     } else {
         m_stance_fp = m_route.m_right_steps[m_right_step_index];
@@ -558,19 +559,21 @@ void glWalkingRobot::move_to_stand( bool mMoveLeftLeg )
     printf("new heel at %6.3f %6.3f %6.3f \n", new_loc.heel[0], new_loc.heel[1], new_loc.heel[2] );
     printf("new toe  at %6.3f %6.3f %6.3f \n", new_loc.toe[0],  new_loc.toe[1],  new_loc.toe[2]  );
 }
+extern glApartment apartment;
 
 void glWalkingRobot::glide_thru_path         ( )        // no leg/arm movements.
 {
-    static int increment = 1;
+    static int increment = 2;
     static int position = 0;
     if (position<(m_route.m_number_path_vertices-1))
         place_over_vertex( m_route.m_vertices[position], m_route.m_vertices[position+1] );
     
-    m_y_angle = m_route.get_angle_degrees( 0 );
-
     position += increment;
-    if (position>m_route.m_number_path_vertices)
+    if (position>m_route.m_number_path_vertices-1)
+    {
         increment = -1;
+        apartment.close_all_doors(1.0);     // Temporary!
+    }
     if (position<0) {
         increment = +1;
         position=0;
@@ -585,16 +588,17 @@ const int DELAYS = 4*3;  // called every 25ms = 0.2 seconds
 void glWalkingRobot::update_animation( )
 {
     static int delay_counter = DELAYS;
-    delay_counter--;
-    if (delay_counter)  return;
-    delay_counter = DELAYS;
 
     if (m_glide_over_path_mode)
         glide_thru_path();
     else {
+/*        delay_counter--;
+        if (delay_counter)  return;
+        delay_counter = DELAYS;     */
+        
         // SCAN HEAD (look ahead for path):
         static float head_angle = 0;
-    //    head_angle += head_delta;
+        // head_angle += head_delta;
         if (head_angle>80.0)
             head_delta = -HEAD_LOOK_INCREMENT;
         if (head_angle<-80.0)

@@ -70,7 +70,7 @@ void glMap2D::create_2D_drawing()
 		for (int d=0; d < m_fwalls[w]->m_doors.size(); d++)
 		{
 			// Front edge of door:
-            MathVector door_s = Wall.get_door_coord(d);
+            MathVector door_s = Wall.get_door_near_coord_plus(d,0);
             v.position[0] = door_s[0];
             v.position[2] = door_s[2];
 			m_vertices.push_back( v );
@@ -78,7 +78,7 @@ void glMap2D::create_2D_drawing()
 			m_indices.push_back( index );
 
 			// Far edge of door:
-            MathVector door_e = Wall.get_door_far_coord(d);
+            MathVector door_e = Wall.get_door_far_coord_plus(d,0);
             v.position[0] = door_e[0];
             v.position[2] = door_e[2];
             m_vertices.push_back( v );
@@ -257,10 +257,13 @@ void glMap2D::add_alternates( MathVectorTree& mTree )
 /* Add Routing point on first side of the door.   */
 void glMap2D::add_before_door( MathVectorTree& mTree, int mWallIndex, list<float>& mDistancesAlong, float mSide )
 {
+    MathVector tmp;
     list<float>::iterator iter = mDistancesAlong.begin();   // Now, flip them all to the other side of the wall.
     while( iter != mDistancesAlong.end() )         // so that it wont detect a collision with the wall towards
     {
-        Alternates.push_back( m_fwalls[mWallIndex]->m_bare_wall.get_point_away_from( *iter, mSide ) );
+        tmp = m_fwalls[mWallIndex]->m_bare_wall.get_point_away_from( *iter, mSide );
+        tmp[1] = 2.0;
+        Alternates.push_back( tmp );
         iter++;
     }
     print_alternates();
@@ -278,6 +281,7 @@ void glMap2D::add_after_door( MathVectorTree& mTree, int mWallIndex, list<float>
     while( iter != mDistancesAlong.end() )         // so that it wont detect a collision with the wall towards
     {
         tmp = m_fwalls[mWallIndex]->m_bare_wall.get_point_away_from( *iter, -mSide );
+        tmp[1] = 2.0;
         c_iter->add_node( tmp );
 
         Alternates.push_back( tmp );
@@ -302,6 +306,9 @@ RETURN:  true    => Destination Reached!
 */
 const float WALL_SPACE_DISTANCE = 12.0;
 
+/* Create a vector between the leaf and the mDestination.
+   If it intersects a wall, 
+ */
 bool glMap2D::scan_leaves(  MathVector mDestination )
 {
     int windex = -1;
@@ -353,6 +360,8 @@ void glMap2D::map_route( glMultiRoute& mRoute, MathVector mSource, MathVector mD
 {
     bool complete=false;
     mRoute.m_tree.clear( );
+    mSource[1] = 2.0;
+    mDestination[1] = 2.0;
     mRoute.start_over_at2( mSource );
 
     MathVectorTree*  parent = &(mRoute.m_tree);

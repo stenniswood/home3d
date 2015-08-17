@@ -32,16 +32,14 @@ class glExtrusion : public glAtom
 public:
 	glExtrusion( );
 	void                setup (float mLength = -1, int mAxis=-1);
-	void                create(float mLength = -1, int mAxis=2 );
 
-	virtual void        generate_layer_vertices	( );
+    virtual void        generate_vertices		( );
 	void                extrude_vertices		( float mExtrusionLength, int mLoftAxis=-1 );
 	void                change_vertices_colors	( );
-	virtual void        generate_vertices		( );
 
-	virtual size_t      generate_disc_indices	( GLuint mStartingVertexIndex );
+    virtual void        generate_indices		( 		);
+    virtual size_t      generate_disc_indices	( GLuint mStartingVertexIndex );
 	virtual void        generate_side_indices	( 	    );
-	virtual void        generate_indices		( 		);
 	void                generate_otherside_indices();
 
 	virtual void        draw_body			 	( );

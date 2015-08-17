@@ -8,6 +8,7 @@
 
 #include "apartment.h"
 #include "all_objects.h"
+#include "tk_colors.h"
 
 
 
@@ -36,13 +37,14 @@ void glApartment::create_vertical_walls()
     w->m_bare_wall.add_window( 144.+36.+116.+3., s, 33.5 );
     w->m_name = "outside";
     w->setup( );
-    w->m_bare_wall.set_texture( 0 );
-    //m_components.push_back( w );
+    w->set_texture( 8 );
     w->m_y_angle = 0.0;
     w->m_z = 0.;
     w->m_x = 0.;
     m_components.push_back( w );
     m_fwalls.push_back    ( w );
+    // Update height stored in glDwellingLevel
+    m_height = m_fwalls[0]->m_bare_wall.m_wall_height;
     
     // Hall way 1 :                             #1
     w = new glFullWall();
@@ -55,7 +57,7 @@ void glApartment::create_vertical_walls()
     tdoor->m_name = "first bedroom";
     tdoor->setup         (     );
     tdoor->open          ( 0.4 );
-    w->add_door  ( 110.     , tdoor );
+    w->add_door          ( 110.     , tdoor );
     tdoor = new glDoor();                   // Door #2
     tdoor->set_params(30.);
     tdoor->set_hinge     (true );
@@ -65,12 +67,13 @@ void glApartment::create_vertical_walls()
     tdoor->open          ( 0.4 );
     w->add_door  ( 122.+40.5, tdoor );
     w->m_bare_wall.add_door( 122.+40.5+64.5, DEFAULT_DOOR_WIDTH, 79.0, false );
-    w->setup    (  );
+    w->set_color ( tan0 );
+    w->setup     (  );
     w->m_y_angle = 0.0;
     w->m_z = 160.;
     w->m_x = 144.;
     m_components.push_back( w );
-    m_fwalls.push_back( w );
+    m_fwalls.push_back    ( w );
     
     // Hall way 2 :                             #2
     w = new glFullWall();
@@ -85,7 +88,8 @@ void glApartment::create_vertical_walls()
     tdoor->open          ( 0.1 );
     w->add_door( 164.5, tdoor );
     //w->add_door( 164.5+52.,28. );		 // really need short inside walls
-    w->setup(  );                       // length = 194.5
+    w->set_color( salmon );
+    w->setup(  );                        // length = 194.5
     w->m_y_angle = 0.0;
     w->m_z = 160.+36.;                   // 196
     w->m_x = 144.;                       //
@@ -110,14 +114,15 @@ void glApartment::create_vertical_walls()
     w->clear();
     w->set_length( 416. - 338.5 );
     tdoor = new glDoor();                       // Door #3
-    tdoor->set_params( 28.);
+    tdoor->set_params    ( 28.);
     tdoor->set_hinge     (false);
     tdoor->set_swing_side(false);
     tdoor->m_name = "closest";
     tdoor->setup         (     );
     tdoor->open          ( 0.1 );
-    w->add_door( 19.5, tdoor    );
-    w->setup   (  );
+    w->add_door ( 19.5, tdoor  );
+    w->set_color( bisque );
+    w->setup    (  );
     w->m_y_angle = 0.0;
     w->m_z = 160.+70.;                       // 230
     w->m_x = 144.+122.+40.5+30.+2.;          // 338
@@ -136,6 +141,7 @@ void glApartment::create_horizontal_walls()
     w = new glFullWall();
     w->clear();
     w->set_length( 70. );
+    w->set_color( bisque );
     w->setup     (     );
     w->m_y_angle = -90.0;
     w->m_z       = 160.;
@@ -147,6 +153,7 @@ void glApartment::create_horizontal_walls()
     w = new glFullWall();
     w->clear();
     w->set_length( 160. );
+    w->set_color( bisque );
     w->setup();
     w->m_bare_wall.set_texture( 0 );
     w->m_y_angle = -90.0;
@@ -159,6 +166,7 @@ void glApartment::create_horizontal_walls()
     w = new glFullWall();
     w->clear();
     w->set_length( 160. );
+    w->set_color( bisque );
     w->setup( );
     w->m_bare_wall.set_texture( 0 );
     w->m_y_angle = -90.0;
@@ -173,6 +181,8 @@ void glApartment::create_horizontal_walls()
     w->set_length( 160.+36.+95. );              // 297
     s.width = 34.0;  s.height = 34.0;
     w->m_bare_wall.add_window( 97.5+6., s, 46.0 );
+    w->set_color( bisque );
+    w->set_texture(8);
     w->setup    (  );
     w->m_y_angle = -90.0;
     w->m_z = 0.;
@@ -189,9 +199,11 @@ void glApartment::create_horizontal_walls()
     tdoor->set_hinge     (false );
     tdoor->set_swing_side(true);
     tdoor->m_name = "entrance";
+    w->set_color( bisque );
     tdoor->setup         (     );
     tdoor->open          ( 0.5 );
     w->add_door( 160.+18.+5., tdoor  );		// Main Entrance Door
+    w->set_texture(8);
     w->setup(  );
     w->m_y_angle = -90.0;
     w->m_z = 0.;
@@ -212,6 +224,7 @@ void glApartment::create_horizontal_walls()
     tdoor->setup         (     );
     tdoor->open          ( 0.2 );
     w->add_door( 33.0, tdoor ); 	// pantry door.
+    w->set_color( bisque );
     w->setup( );
     w->m_y_angle = -90.0;
     w->m_z = 160.+36.;
@@ -243,6 +256,7 @@ void glApartment::create_horizontal_walls()
     tdoor->setup         (     );
     tdoor->open          ( 0.2 );
     w->add_door( 2.0, tdoor ); 	// linen closet "door"
+    w->set_color( bisque );
     w->setup(  );
     w->m_y_angle = -90.0;
     w->m_z = 160.+36.;
@@ -255,6 +269,7 @@ void glApartment::create_horizontal_walls()
     w->clear();
     w->m_bare_wall.m_wall_height = 43.;
     w->set_length( 70.5-4.25);  //, 43.
+    w->set_color( PaleGreen );
     w->setup(  );
     w->m_y_angle = 0.0;
     w->m_z = 160.+18.;
@@ -266,6 +281,7 @@ void glApartment::create_horizontal_walls()
     w = new glFullWall();
     w->clear();
     w->set_length( 4.25 );
+    w->set_color( PaleGreen );
     w->setup(  );
     w->m_y_angle = 0.0;
     w->m_z = 160.+18.;
@@ -286,7 +302,9 @@ void glApartment::create_horizontal_walls()
     tdoor->setup         (     );
     tdoor->open          ( 0.2 );
     w->add_door( 35., tdoor ); 	// linen closet "door"
+    w->set_color( PaleGreen );
     w->setup(  );
+    
     w->m_y_angle = -90.0;
     w->m_z       = 160.+36.+95.-70.5;
     w->m_x       = 74.75;
@@ -296,7 +314,9 @@ void glApartment::create_horizontal_walls()
     w = new glFullWall();
     w->clear();
     w->set_length( 74.75 );
+    w->set_color( gold );
     w->setup(  );
+    w->m_bare_wall.set_texture( 10 );
     w->m_y_angle = 0.0;
     w->m_z = 160.+36.+95.-70.5;
     w->m_x = 0.;
@@ -311,59 +331,63 @@ void glApartment::add_light_switches( )
     // 44 inches to bottom of cover
     
     // Entrance switches :
-    dls = new glDualLightSwitch();              dls->m_y = 44;
-    dls->m_distance_along_wall = 8;             dls->m_wall_side = 1;
-    m_fwalls[13]->add_fixture( dls );
+    //   dls->m_distance_along_wall= 8;
+    dls = new glDualLightSwitch();
+    dls->m_wall_side = 1;
+    m_fwalls[13]->add_fixture( dls, 8, 44 );
 
     // Dining Room switches :
-    dls = new glDualLightSwitch();              dls->m_y = 44;
-    dls->m_distance_along_wall = 5;             dls->m_wall_side = 0;
-    m_fwalls[15]->add_fixture( dls );           // Chandeliere Lights
+    dls = new glDualLightSwitch();
+    // dls->m_distance_along_wall = 5;
+    dls->m_wall_side = 0;
+    m_fwalls[15]->add_fixture( dls, 5, 44 );           // Chandeliere Lights
 
-//    dls = new glDualLightSwitch();            dls->m_y = 44;
+//    dls = new glDualLightSwitch();
 //    dls->m_distance_along_wall = 0;     dls->m_wall_side = 1;
 //    m_fwalls[0]->add_fixture( dls );         // Fan
     
     // Kitchen Switches:
-    ls = new glLightSwitch();              ls->m_y = 44;
-    ls->m_distance_along_wall = 9;         ls->m_wall_side = 1;
-    m_fwalls[2]->add_fixture( ls );         // Lights
-    dls = new glDualLightSwitch();              dls->m_y = 44;
-    dls->m_distance_along_wall = 0;         dls->m_wall_side = 1;
-    m_fwalls[3]->add_fixture( dls );         // Garbage Disposal (outside wall)
+    ls = new glLightSwitch();
+    //         ls->m_distance_along_wall = 9;
+    ls->m_wall_side = 1;
+    m_fwalls[2]->add_fixture( ls, 9, 44 );         // Lights
+    dls = new glDualLightSwitch();
+    // dls->m_distance_along_wall = 0;
+    dls->m_wall_side = 1;
+    m_fwalls[3]->add_fixture( dls, 1, 44 );         // Garbage Disposal (outside wall)
 
     // Hallway Lights:
-    ls = new glLightSwitch();               ls->m_y = 44;
-    ls->m_distance_along_wall = 5;          ls->m_wall_side = 0;
-    m_fwalls[2]->add_fixture( ls );         // Close to door end.
-    ls = new glLightSwitch();                   ls->m_y = 44;
-    ls->m_distance_along_wall = m_fwalls[2]->m_bare_wall.get_door_nearside(0)-4;
+    ls = new glLightSwitch();
+    //ls->m_distance_along_wall = 5;
     ls->m_wall_side = 0;
-    m_fwalls[2]->add_fixture( ls );         // End of hall
+    m_fwalls[2]->add_fixture( ls, 5, 44 );         // Close to door end.
+    ls = new glLightSwitch();
+    float distance_along_wall = m_fwalls[2]->m_bare_wall.get_door_near(0)-4;
+    ls->m_wall_side = 0;
+    m_fwalls[2]->add_fixture( ls, distance_along_wall, 44 );         // End of hall
 
     // First Bedroom:
-    dls = new glDualLightSwitch();          dls->m_y = 44;
-    float tmp = m_fwalls[1]->m_bare_wall.get_door_nearside(0) - 4; // - dls->m_panel_width;
-    dls->m_distance_along_wall = tmp;
+    dls = new glDualLightSwitch();
+    float tmp = m_fwalls[1]->m_bare_wall.get_door_near(0) - 4; // - dls->m_panel_width;
     dls->m_wall_side = 0;
-    m_fwalls[1]->add_fixture( dls );         // by door
+    m_fwalls[1]->add_fixture( dls, tmp, 44 );         // by door
     
     // Master Bedroom:
-    dls = new glDualLightSwitch();          dls->m_y = 44;
+    dls = new glDualLightSwitch();
     tmp = m_fwalls[1]->m_bare_wall.get_door_far(1) + 4;
     dls->m_distance_along_wall = tmp;       dls->m_wall_side = 0;
-    m_fwalls[1]->add_fixture( dls );         // by door
+    m_fwalls[1]->add_fixture( dls, tmp, 44 );         // by door
     
     // Bathroom:
-    dls = new glDualLightSwitch();          dls->m_y = 44;
+    dls = new glDualLightSwitch();
     dls->m_distance_along_wall = 60;         dls->m_wall_side = 1;
-    m_fwalls[5]->add_fixture( dls );         // by door
+    m_fwalls[5]->add_fixture( dls, 60, 44 );         // by door
     
     // Pantry:
-    dls = new glDualLightSwitch();          dls->m_y = 44;
+    dls = new glDualLightSwitch();
     tmp = m_fwalls[10]->m_bare_wall.get_door_far(0) + 4;
     dls->m_distance_along_wall = tmp;         dls->m_wall_side = 1;
-    m_fwalls[10]->add_fixture( dls );         // by door
+    m_fwalls[10]->add_fixture( dls, tmp, 44 );         // by door
 }
 
 void glApartment::create_apartment()
@@ -378,6 +402,8 @@ void glApartment::create_apartment()
 void glApartment::create_components( )
 {
     create_apartment();
+    create_floor();
+    
 }
 
 void glApartment::hang_paintings( )
@@ -486,11 +512,9 @@ void    glMezannineUpstairs::create_components       ( )
 
     glStairway* stairs = new glStairway();
     stairs->create();
-    stairs->relocate( -5*12-stairs->m_width, 0, 0);
+    stairs->relocate( -5*12-stairs->m_extrusion_length, 0, 0);
     stairs->m_y_angle = 90;
     m_components.push_back(stairs);
-
-    
 }
 
 

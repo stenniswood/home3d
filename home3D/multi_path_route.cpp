@@ -77,11 +77,6 @@ void glMultiRoute::generate_sample()
 */
 }
 
-void glMultiRoute::generate_layer_vertices	( )
-{
-    
-}
-
 void	glMultiRoute::generate_vertices( MathVectorTree* mTree )
 {
     static int counter = 0;

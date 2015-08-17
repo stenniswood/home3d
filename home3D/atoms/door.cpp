@@ -10,7 +10,20 @@
 
 const float offset_from_door_edge = 3.0;
 
-glDoor::glDoor(  ) 
+
+glDoorWay::glDoorWay( )
+{
+    m_width  = 0;
+    m_height = 0;
+    m_door_type = DOOR_TYPE_DOORWAY_ONLY;
+}
+glDoorWay::~glDoorWay()
+{
+    
+}
+
+
+glDoor::glDoor(  )
 {
     m_object_class  = 5;
     Initialize();
@@ -18,7 +31,10 @@ glDoor::glDoor(  )
 
 void glDoor::Initialize( )
 {
-    m_object_type_name   = "door";    
+    m_width  = 0;
+    m_height = 0;
+
+    m_object_type_name   = "door";
     m_hinge_side_near    = true;
 	m_direction_positive = true;
 	m_color              = 0xFF5F3F20;
@@ -26,6 +42,7 @@ void glDoor::Initialize( )
     m_direction_positive = true;
     m_handle_height      = DEFAULT_HANDLE_HEIGHT;
 
+    m_door_type = DOOR_TYPE_NORMAL_HINGED;
 	m_min_angle = 0.;
 	m_max_angle = 90.;
 }
@@ -106,6 +123,7 @@ void	glDoor::set_hinge	( bool mNearSide )
     }
 }
 
+/* pick a side of the wall for positive swing */
 // so the open angle will always be positive!
 void glDoor::set_swing_side( bool  mPositive_Y_angle )
 {
@@ -135,7 +153,7 @@ void glDoor::set_range( float mMaxAngle )
 
 void glDoor::select_texture  ( int mSelection )
 {
-    Texture* txt = NULL;
+    Mat* txt = NULL;
     switch(mSelection)
     {
         case 0 : txt = m_door.load_image( "textures/door_carmelle.jpg");
@@ -151,8 +169,8 @@ void glDoor::select_texture  ( int mSelection )
         default:
             break;
     }
-    m_door.apply_front  (txt,3);
-    m_door.apply_back   (txt,3);
+    ((CuboidTexture*)m_door.m_texture)->apply_front  (txt,3);
+    ((CuboidTexture*)m_door.m_texture)->apply_back   (txt,3);
 }
 
 void glDoor::create_components( )

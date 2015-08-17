@@ -29,6 +29,27 @@ const float DEFAULT_HALLOW_CORE_WEIGHT = 25;    // lbs
 #include "route.hpp"
 #include "face_box.h"
 
+const int DOOR_TYPE_DOORWAY_ONLY  = 0;
+const int DOOR_TYPE_NORMAL_HINGED = 1;
+const int DOOR_TYPE_BIFOLD        = 2;
+const int DOOR_TYPE_SLIDING       = 3;
+
+/* This is an empty doorway - no door present.  It serves as a place holder however, so that
+ m_bare_wall and m_fwall are always in sync.  When passing thru a door way some routines
+ return a handle to something.
+ 
+ */
+class glDoorWay : public glMolecule
+{
+public:
+    glDoorWay( );
+    ~glDoorWay();
+    
+    float      m_width;
+    float      m_height;
+    int        m_door_type;
+};
+
 /* 
 The drawer positioning code could go either on the drawer, or on the cabinet.
 
@@ -37,7 +58,7 @@ This would be better as an object derived from glAtom wouldn't it?
 ORIGIN :  Bottom, Left 
     Should really be a glMolecule!
 */
-class glDoor : public glMolecule
+class glDoor : public glDoorWay
 {
 public:
 	glDoor(  );
@@ -48,7 +69,7 @@ public:
 
     void            apply_force     ( float radius, float perpendicularForce );
     void            create_handle_path( glRoute& mPath );
-    
+
 	void			Initialize      (                 );
 	void			set_hinge       ( bool  mNearSide = true            );
     void			set_swing_side  ( bool  mPositive_Y_angle = true    );  // so the open angle will always be positive!
@@ -56,8 +77,7 @@ public:
 	float			get_angle       (                 );                    // interpolates based on fraction open
 	void			open            ( float mFraction );
 	void			close           ( float mFraction );
-    void            select_texture  ( int mSelection );
-    
+    void            select_texture  ( int mSelection  );
     
     void            create_components( );
 
@@ -65,8 +85,6 @@ public:
     glDoorHandle	 	m_handle;
     glHinge             m_hinge;
 
-    float               m_width;
-    float               m_height;
     float               m_thickness;
     float               m_handle_height;
 
@@ -76,6 +94,8 @@ public:
 	bool				m_direction_positive;	// changes swing side.
     bool                m_hinge_side_near;
 };
+
+
 
 
 #endif

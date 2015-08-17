@@ -17,6 +17,7 @@
 #include "floor.h"
 #include "glComputableWall.h"
 #include "vector.hpp"
+#include "gl_misc.h"
 
 
 struct room {
@@ -34,46 +35,46 @@ public:
     glDwellingLevel ();
     ~glDwellingLevel();
 
-    float   get_max_x       ();
-    float   get_max_z       ();
+    float            get_max_x       ();
+    float            get_max_z       ();
     
-    void    mirror_image_x( );
-    void    mirror_image_z( );    
+    void             mirror_image_x( );
+    void             mirror_image_z( );
     
-    void             create_floor();        // to cover all.
+    void             setup();
+    virtual void     create_floor();        // to cover all.
     glDwellingLevel* create_copy();
     glDwellingLevel* create_mirror_image();
     
-    void            generate_exterior_walls();
+    void             generate_exterior_walls();
     
-    void            update_line_info   ( );      // wall origins and vectors.
-    void            create_room        ( float width, float length );
-    glDoor*         map_wall_coord     ( MathVector mWC );
+    void             close_all_doors( float mFraction );
+    glDoorWay*       crosses_doorway    ( MathVector pt1, MathVector pt2 );
+    void             update_line_info   ( );      // wall origins and vectors.
+    void             create_room        ( float width, float length );
+    glDoor*          map_wall_coord     ( MathVector mWC );
 
-    virtual bool    evaluate_collision( glSphere* mOther );
+    virtual bool     evaluate_collision( glSphere* mOther );
     
     // FOR 2D Drawing (and maze solving):
-    void            create_map         ( glMap2D& mMap );
-    // LOCATION FUNCTIONS (from visual & other means to find the location) :
-    void            create_linesegs( float mLinearDistance, float mWallAngleRadians, float mHeight );
-    
-    void            find_all_possibilies( float mLinearDistance, float mWallAngle, float mHeight );
-    void            accept_heading_measurement( float mAngleToNorth );
+    void             create_map         ( glMap2D& mMap );
+    // LOCATION FUNCTIONS (from visual & other means to find the location) :    
+    void             find_all_possibilies( float mLinearDistance, float mWallAngle, float mHeight );
+    void             filter_blocked_possibilies( );
+    void             accept_heading_measurement( float mAngleToNorth );
     
     
     // Not implemented yet... but not difficult.
     vector<Texture*>        m_door_textures;     // hold here instead of each door for memory savings.
     
-    vector<LineSegment>     m_line_segs;
+    vector<glWallLine>      m_line_segs;
     
+    float                   m_height;
     glFloor*                m_floor;
     vector<glFullWall*>     m_fwalls;
     vector<glObject*>       m_furniture;
     vector<glObject*>       m_things;
 };
-//    vector<glComputeableWall*>     m_ext_walls;
-// Find_object ( "asdfs", "door", true );
-// Find_object ( "asdfs", "window", true );
 
 
 #endif /* defined(__home3D__dwelling_level__) */

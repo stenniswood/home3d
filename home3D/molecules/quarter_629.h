@@ -20,8 +20,8 @@ public:
     glUpstairs ();
     ~glUpstairs();
 
-    void            create_vertical_walls   ( );
-    void            create_horizontal_walls ( );
+    void            create_exterior_walls   ( );
+    void            create_interior_walls ( );
     virtual void    add_light_switches      ( );
     virtual void    create_components       ( );
 };
@@ -32,26 +32,25 @@ public:
     glBasement ();
     ~glBasement();
     
-    void            create_vertical_walls   ( );
-    void            create_horizontal_walls ( );
+    void            create_exterior_walls   ( );
+    void            create_interior_walls   ( );
     virtual void    add_light_switches      ( );
     virtual void    create_components       ( );
     
 };
 
 
-class glOurHouse : public glMolecule
+class glOurHouse : public glDwelling
 {
 public:
     glOurHouse ( );
     ~glOurHouse( );
     
-    virtual void    create_components       ( );
-    
+    virtual void    create_components( );
+
     glUpstairs* up;
     glBasement* bm;
     glStairway* sw;
-
 };
 
 

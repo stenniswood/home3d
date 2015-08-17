@@ -78,7 +78,7 @@ MathVector glHead::get_cyclops_coordinate  ()
     MathVector eyeC("Cylops",3);
     eyeC[0] = 0;
     eyeC[1] = 0;
-    eyeC[2] = HEAD_RADIUS+EYE_RADIUS;       // we extend out past the eye pupils.  b/c the eyes protrude and block the view!
+    eyeC[2] = HEAD_RADIUS+4*EYE_RADIUS;       // we extend out past the eye pupils.  b/c the eyes protrude and block the view!
     return eyeC;
 }
 

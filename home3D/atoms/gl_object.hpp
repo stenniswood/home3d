@@ -5,6 +5,8 @@
 #include "vector.hpp"
 #include "moving_object.h"
 //#include "verbal_object.h"
+#include "tk_colors.h"
+
 
 using namespace std;
 
@@ -65,7 +67,8 @@ public:
 	virtual void	relocate        ( float mX, float mY, float mZ );
     void            relocate        ( MathVector mNewLocation );
 
-	void 			set_color       ( long mColor       );
+    virtual void 	set_color       ( Color mColor    );
+	virtual void 	set_color       ( long mColor       );
     void            stamp_color     ( struct Vertex& mV );
 
     virtual void	gl_register     (  );

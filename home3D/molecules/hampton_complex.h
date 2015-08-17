@@ -20,7 +20,8 @@ public:
     glOneBuilding ( );
     ~glOneBuilding( );
     
-    virtual void    create_components       ( );
+    void            create_one_level    ();
+    virtual void    create_components   ();
 
     
 };

@@ -37,7 +37,7 @@ ____
 		|___
 */
 
-void glStairway::generate_layer_vertices( )
+void glStairway::generate_vertices( )
 {
     // GENERATE LEFT SIDE:
     // 2 vertices per step :

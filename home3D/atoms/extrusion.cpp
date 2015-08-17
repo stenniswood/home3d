@@ -31,7 +31,7 @@ glExtrusion::glExtrusion( )
 }
 
 /* Override this function to generate the polygon. */
-void glExtrusion::generate_layer_vertices()
+void glExtrusion::generate_vertices()
 {
 	struct Vertex v;
 	v.position[0] =  0.0;
@@ -91,10 +91,6 @@ void glExtrusion::change_vertices_colors()
 	}
 }
 
-void glExtrusion::generate_vertices()
-{
-	generate_layer_vertices();
-}
 
 //======================= INDICES =======================================
 size_t glExtrusion::generate_disc_indices( GLuint mStartingVertexIndex )
@@ -166,21 +162,6 @@ void glExtrusion::setup( float mLength, int mAxis )
 	extrude_vertices ( m_extrusion_length, m_extrusion_axis );
 	//change_vertices_colors( );
 	generate_indices ( );
-}
-
-void glExtrusion::create( float mLength, int mAxis )
-{
-	if (mLength>0)
-		m_extrusion_length = mLength;
-	if (mAxis>0)
-		m_extrusion_axis   = mAxis;
-
-	generate_vertices( );
-	extrude_vertices ( m_extrusion_length, m_extrusion_axis );
-	change_vertices_colors();
-	generate_indices ( );
-    
-    gl_register();
 }
 
 void glExtrusion::draw_body()

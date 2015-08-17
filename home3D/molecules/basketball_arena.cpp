@@ -80,7 +80,7 @@ void glArena::create_stands           ( )
         tmpB->m_length = 50*12;
         tmpB->m_height = 2*12;
         tmpB->setup();
-        ((glFaceBox*)(tmpB->m_components[0]))->apply_top( m_bench_texture );     // set pointer
+        ((glFaceBox*)(tmpB->m_components[0]))->m_texture = m_bench_texture;     // set pointer
         tmpB->m_y_angle = 90;
         tmpB->relocate( tmp->get_front_edge(i)+tmp->m_run*1.5+25*12, tmp->get_height(i), -94*12/4+NBA_COURT_LENGTH/2 );
         m_components.push_back( tmpB );
@@ -104,6 +104,7 @@ void glArena::create_stands           ( )
         tmpB->m_length = 50*12;
         tmpB->m_height = 2*12;
         tmpB->setup();
+        ((glFaceBox*)(tmpB->m_components[0]))->m_texture = m_bench_texture;     // set pointer
         tmpB->m_y_angle = 90;
         tmpB->relocate( -(tmp->get_front_edge(i)+tmp->m_run*1.5+25*12), tmp->get_height(i), -94*12/4+NBA_COURT_LENGTH/2 );
         m_components.push_back( tmpB );
@@ -130,6 +131,7 @@ void glArena::create_stands_ends( )
         tmpB->m_length = 50*12;
         tmpB->m_height = 2*12;
         tmpB->setup();
+        ((glFaceBox*)(tmpB->m_components[0]))->m_texture = m_bench_texture;     // set pointer
         tmpB->m_y_angle = 0;
         tmpB->relocate( -25*12, tmp->get_height(i), tmp->get_front_edge(i)+tmp->m_run*1.5+NBA_COURT_LENGTH/2 );
         m_components.push_back( tmpB );
@@ -153,6 +155,7 @@ void glArena::create_stands_ends( )
         tmpB->m_length = 50*12;
         tmpB->m_height = 2*12;
         tmpB->setup();
+        ((glFaceBox*)(tmpB->m_components[0]))->m_texture = m_bench_texture;     // set pointer
         tmpB->m_y_angle = 0;
         tmpB->relocate( -25*12, tmp->get_height(i), -(tmp->get_front_edge(i)+tmp->m_run*1.5)-NBA_COURT_LENGTH/2 );
         m_components.push_back( tmpB );
@@ -173,10 +176,12 @@ void glArena::create_components       ( )
 
 void glArena::setup( )
 {
-    m_bench_texture = new Texture();
-    //m_bench_texture->setup( "textures/corrogated_aluminum.jpg" );
-    m_bench_texture->load_image( "textures/corrogated_steel_metal.jpg" );
-
+/*    m_bench_texture = new CuboidTexture();
+    Mat* image = m_bench_texture->load_image( "textures/corrogated_aluminum.jpg", FACE_TOP_ID );
+    //Mat* image = m_bench_texture->load_image( "textures/corrogated_steel_metal.jpg", FACE_TOP_ID );
+    m_bench_texture->apply_bottom( image ); */
+    m_bench_texture = NULL;
+    
     glMolecule::setup();
     
 }

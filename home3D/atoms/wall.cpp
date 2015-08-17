@@ -45,10 +45,12 @@ void glBareWall::Initialize()
     m_show_half_height  = false;    
     m_texture           = NULL;
     m_windows_index_start = 0;
-    m_color               = 0xFFFF8F8F;
+    m_color               = 0xFFCFCF8F;
+    m_extrusion_length = m_wall_thickness;
+    m_extrusion_axis   = 2;
+    
     clear();
 }
-
 void glBareWall::clear()
 {
 	m_vertices.clear();
@@ -63,7 +65,16 @@ void glBareWall::clear()
 	m_number_side_indices = 0;
 }
 
-void	glBareWall::generate_layer_vertices( )
+float glBareWall::get_visible_height(   )
+{
+    if (m_show_half_height)
+        return m_wall_height/2.0;
+    else
+        return m_wall_height;
+}
+
+
+void	glBareWall::generate_vertices( )
 {
     generate_wall_vertices	( );
     generate_door_vertices	( );
@@ -99,7 +110,7 @@ void	glBareWall::generate_wall_vertices( )
 {
 	// GENERATE WALL:  (four points)    a Wall is an extrusion!
 	struct Vertex v;
-	v.color[0] = 0xBF; v.color[1] = 0xBF;  v.color[2] = 0xBF; v.color[3] = 0xBF;
+    set_vertex_color(v);
 	v.position[0] = 0.0;
 	v.position[1] = 0.0;
     v.position[2] = 0.0;
@@ -122,7 +133,8 @@ void	glBareWall::generate_wall_vertices( )
 void glBareWall::generate_door_vertices( )
 {
 	struct Vertex v;
-	v.color[0] = 0xFF; v.color[1] = 0x7F;  v.color[2] = 0xFF; v.color[3] = 0xFF;
+    //v.color[0] = 0xFF; v.color[1] = 0x7F;  v.color[2] = 0xFF; v.color[3] = 0xFF;
+    set_vertex_color(v);
     
 	for (int d=0; d<m_doorways.size(); d++)
 	{		
@@ -130,28 +142,28 @@ void glBareWall::generate_door_vertices( )
 		//   					  2 for the header meets the ceiling)	
 		m_doorways[d].FirstVertexIndex = (int)m_vertices.size();
 
-		v.position[0] = m_doorways[d].position_lengthwise;			// Corner 0
+		v.position[0] = m_doorways[d].position_lengthwise;			// Corner 0 (nearside,bottom)
 		v.position[1] = 0.0;
 		v.position[2] = 0.0;
 		m_vertices.push_back( v );
-		v.position[0] = m_doorways[d].position_lengthwise;			// Corner 1
+        v.position[0] = m_doorways[d].position_lengthwise;			// Corner 1 (nearside,height)
 		v.position[1] = m_doorways[d].height;
 		v.position[2] = 0.0;	
 		m_vertices.push_back( v );	
-		v.position[0] = m_doorways[d].position_lengthwise;			// Also add first top of header
+        v.position[0] = m_doorways[d].position_lengthwise;			// Also add top of header (nearside,ceiling)
         v.position[1] = m_wall_height;//  get_visible_height();
 		v.position[2] = 0.0;	
 		m_vertices.push_back( v );									
 
-		v.position[0] = m_doorways[d].position_lengthwise + m_doorways[d].width;	// Corner 2
+        v.position[0] = m_doorways[d].position_lengthwise + m_doorways[d].width;	// Corner 2 (farside,bottom)
 		v.position[1] = 0.0;
 		v.position[2] = 0.0;	
 		m_vertices.push_back( v );
-		v.position[0] = m_doorways[d].position_lengthwise + m_doorways[d].width;	// Corner 3
+        v.position[0] = m_doorways[d].position_lengthwise + m_doorways[d].width;	// Corner 3 (farside,height)
 		v.position[1] = m_doorways[d].height;
 		v.position[2] = 0.0;	
 		m_vertices.push_back( v );
-		v.position[0] = m_doorways[d].position_lengthwise + m_doorways[d].width;	// Also add 2nd top of header
+        v.position[0] = m_doorways[d].position_lengthwise + m_doorways[d].width;	// Also add 2nd top of header (farside,ceiling)
 		v.position[1] = m_wall_height;
 		v.position[2] = 0.0;	
 		m_vertices.push_back( v );
@@ -162,7 +174,8 @@ void glBareWall::generate_door_vertices( )
 void glBareWall::generate_window_vertices( )
 {
 	struct Vertex v;
-	v.color[0] = 0xFF; v.color[1] = 0xFF;  v.color[2] = 0xFF; v.color[3] = 0xFF;  	
+	//v.color[0] = 0xFF; v.color[1] = 0xFF;  v.color[2] = 0xFF; v.color[3] = 0xFF;
+    set_vertex_color(v);
 	for (int w=0; w<m_windows.size(); w++)
 	{
 		m_windows[w].FirstVertexIndex = (int)m_vertices.size();
@@ -249,27 +262,7 @@ bool glBareWall::is_valid_location( float mPositionLengthwise, float mWidth )
     return true;	
 }
 
-/* Extracts and puts into the abWall object */
-void glBareWall::extract_2d_line_info()
-{
-    m_line.m_origin.dimension(3);
-    m_line.m_origin[0] = m_x;
-    m_line.m_origin[1] = 2.0;
-    m_line.m_origin[2] = m_z;
-    
-    // Convert the wall angle to a unit vector.  This might better be done when creating the dwelling in the first place.
-    float rad = -radians(m_y_angle);
-    m_line.m_vector.dimension(3);
-    m_line.m_vector[0] = cos(rad);
-    m_line.m_vector[1] = 0.0;        // y is height!
-    m_line.m_vector[2] = sin(rad);
-}
 
-void glBareWall::relocate( float mX, float mY, float mZ )
-{
-    glAtom::relocate(mX,mY,mZ);
-    extract_2d_line_info();
-}
 
 /*
 INPUT:
@@ -324,12 +317,7 @@ void glBareWall::set_length_height( float mLength, int  mHeight )
 
 void glBareWall::setup( )
 {
-    // VERTICES :
-    generate_layer_vertices ( );
-    extrude_vertices        ( m_wall_thickness, 2 );		// generates new vertices
-    
-    // INDICES :
-    generate_disc_indices   ( 0 );    
+    glExtrusion::setup( m_wall_thickness, 2 );    
 }
 
 /* Call this :
@@ -338,13 +326,8 @@ void glBareWall::setup( )
 NOTE: If you want to change the vertices color, it must be done inside this function.
 	  (before generate_VBO() and after all vertices are created!)
 */
-void  glBareWall::create( )
-{
-    setup();
-    gl_register();
-}
 
-size_t 	glBareWall::generate_disc_indices( GLuint mStartingVertexIndex )
+void glBareWall::generate_indices( )
 {
 	generate_marks			( );
 	generate_wall_indices	( );		// GL_QUADS - m_layer_one_indices
@@ -356,7 +339,6 @@ size_t 	glBareWall::generate_disc_indices( GLuint mStartingVertexIndex )
 	generate_wall_side_indices();			//  The edges of the wall (outside perimeter)
 											//  (includes edges of the doorways)
 	generate_window_side_indices();			//  The edges of each window.  
-	return (GLuint)m_indices.size();
 }
 
 /* 
@@ -524,8 +506,7 @@ void glBareWall::print_info( )
     printf("Number Doors  :%lu \n", m_doorways.size() );
     printf("Number Windows:%lu \n", m_windows.size()  );
     
-    printf("Located at: \n\t");    m_line.m_origin.print();
-    printf("\t");    m_line.m_vector.print();
+    printf("Located at: \n\t");    m_position.print();
 }
 
 void glBareWall::print_door_info( )
@@ -611,33 +592,6 @@ void glBareWall::generate_wall_indices( )
 	//printf("wall indices = %d\n", m_indices.size() );
 }
 
-/****** Door Vertices ********/
-struct Vertex glBareWall::get_door_coord( int mDoorIndex )
-{
-	int v_index = m_doorways[mDoorIndex].FirstVertexIndex;
-	return m_vertices[v_index];
-}
-struct Vertex glBareWall::get_door_center_coord( int mDoorIndex )
-{
-    int v_index   = m_doorways[mDoorIndex].FirstVertexIndex;
-	struct Vertex v1 =  m_vertices[v_index  ];
-	struct Vertex v2 =  m_vertices[v_index+1];
-	struct Vertex vc;
-	vc.color[0] = v1.color[0];
-	vc.color[1] = v1.color[1];
-	vc.color[2] = v1.color[2];
-	vc.color[3] = v1.color[3]; 
-	vc.position[1] = v1.position[1];                                // Floor Height.
-	vc.position[0] = (v1.position[0] + v2.position[0]) / 2.;        // Average close & far sides.
-	vc.position[2] = (v1.position[2] + v2.position[2]) / 2.;        //
-	return vc;
-}
-struct Vertex glBareWall::get_door_far_coord(  int mDoorIndex  )
-{
-    int v_index = m_doorways[mDoorIndex].FirstVertexIndex;
-	return m_vertices[v_index+1];
-}
-/****** Door Vertices ********/
 
 
 void	glBareWall::draw_body()
@@ -679,14 +633,24 @@ void glBareWall::set_texture( int mSelection )
      m_texture = new Texture( );
      switch (mSelection)
      {
-     case 0:	m_texture->load_image("textures/light-stucco-texture.jpg" 	);  break;
-     case 1:	m_texture->load_image("textures/stucco-texture.jpg" 		);  break;
-     case 2:	m_texture->load_image("textures/stucco-2-texture.jpg" 		);  break;
-     case 3:	m_texture->load_image("textures/wall-texture.jpg" 			);  break;
-     case 4:	m_texture->load_image("textures/drywall-texture.jpg" 		);	break;
-     case 5:	m_texture->load_image("textures/concrete-texture.jpg" 		);  break;
-     case 6:	m_texture->load_image("textures/bump-wall-texture.jpg" 		);  break;
-     case 7:	m_texture->load_image("textures/bamboo-fence-texture.jpg"	);  break;
+     case 0:	m_texture->load_image("textures/light-stucco-texture.jpg" 	);  m_texture->m_width_in_inches = 12;  m_texture->m_height_in_inches= 12;  break;
+     case 1:	m_texture->load_image("textures/stucco-texture.jpg" 		);  m_texture->m_width_in_inches = 12;  m_texture->m_height_in_inches= 12;  break;
+     case 2:	m_texture->load_image("textures/stucco-2-texture.jpg" 		);  m_texture->m_width_in_inches = 12;  m_texture->m_height_in_inches= 12;  break;
+     case 3:	m_texture->load_image("textures/wall-texture.jpg" 			);  m_texture->m_width_in_inches = 12;  m_texture->m_height_in_inches= 12;  break;
+     case 4:	m_texture->load_image("textures/drywall-texture.jpg" 		);	m_texture->m_width_in_inches = 12;  m_texture->m_height_in_inches= 12;  break;
+     case 5:	m_texture->load_image("textures/concrete-texture.jpg" 		);  m_texture->m_width_in_inches = 12;  m_texture->m_height_in_inches= 12;  break;
+     case 6:	m_texture->load_image("textures/bump-wall-texture.jpg" 		);  m_texture->m_width_in_inches = 12;  m_texture->m_height_in_inches= 12;  break;
+     case 7:	m_texture->load_image("textures/bamboo-fence-texture.jpg"	);  m_texture->m_width_in_inches = 12;  m_texture->m_height_in_inches= 12;  break;
+
+     case 8:	m_texture->load_image("textures/brick_wall_seamless.jpg"	);  m_texture->m_width_in_inches = 6*12;  m_texture->m_height_in_inches= 8*12;  break;
+     case 9:	m_texture->load_image("textures/brick_wall_seamless.png"	);  m_texture->m_width_in_inches = 12;  m_texture->m_height_in_inches= 8;       break;
+     case 10:	m_texture->load_image("textures/brick_wall_1.jpg"           );  m_texture->m_width_in_inches = 6*12;  m_texture->m_height_in_inches= 5*12;  break;
+     case 11:	m_texture->load_image("textures/brick_wall_2.jpg"           );  m_texture->m_width_in_inches = 2.5*12;  m_texture->m_height_in_inches= 28;  break;
+     case 12:	m_texture->load_image("textures/stone_brick_wall.jpg"       );  m_texture->m_width_in_inches = 2.5*12;  m_texture->m_height_in_inches= 14;  break;
+     case 13:	m_texture->load_image("textures/red_brick_wall.jpg"         );  m_texture->m_width_in_inches = 5*12;  m_texture->m_height_in_inches= 4*12;  break;
+
+     case 20:	m_texture->load_image("textures/entry_wall_paper.jpg"           );  m_texture->m_width_in_inches = 2*12;  m_texture->m_height_in_inches= 2*12;  break;
+             
      default:  break;
      }
      generate_texture_coords 		( );
@@ -694,60 +658,138 @@ void glBareWall::set_texture( int mSelection )
      m_texture->generate_VBOTexCoords( );
 }
 
+
+/* 
+    Remember Texture Coords have to correspond 1 to 1 with the Vertices.
+    The sequence for generating vertices is:
+    Generate :
+        wall        (4 total)
+        door
+        window
+ 
+    Then extrude everything (duplicate)
+*/
+void glBareWall::generate_window_texture_coords ( )
+{
+    struct stTextCoord t;
+    for (int w=0; w<m_windows.size(); w++)
+    {
+        // 4 Nearsides,  (bottom, sill, height, ceiling)
+        // 4 Farsides,   (bottom, sill, height, ceiling)
+        
+        /* what should the texture coordinates be?  (u,v)
+         (x_multiples of the image, 0 )
+         (x_multiples of the image, height/ceiling * y_multiples )
+         (x_multiples of the image, y_multiples )
+         */
+        float x_length = (m_windows[w].PositionLengthwise - 0);
+        float fs_x     = (x_length / m_texture->m_width_in_inches);
+        // how to know the real ratio?  depends on how many inches the image covers.
+        // ie.
+        float fs_y     = (1 / m_texture->m_height_in_inches );
+
+        // Front Edge:
+        t.u = fs_x;
+        t.v = 0.0;
+        m_texture->m_TexCoords.push_back( t );
+        t.u = fs_x;
+        t.v = (fs_y * m_windows[w].SillHeight );
+        m_texture->m_TexCoords.push_back( t );
+        t.u = fs_x;
+        t.v = (fs_y * (m_windows[w].SillHeight+m_windows[w].Height) );
+        m_texture->m_TexCoords.push_back( t );
+        t.u = fs_x;
+        t.v = fs_y * get_visible_height();
+        m_texture->m_TexCoords.push_back( t );
+
+        /**********************/
+        // Far Edge:
+        fs_x = (x_length+m_windows[w].Width) / m_texture->m_width_in_inches;  // m_windows[w].PositionLengthwise +
+        t.u = fs_x;
+        t.v = 0.0;
+        m_texture->m_TexCoords.push_back( t );
+        t.u = fs_x;
+        t.v = fs_y * (m_windows[w].SillHeight);
+        m_texture->m_TexCoords.push_back( t );
+        t.u = fs_x;
+        t.v = fs_y * (m_windows[w].SillHeight+m_windows[w].Height);
+        m_texture->m_TexCoords.push_back( t );
+        t.u = fs_x;
+        t.v = fs_y * m_wall_height;
+        m_texture->m_TexCoords.push_back( t );
+    }
+    
+}
 void glBareWall::generate_texture_coords( )
 {
      // We match vertices here, not indices.
     // First 4 are beginning and ending of the wall.
-     const float fs = 1.0;
+     const float fs_x = m_wall_length / m_texture->m_width_in_inches;
+     const float fs_y = get_visible_height() / m_texture->m_height_in_inches;
      struct stTextCoord t;
-     t.u = 0.;              t.v = 0.;			// Vertex 0,0
+     t.u = 0.;          t.v = 0.;			// Vertex 0,0
      m_texture->m_TexCoords.push_back( t );
-     t.u = fs;			t.v = 0.;			// Vertex 0,0   (wall length, floor)
+     t.u = fs_x;			t.v = 0.;			// Vertex 0,0   (wall length, floor)
      m_texture->m_TexCoords.push_back( t );
-     t.u = fs;			t.v = fs;			// Vertex 0,0   (wall length, ceiling)
+     t.u = fs_x;			t.v = fs_y;			// Vertex 0,0   (wall length, ceiling)
      m_texture->m_TexCoords.push_back( t );
-     t.u = 0.;              t.v = fs;			// Vertex 0,0   (start, ceiling)
+     t.u = 0.;          t.v = fs_y;			// Vertex 0,0   (start, ceiling)
      m_texture->m_TexCoords.push_back( t );
-
-    t.u = 0.;              t.v = 0.;			// Vertex 0,0
-    m_texture->m_TexCoords.push_back( t );
-    t.u = fs;			t.v = 0.;			// Vertex 0,0   (wall length, floor)
-    m_texture->m_TexCoords.push_back( t );
-    t.u = fs;			t.v = fs;			// Vertex 0,0   (wall length, ceiling)
-    m_texture->m_TexCoords.push_back( t );
-    t.u = 0.;              t.v = fs;			// Vertex 0,0   (start, ceiling)
-    m_texture->m_TexCoords.push_back( t );
     
-    /*
-     for (int d=0; d<m_doors.size(); d++)
-     {
-     // We'll add 6 vertices
-     // ( 4 of the doorway itself and 2 for the header meets the ceiling)
-     t.u = 1.0;			// because end of prev wall segment.
-     t.v = 0.0;
-     m_texture->m_TexCoords.push_back( t );
-     
-     t.u = 1.0;			// because end of prev wall segment.
-     t.v = m_doors[d].Height / get_visible_height();
-     m_texture->m_TexCoords.push_back( t );
-     
-     t.u = 1.0;			// because end of prev wall segment.
-     t.v = 1.0;
-     m_texture->m_TexCoords.push_back( t );
-     
-     t.u = 0.0;			// Corner 2
-     t.v = 0.0;
-     m_texture->m_TexCoords.push_back( t );
-     
-     t.u = 0.0;			// Corner 3
-     t.v = m_doors[d].Height / get_visible_height();
-     m_texture->m_TexCoords.push_back( t );
-     
-     t.u = 0.0;			// 
-     t.v = 1.0;
-     m_texture->m_TexCoords.push_back( t );
-     }
-     */
+    // Door ways add 6 vertices each :
+    //      ( 4 of the doorway itself and
+    //   	  2 for the header meets the ceiling)
+    for (int d=0; d<m_doorways.size(); d++)
+    {
+        // 3 Nearsides,  (bottom, height, ceiling)
+        // 3 Farsides,   (bottom, height, ceiling)
+
+        /* what should the texture coordinates be?  (u,v)
+           (x_multiples of the image, 0 )
+           (x_multiples of the image, height/ceiling * y_multiples )
+           (x_multiples of the image, y_multiples )
+        */
+         float x_length = (m_doorways[d].position_lengthwise - 0);
+         float fs_x     = (x_length / m_texture->m_width_in_inches);
+         float fs_y     = (1 / m_texture->m_height_in_inches );
+        
+         // Front Edge (3)
+         t.u = fs_x;
+         t.v = 0.0;
+         m_texture->m_TexCoords.push_back( t );
+         t.u = fs_x;
+         t.v = fs_y*(m_doorways[d].height);
+         m_texture->m_TexCoords.push_back( t );
+         t.u = fs_x;
+         t.v = fs_y*get_visible_height();
+         m_texture->m_TexCoords.push_back( t );
+        
+             /**********************/
+         fs_x = (x_length+m_doorways[d].width) / m_texture->m_width_in_inches;  // m_windows[w].PositionLengthwise
+        
+         // Far Edge (3)
+         t.u = fs_x;
+         t.v = 0.0;
+         m_texture->m_TexCoords.push_back( t );
+         // 2 for the header meets the ceiling)
+         t.u = fs_x;
+         t.v = fs_y*(m_doorways[d].height);
+         m_texture->m_TexCoords.push_back( t );
+         
+         t.u = fs_x;
+         t.v = fs_y*get_visible_height();
+         m_texture->m_TexCoords.push_back( t );
+    }
+    
+    generate_window_texture_coords();
+    
+    // Next duplicate for the extrusion :
+    long size = m_texture->m_TexCoords.size();
+    for (int tc=0; tc<size; tc++)
+    {
+        m_texture->m_TexCoords.push_back( m_texture->m_TexCoords[tc] );
+    }
+    
 }
 
 

@@ -12,10 +12,9 @@
 
 glPainting::glPainting()
 {
-    m_frame_width   = 1.5;
-    m_matting_width = 2;
-    
-    m_object_type_name = "painter";    
+    m_frame_width      = 1.5;
+    m_matting_width    = 2;
+    m_object_type_name = "painter";
 }
 
 glPainting::~glPainting()
@@ -28,7 +27,7 @@ void glPainting::create_components()
 {
     m_painting->setup();
     m_components.push_back(m_painting);
-    
+
     m_matting = new glFrame( );
     m_matting->set_params( m_matting_width, m_painting->m_height, m_matting_width, 0.1 );
     m_matting->setup       ( );
@@ -63,8 +62,10 @@ void glPainting::select_work_of_art(int mIndex )
         case 14 : m_painting->load_texture("paintings/world_famous_cliff.jpg");                      break;
         case 15 : m_painting->load_texture("paintings/wpe113.jpg");                                  break;
         case 16 : m_painting->load_texture("paintings/sidewalk_painting.jpg");                       break;
+            // Tenniswood's house paintings...
+        case 20 : m_painting->load_texture("paintings/living_room_picture.jpg");                    break;
+        case 21 : m_painting->load_texture("paintings/stairway_rug.jpg");                           break;
         default : break;
     };
     //imshow( "Display Image2", m_painting->m_texture->m_image );
-
 }

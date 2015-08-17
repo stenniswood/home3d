@@ -169,6 +169,8 @@ void eye_follow_route(glRoute& mRoute)
         v = 0;
 }
 
+glLine nose;
+
 void assume_robot_view()
 {
     eye  = robot.get_eye_location();
@@ -201,7 +203,7 @@ void change_route( MathVector mSource, MathVector mDestination )
 
     //multiRoute.gl_unregister  ( );
     multiRoute.setup            ( );
-    multiRoute.gl_register      ( );
+    //multiRoute.gl_register      ( );
 
     // Show end points :
     multiRoute2.m_tree.clear    ( );
@@ -233,7 +235,7 @@ int  r_step_index  = 0;
 bool left_leg_turn = true;
 bool last_direction_forward = true;
 bool show_tree      = false;
-bool pause          = true;
+bool pause          = true ;
 glArm*  selected_arm  = &(robot.m_left_arm);          // 0=left; 1=right;
 glLeg*  selected_leg  = &(robot.m_left_leg);          // 0=left; 1=right;
 bool  last_select_leg = true;
@@ -442,12 +444,16 @@ void draw_objects()
     theWorld.draw();
 }
 
+#include "gl_misc.h"
+
 glDoor* tdoor1=NULL;
 glDoor* tdoor2=NULL;
 glTerrain terra;
 
+
 void init_objects()
-{
+{    
+    
     MathVector tmp(3);
     tmp.set_xyz( 50, 2., 50. );             // Living room
     Sources.push_back     ( tmp );
@@ -480,10 +486,11 @@ void init_objects()
     cube.depth = 10;
     cube.height= 20.0;
     cube.set_color( 0xFFFFFF00 );
-    Texture* txt  = cube.load_image("textures/me_in_car.bmp",        FACE_TOP_ID );
-    Texture* txt2 = cube.load_image("textures/sidewalk_painting.jpg",FACE_LEFT_ID);        // 0 = top
-    cube.apply_front( txt);
-    cube.apply_back (txt2);
+    Mat* txt  = cube.load_image("textures/me_in_car.bmp",        FACE_TOP_ID );
+    Mat* txt2 = cube.load_image("textures/sidewalk_painting.jpg",FACE_LEFT_ID);        // 0 = top
+    ((CuboidTexture*)cube.m_texture)->apply_front( txt);
+    ((CuboidTexture*)cube.m_texture)->apply_back (txt2);
+    
 //    cube.apply_left (txt2);
 //    cube.apply_right(txt2);
 
@@ -496,8 +503,6 @@ void init_objects()
     cube.create();
     cube.relocate( 50, 90, 50 );
 
-    
-    
 	// Fairly well tested units :
     /*fwall.set_length( 22 * 12 );
     struct stSize s;
@@ -621,12 +626,12 @@ void init_objects()
     printf("\nApartment Create\n\n");
     apartment2.setup();
     apartment2.mirror_image_x();
-    apartment2.gl_register();
+    apartment2.gl_register   ();
     apartment2.relocate( 0, 0, 300);
     
     //Hcomplex.create();
-    //house.create();
-    //house.relocate( 0, 0, 0 );
+    house.create();
+    house.relocate( -800, 0, 0 );
     
     string searchname     = "master bedroom";
     string searchtypename = "door";
@@ -640,6 +645,9 @@ void init_objects()
 	map2D.gl_register( );
     map2D.m_z_angle = 0.0;
     map2D.m_y       = 0.0;
+    
+    apartment.find_all_possibilies( 2*12, 60*M_PI/180., 3*12 );
+    
 
     select_route( );
     
@@ -657,23 +665,11 @@ void init_objects()
 
     // Sample door handle path :
     //    (exact same method should be available for drawers, light switches)
-    glDoor* selected_door = apartment.m_fwalls[1]->m_doors[0];
+    glDoor* selected_door = (glDoor*)apartment.m_fwalls[1]->m_doors[0];
     selected_door->create_handle_path( door_path );
+    
     door_path.map_vertices( apartment.m_fwalls[1]->get_body_matrix() );
     door_path.gl_register();
-    
-    
-    /*route.start_over_at2    ( FinalPath[0] );
-    long size = FinalPath.size();
-    for (long i=0; i<size; i++)
-        route.add_way_point2( FinalPath[i] );
-    route.compute_slopes         ( );
-    route.compute_robot_path     ( 30., true, robot );
-    route.compute_angles         ( );
-    route.generate_steps_vertices( );
-    route.generate_VBO           ( );
-    route.generate_IBO           ( );
-    route.place_robot_over_vertex( 0, robot ); */
     
 /*    txt_cylinder.m_radius = 15.;
     txt_cylinder.m_extrusion_length = 20.;
@@ -731,6 +727,25 @@ void drawScene() {
 	glutSwapBuffers();
 }
 
+void create_nose_line()
+{
+    static bool first_time = true;
+    if (first_time)
+    {
+        nose.gl_register();
+        first_time=false;
+    };
+    
+    nose.m_Start  = robot.get_eye_location   ();
+    glm::vec4 center = robot.get_eye_target  ();
+    nose.m_End[0]=center[0];       nose.m_End[1]=center[1];       nose.m_End[2]=center[2];
+    glDoorWay* door = apartment.crosses_doorway( nose.m_Start, nose.m_End );
+    if (door) {
+        int type = door->m_door_type;
+        if ((door) && (type==DOOR_TYPE_NORMAL_HINGED))
+            ((glDoor*)door)->open(1.0);
+    }
+}
 #define ms_update_rate 25
 /*
 	Called every 25 milliseconds
@@ -758,8 +773,11 @@ void update(int value)
 //        paper.gl_unregister();
 //        paper.wave_it(10, 2, phase );
 //        paper.gl_register();
+        
         theWorld.time_slice( time_period*2 );
         robot.update_animation();
+        create_nose_line();
+        
         pause_count = 1;
 	} else if (pause==false) pause_count--;
 
@@ -817,12 +835,7 @@ void MouseMotion(int x, int y)
         
         x -= 320;
         y -= 320;
-        //robot.m_left_arm.inverse_xyz (x/10., y/10., robot.m_left_arm.m_z );
-        //robot.m_right_arm.inverse_xyz(x/10., y/10., robot.m_left_arm.m_z );
 
-      //g_fViewDistance = (y - g_yClick) / 3.0;
-      //if (g_fViewDistance < VIEWING_DISTANCE_MIN)
-      //g_fViewDistance = VIEWING_DISTANCE_MIN;
       glutPostRedisplay();
     }
 }
@@ -935,28 +948,3 @@ void init_construction_objects()
  ring.gl_register();
  ring.relocate( 50, 60, 100 );       */
 
-/*
-	tray.width  = 18.;
-	tray.height = 5.;
-	tray.depth  = 12.0;
-	tray.m_y = tray.height+2.;
-	tray.generate_vertices();
-	tray.generate_VBO();
-	tray.generate_IBO();
- 
-	box2.width  = 4.;
-	box2.height = 2.;
-	box2.depth  = 2.0;
-	box2.m_x 	= 12.;
-	box2.m_is_closed = true;
-	box2.generate_vertices();
-	box2.generate_VBO();
-	box2.generate_IBO();
- 
-	cyl.m_radius = 4.;
-	cyl.m_height = 8.;
-	cyl.generate_vertices();
-	cyl.generate_VBO();
-	cyl.generate_IBO();
-	printf("=============================\n");
- */

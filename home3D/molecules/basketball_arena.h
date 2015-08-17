@@ -37,9 +37,8 @@ public:
     virtual void    add_light_switches      ( );
     virtual void    create_components       ( );
     
-    glBasketballCourt* bball_court;
-    
-    Texture*        m_bench_texture;        // load once here and applied to all benches to save memory.
+    glBasketballCourt*  bball_court;    
+    CuboidTexture*      m_bench_texture;        // load once here and applied to all benches to save memory.
     
 };
 

@@ -20,8 +20,11 @@ public:
     glDwelling();
     ~glDwelling();
 
+    void    add_level( glDwellingLevel* mLevel );
+    
     // Find door, window,
 
+    float                    m_level_height;    
     vector<glStairway*>      m_stairs;
     vector<glDwellingLevel*> m_levels;
 };

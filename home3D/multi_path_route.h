@@ -54,7 +54,6 @@ public:
     void			start_over_at   ( struct Vertex mStart );
     void			start_over_at2  ( MathVector    mStart );
     
-    virtual void	generate_layer_vertices	( );
     virtual void	generate_vertices		( MathVectorTree* mTree );
 
     virtual void	draw_body			 	( );

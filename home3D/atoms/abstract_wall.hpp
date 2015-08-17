@@ -70,7 +70,7 @@ public:
     float	get_door_far	  (  int mDoorIndex  );
     
     MathVector  get_point_away_from( float mDistanceAlong, float mPerpendicularDistance );
-	MathVector	get_door_coord		 (  int mDoorIndex, float mPerpDistance=0.0  );
+	MathVector	get_door_near_coord	 (  int mDoorIndex, float mPerpDistance=0.0  );
 	MathVector	get_door_center_coord(  int mDoorIndex, float mPerpDistance=0.0  );
     MathVector	get_door_far_coord	 (  int mDoorIndex, float mPerpDistance=0.0  );
     MathVector	get_far_end          (  );

@@ -31,12 +31,12 @@ public:
 	~Texture( );
 
 	void			load_image				(string mFilename);
+    GLuint			generate_TBO			( );		// handle
     
 	// The object can either create a class derived from this and override this function.
 	// Or ignore this function and add coordinates to "m_TexCoords" - better usually.
     GLuint          generate_grid_coords    ( int mWidth, int mHeight );
     GLuint			generate_texture_coords	( int mRotation = 0);		// data to match vertexes.  Unique to each object!
-	GLuint			generate_TBO			( );		// handle
 	void			generate_VBOTexCoords	( );		// handle
 
 	virtual void	draw(); 
@@ -51,6 +51,9 @@ public:
     int             m_repetitions_x;
     int             m_repetitions_y;
 //    float           m_tiles;
+    float           m_width_in_inches;      // maps 1.0 text coordinate to how many inches?
+    float           m_height_in_inches;      // maps 1.0 text coordinate to how many inches?
+    
 	Mat 			m_image;
     
 };

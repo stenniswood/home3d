@@ -69,8 +69,8 @@ void glRobot::place_over_vertex( struct Vertex mVertex, struct Vertex mVertex2 )
     
     relocate( mVertex.position[0], mVertex.position[1]+leg_height+torso_height, mVertex.position[2] );
 
-    float rise = mVertex2.position[0] - mVertex2.position[0];
-    float run  = mVertex2.position[2] - mVertex2.position[2];
+    float rise = mVertex2.position[0] - mVertex.position[0];
+    float run  = mVertex2.position[2] - mVertex.position[2];
     m_y_angle = atan2( rise, run ) * 180./M_PI;
 }
 
@@ -122,7 +122,7 @@ MathVector glRobot::get_eye_location    ( )        // in world cooridnates for v
     eye[1] = eyeC[1];
     eye[2] = eyeC[2];
     eye[3] = 1.0;
-    
+
     glm::mat4 head_rotate = m_head.get_body_matrix();
     glm::vec4 eyeRobotCoords = head_rotate * eye;
 

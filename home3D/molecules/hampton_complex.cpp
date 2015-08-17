@@ -25,15 +25,13 @@ glOneBuilding::~glOneBuilding( )
     }
 }
 
-void glOneBuilding::create_components( )
+void glOneBuilding::create_one_level( )
 {
-    
     glApartment* apt;
     glApartment* prev_apt;          // mine
     apt = new glApartment();
     apt->setup();
     apt->update_line_info();
-    //apt->gl_register();
     m_components.push_back( apt );
     
     prev_apt = apt;                 // back
@@ -42,7 +40,6 @@ void glOneBuilding::create_components( )
     apt->mirror_image_x();
     apt->relocate( 0, 0, prev_apt->get_max_z() );
     apt->update_line_info();
-    //apt->gl_register();
     m_components.push_back( apt );
     
     prev_apt = apt;                 // front
@@ -51,7 +48,6 @@ void glOneBuilding::create_components( )
     apt->mirror_image_z();
     apt->update_line_info();
     apt->relocate( -5*12 - prev_apt->get_max_x(), 0, 0 );
-    //apt->gl_register();
     m_components.push_back( apt );
     
     prev_apt = apt;                 // back
@@ -61,7 +57,6 @@ void glOneBuilding::create_components( )
     apt->mirror_image_z();
     apt->relocate( -5*12 - prev_apt->get_max_x(), 0, prev_apt->get_max_z() );
     apt->update_line_info();
-    //apt->gl_register();
     m_components.push_back( apt );
     
 /*    glMezannineUpstairs* mup = new glMezannineUpstairs();
@@ -71,6 +66,12 @@ void glOneBuilding::create_components( )
     m_components.push_back(mup); */
     
 //    m_levels.push_back( &m_front_bottom );
+}
+
+void glOneBuilding::create_components( )
+{
+    create_one_level();
+//    create_one_level();
 }
 
 

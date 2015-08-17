@@ -37,11 +37,11 @@ class glInner : public glExtrusion
 {
 public:
 	glInner();
-			void	generate_shank_vertices( );		// 2D
+    virtual void	generate_vertices		( );
+            void	generate_shank_vertices( );		// 2D
 			void	generate_round_vertices( );		// 2D
 	virtual void	generate_layer_vertices( );		// 2D
 	virtual GLbyte 	generate_disc_indices  ( GLbyte mStartingVertexIndex=0 );
-	virtual void	generate_vertices		( );
 
 	int		m_vertex_count;
 	float	m_leg_length  ;

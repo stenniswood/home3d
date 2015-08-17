@@ -15,6 +15,7 @@
 #include "door.hpp"
 #include "light_switch.hpp"
 #include "gl_window.h"
+#include "verbal_object.h"
 
 
 
@@ -29,17 +30,21 @@ public:
     void	create_components ( );
     void    clear             ( );
     
-    virtual void	setup       ( );
-    void	set_length          ( float mLength )  { m_wall_length = mLength;  m_bare_wall.m_wall_length=mLength; };
+    virtual void	setup               ( );
+    virtual void 	set_color           ( Color mColor   );
+    virtual void 	set_color           ( long mColor    );
+    void            set_texture         ( int mSelection );
     
-    void    add_fixture         ( glFixture*   mFixture                );
-    void    add_door            ( float mPositionLengthwise, glDoor*   mDoor                      );
-    void    add_window          ( float mPositionLengthwise, float mSillHeight, glWindow* mWindow );
-    void    extract_2d_line_info();
+    void            set_length          ( float mLength )  { m_wall_length = mLength;  m_bare_wall.m_wall_length=mLength; };
+    
+    void            add_fixture         ( VerbalObject*   mFixture, float mDistanceAlong, float mHeight   );
+    void            add_door            ( float mPositionLengthwise, glDoorWay*   mDoor                   );
+    void            add_window          ( float mPositionLengthwise, float mSillHeight, glWindow* mWindow );
+    void            extract_2d_line_info();
     
     glComputeableWall           m_bare_wall;
-    vector<glDoor*>             m_doors;
-    vector<glFixture*>          m_fixtures;         // light switch, plug, combos, phone jack, cable, etc.
+    vector<glDoorWay*>             m_doors;
+    vector<VerbalObject*>       m_fixtures;         // light switch, plug, combos, phone jack, cable, painting, etc.
     vector<struct stWindow>     m_windows;          // bare wall has the window bay info
     
 private:

@@ -23,9 +23,12 @@ class glPainting : public glMolecule
 public:
     glPainting();
     ~glPainting();
-    
-    virtual void    create_components();
+
     void            select_work_of_art( int mIndex );
+    // may also use load an image with:
+    // m_painting->load_texture()
+
+    virtual void    create_components();
     
     glPaper* m_painting;
     glFrame* m_frame;
@@ -37,4 +40,3 @@ public:
 
 
 #endif /* defined(__home3D__painting__) */
-

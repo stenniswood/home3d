@@ -49,18 +49,27 @@ void glObject::setup           ( )
 
 void glObject::create          ( )
 {
-    
+    setup();
+    gl_register();
 }
 
 
-void	glObject::relocate( float mX, float mY, float mZ )
+void glObject::relocate( float mX, float mY, float mZ )
 {
 	m_x = mX;
 	m_y = mY;
 	m_z = mZ;
 }
 
-void 	glObject::set_color	( long mColor )
+void glObject::set_color(  Color mColor    )
+{
+    m_color  = (mColor.m_alpha<<24);
+    m_color += (mColor.m_red  <<16);
+    m_color += (mColor.m_green<<8);
+    m_color += (mColor.m_blue);
+}
+
+void  glObject::set_color( long mColor )
 { 
 	m_color = mColor;
 }

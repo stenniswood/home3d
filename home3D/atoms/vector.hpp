@@ -7,6 +7,7 @@
 
 using namespace std;
 
+extern float radians( float degrees );
 
 /* An object in a 2D floor plan	*/
 class MathVector
@@ -54,10 +55,13 @@ class Line
 {
 public:
 	Line    ( );
+    Line    (MathVector pt1, MathVector pt2);
     Line    ( int dimension );
     ~Line   ( );
     
     int			line_intersection( Line mLine2, float& t, float& s );
+    MathVector  line_intersection_point( );
+    
     void        unitize();
     void        print  ();
     
@@ -73,8 +77,10 @@ public:
     LineSegment (MathVector msource, MathVector mdest );
     bool        is_in_segment( MathVector mPoint);
     
+    // 
     int         line_seg_intersection( LineSegment mLine2, float& ss, double* mX, double* mY );
     float       m_length;
+    
 };
 
 class SampledLineSegment : public LineSegment

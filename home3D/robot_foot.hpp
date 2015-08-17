@@ -14,7 +14,7 @@ class glFootShape : public glExtrusion
 public:
 	glFootShape();
 
-	virtual void	generate_layer_vertices( );	
+	virtual void	generate_vertices( );
 	virtual size_t 	generate_disc_indices  ( GLuint mStart_of_top_index );
 	virtual void	draw_body			   ( );
 };

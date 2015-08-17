@@ -26,6 +26,7 @@ public:
     glFloor();
     ~glFloor();
     
+    void        cover_region     (float sx, float sz, float ex, float ez);
     void        cover_all        (struct room mDimensions);
     void        divide_into_rooms();
     

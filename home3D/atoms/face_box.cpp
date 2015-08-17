@@ -28,10 +28,130 @@ using namespace cv;
 using namespace std;
 
 
+CuboidTexture::CuboidTexture()
+{
+    for (int s=0; s<6; s++) {
+        m_orientations[s] = 30;
+        m_TBOs[s] = 0;
+    }
+}
+CuboidTexture::~CuboidTexture()
+{
+    
+}
+Mat* CuboidTexture::load_image(string mFilename, int side, char mOrientation)
+{
+    m_images[side] = imread(mFilename);
+    m_orientations[side] = mOrientation;
+    return &(m_images[side]);
+}
+
+/* Allocate a TBO id and upload the image to video memory */
+GLuint	CuboidTexture::generate_TBO	( int mSide )
+{
+    if (m_orientations[mSide]==30) return 0;
+    
+    uint8_t* pixelPtr   = (uint8_t*)m_images[mSide].data;
+    int channels        = m_images[mSide].channels();
+    int type;
+    switch(channels) {
+        case 1: break;
+        case 2: break;
+        case 3: format  = GL_RGB;	type = GL_UNSIGNED_BYTE;
+            format2 = GL_BGR;
+            break;
+        case 4: format  = GL_RGBA;	type = GL_UNSIGNED_BYTE; //type = GL_UNSIGNED_INT_8_8_8_8;
+            format2 = GL_RGBA;
+            break;
+        default: break;
+    }
+    printf("Texture::generate_TBO: rows=%d; cols=%d\n", m_images[mSide].rows, m_images[mSide].cols);
+    glEnable     (GL_TEXTURE_2D );
+    glGenTextures(1, &m_TBOs[mSide]     );
+    glBindTexture(GL_TEXTURE_2D, m_TBOs[mSide]);
+    printf("Texture::generate_TBO: m_TBO=%d\n", m_TBOs[mSide]);
+    
+    /* may need these for odd sized images: */
+    glPixelStorei(GL_UNPACK_ALIGNMENT,   1);
+    glPixelStorei(GL_UNPACK_ROW_LENGTH,  0);
+    glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
+    glPixelStorei(GL_UNPACK_SKIP_ROWS,   0);
+    
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexImage2D(GL_TEXTURE_2D,
+                 0,
+                 format,
+                 m_images[mSide].cols, m_images[mSide].rows,
+                 0,
+                 format2,	 type,
+                 pixelPtr );
+    
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glGenerateMipmap(GL_TEXTURE_2D);
+    glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
+    return m_TBOs[mSide];
+}
+void  CuboidTexture::generate_TBO_allsides  ( )
+{
+    for (int s=0; s<6; s++)
+        generate_TBO( s );
+}
+
+void CuboidTexture::generate_texture_coords_allsides	( )		// handle
+{
+    for (int s=0; s<6; s++)
+        generate_texture_coords(m_orientations[s]);
+    generate_VBOTexCoords();
+}
+
+void CuboidTexture::draw(int mSide)
+{
+    glEnable            (GL_TEXTURE_2D              );
+    glBindTexture       (GL_TEXTURE_2D,   m_TBOs[mSide]   );
+    glBindBuffer        (GL_ARRAY_BUFFER, m_TBOTexCoords );
+    glEnableClientState (GL_TEXTURE_COORD_ARRAY     );
+    glTexCoordPointer   (2, GL_FLOAT,   0, NULL     );
+}
+
+void CuboidTexture::apply_top( Mat* mImage, char mOrientation )     // Show the texture just on 1 side ()
+{
+    m_orientations[FACE_TOP_ID] = mOrientation;
+    m_images[FACE_TOP_ID] = *mImage;
+}
+void CuboidTexture::apply_bottom( Mat* mImage, char mOrientation )
+{
+    m_orientations[FACE_BOTTOM_ID] = mOrientation;
+    m_images[FACE_BOTTOM_ID] = *mImage;
+}
+void CuboidTexture::apply_front( Mat* mImage, char mOrientation )
+{
+    m_orientations[FACE_FRONT_ID] = mOrientation;
+    m_images[FACE_FRONT_ID] = *mImage;
+}
+void CuboidTexture::apply_back( Mat* mImage, char mOrientation )
+{
+    m_orientations[FACE_BACK_ID] = mOrientation;
+    m_images[FACE_BACK_ID] = *mImage;
+}
+void CuboidTexture::apply_left( Mat* mImage, char mOrientation )
+{
+    m_orientations[FACE_LEFT_ID] = mOrientation;
+    m_images[FACE_LEFT_ID] = *mImage;
+}
+void CuboidTexture::apply_right( Mat* mImage, char mOrientation )
+{
+    m_orientations[FACE_RIGHT_ID] = mOrientation;
+    m_images[FACE_RIGHT_ID] = *mImage;
+}
+
+
+/***************************** glFaceBox **************************************/
 glFaceBox::glFaceBox(  )
 {
+    
     for (int i=0; i<6; i++) {
-        m_side[i] = NULL;
         m_orientations[i] = 0;
     }
     
@@ -40,6 +160,8 @@ glFaceBox::glFaceBox(  )
     m_object_type_name = "textured box";
     m_object_class  = 9;
     m_side_applied	= TOP_SIDE_ID;
+    
+    m_texture = new CuboidTexture();
 }
 
 /* 4*6=24 vertices total. */
@@ -182,43 +304,16 @@ void glFaceBox::generate_indices ( )
         m_indices.push_back(i);
 }
 
-Texture* glFaceBox::load_image( string mFilename, int mSide )
+Mat* glFaceBox::load_image( string mFilename, int mSide )
 {
-    m_side[mSide] = new Texture();
-    m_side[mSide]->load_image(mFilename);
-    return m_side[mSide];
+//    m_side[mSide] = new Texture();
+//    m_side[mSide]->load_image(mFilename);
+    ((CuboidTexture*)m_texture)->load_image(mFilename, mSide);
+    return &(((CuboidTexture*)m_texture)->m_images[mSide]);
 }
 
-void glFaceBox::apply_top( Texture* mTexture, char mOrientation )     // Show the texture just on 1 side ()
-{
-    m_orientations[FACE_TOP_ID] = mOrientation;
-    m_side[FACE_TOP_ID] = mTexture;
-}
-void glFaceBox::apply_bottom( Texture* mTexture, char mOrientation )
-{
-    m_orientations[FACE_BOTTOM_ID] = mOrientation;
-    m_side[FACE_BOTTOM_ID] = mTexture;
-}
-void glFaceBox::apply_front( Texture* mTexture, char mOrientation )
-{
-    m_orientations[FACE_FRONT_ID] = mOrientation;
-    m_side[FACE_FRONT_ID] = mTexture;
-}
-void glFaceBox::apply_back( Texture* mTexture, char mOrientation )
-{
-    m_orientations[FACE_BACK_ID] = mOrientation;
-    m_side[FACE_BACK_ID] = mTexture;
-}
-void glFaceBox::apply_left( Texture* mTexture, char mOrientation )
-{
-    m_orientations[FACE_LEFT_ID] = mOrientation;
-    m_side[FACE_LEFT_ID] = mTexture;
-}
-void glFaceBox::apply_right( Texture* mTexture, char mOrientation )
-{
-    m_orientations[FACE_RIGHT_ID] = mOrientation;
-    m_side[FACE_RIGHT_ID] = mTexture;
-}
+
+
 
 // Show the texture just on 1 side ()
 /*void glFaceBox::wrap_3_sides( )
@@ -242,13 +337,18 @@ void glFaceBox::gl_register(  )
 {
     glAtom::gl_register();       // Base class
     
-    for (int s=0; s<6; s++)
-        if (m_side[s])
+    if (m_texture==NULL) return;
+    ((CuboidTexture*)m_texture)->generate_TBO_allsides();
+    ((CuboidTexture*)m_texture)->generate_texture_coords_allsides();
+    ((CuboidTexture*)m_texture)->generate_VBOTexCoords();
+    
+/*    for (int s=0; s<6; s++)
+        if (((CuboidTexture*)m_texture)->m_images[s])
         {
             m_side[s]->generate_TBO();
             m_side[s]->generate_texture_coords(m_orientations[s]);
             m_side[s]->generate_VBOTexCoords();
-        }
+        } */
     //generate_texture_coords_4_side_stretch();
 }
 
@@ -291,12 +391,16 @@ void glFaceBox::draw_body()
     int offset = 0;
     for (int s=0; s<6; s++)
     {
-        if (m_side[s])
+        
+        bool is_loaded = false;
+        if (m_texture!=NULL)
+            is_loaded = (((CuboidTexture*)m_texture)->m_images[s].rows>0);
+        if (is_loaded)
         {
-            m_side[s]->draw();
+            ((CuboidTexture*)m_texture)->draw(s);
             glDrawElements(GL_QUADS,(int)4, GL_UNSIGNED_INT,
                            (GLvoid*)(offset*sizeof(GL_UNSIGNED_INT)));
-            m_side[s]->after_draw();
+            ((CuboidTexture*)m_texture)->after_draw();
         }
         else
             glDrawElements(GL_QUADS, (int)4, GL_UNSIGNED_INT,
@@ -347,8 +451,11 @@ GLuint glFaceBox::generate_texture_coords( int mSide )
         There has to be 24 of them to match the vertices!
         so we combine them into m_TexCoords
      */
-    struct stTextCoord tc;
-    for (int s=0; s<6; s++)
+    
+    ((CuboidTexture*)m_texture)->generate_texture_coords_allsides();
+    
+/*  struct stTextCoord tc;
+ for (int s=0; s<6; s++)
     {
         if (m_side[s]) {
             m_side[s]->generate_texture_coords();
@@ -364,7 +471,7 @@ GLuint glFaceBox::generate_texture_coords( int mSide )
             tc.u = 1.0;   tc.v = 1.0;    m_TexCoords.push_back ( tc );
             tc.u = 1.0;   tc.v = 0.0;    m_TexCoords.push_back ( tc );
         }
-    }
+    } */
     return 0;
 }
 

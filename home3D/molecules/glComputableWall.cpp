@@ -7,6 +7,7 @@
 //
 
 #include "glComputableWall.h"
+#include "gl_misc.h"
 
 
 const float WALL_END_OFFSET = 12.;      // for routing the robot around a corner
@@ -22,6 +23,12 @@ glComputeableWall::~glComputeableWall( )
     
 }
 
+void glComputeableWall::relocate( float mX, float mY, float mZ )
+{
+    glAtom::relocate(mX,mY,mZ);
+    extract_2d_line_info();
+}
+
 /*
  Assumption is that mIntersection is a 3D point on the base of the wall
  */
@@ -34,7 +41,7 @@ int glComputeableWall::find_closest_door( MathVector mIntersection )
     // Find closest Door to the Intersection.
     for (int d=0; d<num_doors; d++)
     {
-        MathVector dc = get_door_center_coord( d );
+        MathVector dc = get_door_center_coord_plus( d, 0 );
         float distance = mIntersection.get_distance( dc );
         if (distance < min_distance)
         {
@@ -73,8 +80,9 @@ void glComputeableWall::find_paths_around ( list<float>& mDistanceAlong )
 {
     // LIST ALL DOORS :
     long size = m_doorways.size();
-    for (int i=0; i<size; i++)
+    for (int i=0; i<size; i++) {
         mDistanceAlong.push_back( get_door_center(i) );
+    }
     
     // LIST END POINTS :
     float tmp = -WALL_END_OFFSET ;
@@ -89,7 +97,7 @@ void glComputeableWall::find_paths_around( list<MathVector>& mPoints, float mOff
     // LIST ALL DOORS :
     long size = m_doorways.size();
     for (int i=0; i<size; i++)
-        mPoints.push_back( get_door_center_coord( i, mOffsetAwayFromWall ) );
+        mPoints.push_back( get_door_center_coord_plus( i, mOffsetAwayFromWall ) );
     
     // LIST END POINTS :
     MathVector tmp = m_line.m_origin + m_line.m_vector * -WALL_END_OFFSET + m_line.m_vector.get_perp_xz()*mOffsetAwayFromWall;
@@ -109,7 +117,7 @@ int glComputeableWall::find_alternate_via( MathVector mIntersection, MathVector&
     
     //
     int index = find_closest_door(mIntersection);
-    MathVector dc = get_door_center_coord( index );
+    MathVector dc = get_door_center_coord_plus( index,0 );
     float distance3 = mIntersection.get_distance( dc );
     float min_dist  = distance1;
     int min = 1;
@@ -144,8 +152,9 @@ bool  glComputeableWall::intersects(  LineSegment mPath, float& t, float& s )
         return false;
 }
 
+/****** Door Linear Measurements ********/
 // Distance along wall
-float glComputeableWall::get_door_nearside(  int mDoorIndex  )
+float glComputeableWall::get_door_near(  int mDoorIndex  )
 {
     return m_doorways[mDoorIndex].position_lengthwise;
 }
@@ -161,6 +170,72 @@ float glComputeableWall::get_door_far	 (  int mDoorIndex  )
     float distance_to_far = m_doorways[mDoorIndex].position_lengthwise + m_doorways[mDoorIndex].width;
     return distance_to_far;
 }
+/****** Door Linear Measurements ********/
+/****** Door Vertices ********/
+struct Vertex glComputeableWall::get_door_near_coord( int mDoorIndex )
+{
+    int v_index = m_doorways[mDoorIndex].FirstVertexIndex;
+    return m_vertices[v_index];
+}
+struct Vertex glComputeableWall::get_door_center_coord( int mDoorIndex )
+{
+    int v_index   = m_doorways[mDoorIndex].FirstVertexIndex;
+    struct Vertex v1 =  m_vertices[v_index  ];
+    struct Vertex v2 =  m_vertices[v_index+1];
+    struct Vertex vc;
+    vc.color[0] = v1.color[0];
+    vc.color[1] = v1.color[1];
+    vc.color[2] = v1.color[2];
+    vc.color[3] = v1.color[3];
+    vc.position[1] = v1.position[1];                                // Floor Height.
+    vc.position[0] = (v1.position[0] + v2.position[0]) / 2.;        // Average close & far sides.
+    vc.position[2] = (v1.position[2] + v2.position[2]) / 2.;        //
+    return vc;
+}
+struct Vertex glComputeableWall::get_door_far_coord(  int mDoorIndex  )
+{
+    int v_index = m_doorways[mDoorIndex].FirstVertexIndex;
+    return m_vertices[v_index+1];
+}
+/****** Door Vertices ********/
+
+/****** Door  ********/
+MathVector glComputeableWall::get_door_near_coord_plus( int mDoorIndex, float mPerpDistance )
+{
+    float  distance = get_door_near(mDoorIndex);
+    return get_point_away_from( distance, mPerpDistance );
+}
+
+MathVector glComputeableWall::get_door_center_coord_plus( int mDoorIndex, float mPerpDistance )
+{
+    float distance = get_door_center(mDoorIndex);
+    return get_point_away_from( distance, mPerpDistance );
+}
+
+MathVector glComputeableWall::get_door_far_coord_plus(  int mDoorIndex, float mPerpDistance  )
+{
+    float distance = get_door_far(mDoorIndex);
+    return get_point_away_from( distance, mPerpDistance );
+}
+/****** Door Vertices ********/
+
+
+/* Extracts and puts into the abWall object */
+void glComputeableWall::extract_2d_line_info()
+{
+    m_line.m_origin.dimension(3);
+    m_line.m_origin[0] = m_x;
+    m_line.m_origin[1] = m_y;
+    m_line.m_origin[2] = m_z;
+    
+    // Convert the wall angle to a unit vector.  This might better be done when creating the dwelling in the first place.
+    float rad = -radians(m_y_angle);
+    m_line.m_vector.dimension(3);
+    m_line.m_vector[0] = cos(rad);
+    m_line.m_vector[1] = 0.0;        // y is height!
+    m_line.m_vector[2] = sin(rad);
+}
+
 
 MathVector glComputeableWall::get_point_away_from( float mDistanceAlong, float mPerpendicularDistance, bool mPositiveSide )
 {
@@ -175,23 +250,6 @@ MathVector glComputeableWall::get_point_away_from( float mDistanceAlong, float m
     return pt;
 }
 
-MathVector glComputeableWall::get_door_coord( int mDoorIndex, float mPerpDistance )
-{
-    float  distance = get_door_nearside(mDoorIndex);
-    return get_point_away_from( distance, mPerpDistance );
-}
-
-MathVector glComputeableWall::get_door_center_coord( int mDoorIndex, float mPerpDistance )
-{
-    float distance = get_door_center(mDoorIndex);
-    return get_point_away_from( distance, mPerpDistance );
-}
-
-MathVector glComputeableWall::get_door_far_coord(  int mDoorIndex, float mPerpDistance  )
-{
-    float distance = get_door_far(mDoorIndex);
-    return get_point_away_from( distance, mPerpDistance );
-}
 
 MathVector	glComputeableWall::get_origin (  )
 {
@@ -202,6 +260,108 @@ MathVector	glComputeableWall::get_far_end (  )
 {
     MathVector end = m_line.m_origin + (m_line.m_vector * m_wall_length);
     return end;
+}
+
+
+bool glComputeableWall::wall_is_between( glWallLine* mWallLine, glComputeableWall* mOrigWall )
+{
+    //glComputeableWall* originalWall = &(m_fwall[ mWallLine->m_wall_index ].m_bare_wall);
+    MathVector perp_main = mOrigWall->m_line.m_vector.get_perp_xz();
+    
+    //  The Line                                This Wall
+    // m_Start + perp_main * X_unknown = m_line.m_origin + m_line.m_vector * Y_unknown;
+    // m_End   + perp_main * X_unknown = m_line.m_origin + m_line.m_vector * Y_unknown;
+
+    
+    // Then see if X_unknown <= mWallLine->m_perp_distance
+    // y_Unkown is don't care for the test.  Use only to change the line end point.
+    
+    return false;
+}
+
+void glComputeableWall::add_line_seg(glWallLine &line, float mHeight, MathVector &end_retraction, vector<glWallLine>* lines )
+{
+    float magn = end_retraction.magnitude();
+    if (magn>0)
+        line.m_End   -= end_retraction;
+    else
+        line.m_Start += end_retraction;
+
+    line.m_Start[1]= mHeight;
+    line.m_End  [1]= mHeight;
+    lines->push_back(line);
+}
+
+/*
+    Where's Waldo?
+ 
+    Creates a break for each doorway.  So doorway+1 line segments on each side of the wall.
+        used for locating on a map.
+ */
+vector<glWallLine>* glComputeableWall::create_lines_distance_from(  float mLinearDistance, float mWallAngleRadians, float mHeight  )
+{
+    static vector<glWallLine> lines;
+    int    doors = (int)m_doorways.size();
+    
+    glWallLine line1;       // working copy
+    glWallLine line2;       // working copy
+    line1.m_color = 0xFF00FF00;
+    
+    MathVector perp       = m_line.m_vector.get_perp_xz();
+    float  perp1_distance = mLinearDistance * sin(mWallAngleRadians);
+    float  perp2_distance = -(mLinearDistance + m_wall_thickness) * sin(mWallAngleRadians);
+    line1.m_perp_distance = perp1_distance;
+    line2.m_perp_distance = perp2_distance;
+
+    // Now take parallel_distance off of 1 end.
+    float parallel_distance   = mLinearDistance * cos(mWallAngleRadians);
+    if (mWallAngleRadians > M_PI/2)
+        parallel_distance = -parallel_distance;
+    else
+        parallel_distance = parallel_distance;
+    MathVector end_retraction = m_line.m_vector * parallel_distance;
+    
+    // First line:  m_origin to first door.
+    line1.m_Start = m_line.m_origin + perp * perp1_distance;
+    line2.m_Start = m_line.m_origin + perp * perp2_distance;
+    
+    if (doors==0)
+    {
+        line1.m_End = get_far_end() + perp * perp1_distance;    // if no doors :
+        line2.m_End = get_far_end() + perp * perp2_distance;
+    } else {
+        line1.m_End = get_door_near_coord_plus(0,0) + perp * perp1_distance;  // if 1 or more doors:
+        line2.m_End = get_door_near_coord_plus(0,0) + perp * perp2_distance;
+    }
+    add_line_seg( line1, mHeight, end_retraction, &lines );
+    add_line_seg( line2, mHeight, end_retraction, &lines );
+    
+    
+    // 2nd line  :  end of first door to start of next.... repeat for all doors.
+    for (int l=0; l<doors-1; l++)
+    {
+        line1.m_Start = get_door_far_coord_plus(l,perp1_distance); // + perp * ;  // if 1 or more doors:
+        line2.m_Start = get_door_far_coord_plus(l,perp2_distance); // + perp * ;
+        line1.m_End   = get_door_near_coord_plus(l+1,0) + perp * perp1_distance;  // if 1 or more doors:
+        line2.m_End   = get_door_near_coord_plus(l+1,0) + perp * perp2_distance;
+
+        add_line_seg( line1, mHeight, end_retraction, &lines );
+        add_line_seg( line2, mHeight, end_retraction, &lines );
+    }
+    
+    // last line :  end of last door to end of wall.
+    if (doors>0)
+    {
+        line1.m_Start = get_door_far_coord_plus(doors-1,perp1_distance); // + perp * ;  // if 1 or more doors:
+        line2.m_Start = get_door_far_coord_plus(doors-1,perp2_distance); // + perp * ;
+        
+        line1.m_End = get_far_end() + perp * perp1_distance;
+        line2.m_End = get_far_end() + perp * perp2_distance;
+
+        add_line_seg( line1, mHeight, end_retraction, &lines );
+        add_line_seg( line2, mHeight, end_retraction, &lines );
+    }
+    return &lines;
 }
 
 //bool glComputeableWall::evaluate_collision( glMovingObject* mOther )

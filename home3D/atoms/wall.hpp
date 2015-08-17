@@ -32,70 +32,64 @@ struct stSize {
     float height;
 };
 
+#define m_wall_thickness m_extrusion_length
+
 class glBareWall : public glExtrusion
 {
 public:
 	glBareWall ( );
     ~glBareWall( );
-    
-    void            Initialize      (   );
-    virtual void    relocate        ( float mX, float mY, float mZ );
-    
-	void    set_texture             ( int mSelection );
-	void    generate_texture_coords (   );
-	void    clear                   (	);
-    float   get_visible_height      (   )
-            { if (m_show_half_height) return m_wall_height/2.0; else return m_wall_height; };
 
-	bool    add_door         (  float mPositionLengthwise,
-                                float mWidth       =DEFAULT_DOOR_WIDTH,
-                                float mHeight      =79.0,
-                                bool  mDoorwayOnly =false );
-
-	bool    add_window        ( float mPositionLengthwise, struct stSize mSize, float mHeight=36.0 );
-    bool	is_valid_location ( float mPositionLengthwise, float mWidth = 36.0 );
+    void            clear                   (	);
+    void            Initialize              (   );
     
+    void            set_length_height       ( float mLength, int  mHeight=DEFAULT_WALL_HEIGHT );
+	void            set_texture             ( int mSelection );
+    void            setup                   (  );    
+    float           get_visible_height      (   );
+
 	// ADD DOORS & WIDOWS BEFORE CREATE()!
-    void            set_length_height    ( float mLength, int  mHeight = DEFAULT_WALL_HEIGHT );
-    void            setup                (  );
-	void            create               (  );
-	
-    void            extract_2d_line_info (  );      // Call this if any of the m_xyz_angles have changed!
-	struct Vertex	get_door_coord		 (  int mDoorIndex  );
-	struct Vertex	get_door_center_coord(  int mDoorIndex  );
-    struct Vertex	get_door_far_coord	 (  int mDoorIndex  );
+	bool            add_door                (   float mPositionLengthwise,
+                                                float mWidth       =DEFAULT_DOOR_WIDTH,
+                                                float mHeight      =79.0,
+                                                bool  mDoorwayOnly =false );
+
+	bool            add_window                  ( float mPositionLengthwise,
+                                                  struct stSize mSize,
+                                                  float mHeight=36.0        );
+    bool            is_valid_location           ( float mPositionLengthwise, float mWidth = 36.0 );
+    void            generate_window_texture_coords( );
+    void            generate_texture_coords     (   );
 
 	// VERTICES:
-	void			generate_wall_vertices      ( );
+    virtual void	generate_vertices           ( );
+    void			generate_wall_vertices      ( );
 	void			generate_door_vertices      ( );
 	void			generate_window_vertices    ( );
-	virtual void	generate_layer_vertices     ( );
 
 	// INDICES:	
-	void 			generate_marks              ( );
-	void			generate_wall_indices       ( );
+    virtual void 	generate_indices            ( );
+    void 			generate_marks              ( );
+    void			generate_wall_indices       ( );
 	void			generate_window_side_indices( );
 	void 			generate_wall_side_indices  ( );
-	virtual size_t 	generate_disc_indices       ( GLuint mStartingVertexIndex );
 
-	virtual void	draw_body                   ( );
+    // PRINT:
 	void			print_marks                 ( );
     void            print_info                  ( );
     void            print_door_info             ( );
     void            print_window_info           ( );
+    virtual void	draw_body                   ( );
     
     //=============== VARIABLES ==========================
-	int             m_windows_index_start;		// index into m_indices where the window edges start.
-    float           m_wall_thickness;
-    float           m_wall_length;          // in inches
-    float           m_wall_height;          // in inches
+    float           m_wall_length;              // in inches
+    float           m_wall_height;              // in inches
     bool            m_show_half_height;
+    int             m_windows_index_start;		// index into m_indices where the window edges start.
     
-    Line            m_line;                 // 2 vectors origin and direction.
-
+    
     // These are for punching out the holes only.  don't contain the actual door.  too much info in it.
     // swing, open, hinge side, etc.  The doors, plugs, lightswitches, etc will be stored in FullWall molecule.
-    
     vector<struct stWindow>     m_windows ;
     vector<struct doorway_info> m_doorways;
 };

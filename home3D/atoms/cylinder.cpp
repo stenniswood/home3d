@@ -26,7 +26,7 @@ glCylinder::glCylinder( int mNumberSamples )
 	m_extrusion_axis = 1;
 }
 
-void glCylinder::generate_layer_vertices( )
+void glCylinder::generate_vertices( )
 {	
 	struct Vertex v;
     set_vertex_color(v);
@@ -60,7 +60,6 @@ void glCylinder::generate_layer_vertices( )
 		m_vertices.push_back( v );
 	}
 	m_layer_one_vertices = m_vertices.size();
-	//printf("glCylinder::generate_layer_vertices()  %d\n", m_layer_one_vertices );
 }
 
 size_t glCylinder::generate_disc_indices( GLuint mStartingVertexIndex )
