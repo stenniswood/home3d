@@ -25,22 +25,6 @@ void glTableCenterPole::Initialize	( )
 //    m_object_class  = 15;
 }
 
-/*void glTableCenterPole::relocate	( float mX, float mY, float mZ )
-{    
-    m_table_top.m_x = mX;
-    m_table_top.m_y = mY+m_table_height; //m_table_top.get_height();	// zero is at bottom of table!
-    m_table_top.m_z = mZ;
-    
-    m_center_pole.m_x = mX;
-    m_center_pole.m_z = mZ;
-    
-    for (int f=0; f<m_table_num_feet; f++)
-    {
-        m_feet[f].m_x = mX;
-        m_feet[f].m_y = mY;
-        m_feet[f].m_z = mZ;
-    }    
-}*/
 
 void glTableCenterPole::create_components()
 {
@@ -52,13 +36,15 @@ void glTableCenterPole::create_components()
 
     // Table Height. m_y is the center of the cylinder (middle of leg)
     m_table_top.m_is_closed = true;
-    m_table_top.setup(TABLE_THICKNESS, 1);
+    m_table_top.set_la( TABLE_THICKNESS, 1 );
+    m_table_top.setup( );
     //m_table_top.load_image("textures/oak_wood.jpg");
     m_components.push_back( &m_table_top );
     
     m_center_pole.m_radius = 1.5;
     set_relative_xyz( &m_center_pole, 0., 0., 0. );
-    m_center_pole.setup(m_table_height, 1);
+    m_center_pole.set_la(m_table_height, 1);
+    m_center_pole.setup ( );
     m_components.push_back( &m_center_pole );
 
     static glBox      one;

@@ -1,7 +1,7 @@
 #ifndef _EXTRUSION_H_
 #define _EXTRUSION_H_
 
-#include <vector>
+//#include <vector>
 using namespace std;
 #include "gl_atom.hpp"
 
@@ -31,7 +31,8 @@ class glExtrusion : public glAtom
 {
 public:
 	glExtrusion( );
-	void                setup (float mLength = -1, int mAxis=-1);
+    void                set_la(float mLength, int mAxis);
+    virtual void        setup ();
 
     virtual void        generate_vertices		( );
 	void                extrude_vertices		( float mExtrusionLength, int mLoftAxis=-1 );

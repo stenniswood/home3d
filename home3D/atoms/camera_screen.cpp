@@ -74,7 +74,8 @@ int CameraTexture::timeslice()
     if (ptr)
     {
         // update data directly on the mapped buffer
-        memcpy( ptr, m_image.data, DATA_SIZE );
+        if ((m_image.data) && (ptr))
+            memcpy( ptr, m_image.data, DATA_SIZE );
         glUnmapBufferARB(GL_PIXEL_UNPACK_BUFFER_ARB);   // release pointer to mapping buffer
     }
     // it is good idea to release PBOs with ID 0 after use.
@@ -97,8 +98,7 @@ glCameraScreen::glCameraScreen()
 {
     m_texture = new CameraTexture();
     m_samples_per_inch  = 4;
-    Initialize( 10, 10.0);
-
+    Initialize( 10, 10.0 );
 }
 
 glCameraScreen::~glCameraScreen()

@@ -20,6 +20,11 @@ public:
     glRobotInterpolator();
     ~glRobotInterpolator();
     
+    void        save_one_vector   ( std::ofstream &mofs, int mIndex, bool mSaveArms=false );
+    void        read_sequence_file();       // These can be played on the "asequencer" app.
+    void        save_sequence_file( string mFilename );
+    
+    
     float      interpolate_one ( float mAngle1, float mAngle2,
                                  float mNumberOfSamples, float mIndex );
                                 
@@ -32,7 +37,7 @@ public:
     bool    play_next  ( );
     void    morph_demos( );
     
-    vector<struct stBodyPosition>   m_interpolated_sequence;
+    vector<struct stBodyPosition>   m_sequence;
     int     m_interpolated_index;
 };
 

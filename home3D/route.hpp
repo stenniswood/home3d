@@ -23,6 +23,7 @@ ALTERNATIVELY:
 #define _ROUTE_H_
 
 #include <vector>
+#include "gl_misc.h"
 #include "vector.hpp"
 #include "multi_path_route.h"
 
@@ -55,12 +56,17 @@ public:
     void             add_sample             ( MathVector   mPoint  );
 
     virtual void     create_from_multi      ( glMultiRoute& mMulti );
+    void             show_direct_path       ( bool mDraw = true );
     
     float 			 get_angle_degrees      ( int mIndex );
 	void 			 compute_slopes			( );
 	MathVector       compute_delta			( int mIndex );
 	struct stRiseRun compute_perpendicular	( int mIndex );
-    MathVector       get_perpendicular      ( int mIndex, float mPerpendicular_Distance );
+    MathVector       get_perpendicular_pt   ( int mIndex, float mPerpendicular_Distance );
+
+    MathVector       get_directional_vector  ( int mIndex );
+    MathVector       get_perpendicular_vector( int mIndex );
+
     
 	//void 			 change_vertices_colors	( );	// makes robot feet in red.
 	//virtual void	 generate_vertices		( );
@@ -71,9 +77,13 @@ public:
 	struct Vertex 	 m_start;
 	struct Vertex 	 m_end;
 
+    float            m_line_width;
+    float            m_sample_spacing_inches;       // when add_way_point() how often should we sample the line?
+    
     vector<MathVector>      m_xyz;
 	vector<MathVector>      m_slopes;		// rise/run of the path
-	
+	glLine                  m_direct_path;
+    
 	// IBO / VBO:
 	int             m_number_path_vertices;
 };

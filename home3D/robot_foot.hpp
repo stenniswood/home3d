@@ -14,7 +14,7 @@ class glFootShape : public glExtrusion
 public:
 	glFootShape();
 
-	virtual void	generate_vertices( );
+	virtual void	generate_vertices      ( );
 	virtual size_t 	generate_disc_indices  ( GLuint mStart_of_top_index );
 	virtual void	draw_body			   ( );
 };
@@ -39,7 +39,7 @@ public:
 
     virtual void        draw_body        ( );
     void                calc_angle       ( struct stFootPosition &mfp );
-    void                make_flat_footed ( );
+    //void                make_flat_footed ( );     Deprecated - call the Leg function instead (leg has knowledge of all leg angles)
     
     MathVector          get_vector();    
     float               get_floor_projection_angle(  );     // X,Z coordinates
@@ -54,7 +54,7 @@ public:
     struct stFootPosition m_robot_coords;
     struct stFootPosition m_foot_coords;     // heel & toe location in foot coordinates
     
-
+    float           m_ankle_height;      // floor to center of ankle pivot;
     float           m_foot_length;
     float           m_ankle_to_heel;    // distance
 };

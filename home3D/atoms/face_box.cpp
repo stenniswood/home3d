@@ -27,6 +27,7 @@
 using namespace cv;
 using namespace std;
 
+#define Debug 0
 
 CuboidTexture::CuboidTexture()
 {
@@ -65,11 +66,11 @@ GLuint	CuboidTexture::generate_TBO	( int mSide )
             break;
         default: break;
     }
-    printf("Texture::generate_TBO: rows=%d; cols=%d\n", m_images[mSide].rows, m_images[mSide].cols);
+    dprintf("Texture::generate_TBO: rows=%d; cols=%d\n", m_images[mSide].rows, m_images[mSide].cols);
     glEnable     (GL_TEXTURE_2D );
     glGenTextures(1, &m_TBOs[mSide]     );
     glBindTexture(GL_TEXTURE_2D, m_TBOs[mSide]);
-    printf("Texture::generate_TBO: m_TBO=%d\n", m_TBOs[mSide]);
+    //dprintf("Texture::generate_TBO: m_TBO=%d\n", m_TBOs[mSide]);
     
     /* may need these for odd sized images: */
     glPixelStorei(GL_UNPACK_ALIGNMENT,   1);
@@ -150,7 +151,7 @@ void CuboidTexture::apply_right( Mat* mImage, char mOrientation )
 /***************************** glFaceBox **************************************/
 glFaceBox::glFaceBox(  )
 {
-    
+    m_uses_normals = true;
     for (int i=0; i<6; i++) {
         m_orientations[i] = 0;
     }
@@ -160,7 +161,6 @@ glFaceBox::glFaceBox(  )
     m_object_type_name = "textured box";
     m_object_class  = 9;
     m_side_applied	= TOP_SIDE_ID;
-    
     m_texture = new CuboidTexture();
 }
 
@@ -169,7 +169,7 @@ void glFaceBox::generate_vertices	( )
 {
     struct Vertex_pnc v;
     set_vertex_color( v );
-    
+
     // FACE #1: (back)
     v.normal[0]   = 0.0;
     v.normal[1]   = 0.0;
@@ -304,16 +304,13 @@ void glFaceBox::generate_indices ( )
         m_indices.push_back(i);
 }
 
-Mat* glFaceBox::load_image( string mFilename, int mSide )
+Mat* glFaceBox::load_image( string mFilename, int mSide, int mOrientation )
 {
 //    m_side[mSide] = new Texture();
 //    m_side[mSide]->load_image(mFilename);
-    ((CuboidTexture*)m_texture)->load_image(mFilename, mSide);
+    ((CuboidTexture*)m_texture)->load_image(mFilename, mSide, mOrientation);
     return &(((CuboidTexture*)m_texture)->m_images[mSide]);
 }
-
-
-
 
 // Show the texture just on 1 side ()
 /*void glFaceBox::wrap_3_sides( )
@@ -384,7 +381,9 @@ void glFaceBox::draw_body()
     
     glVertexPointer (3, GL_FLOAT, 		  sizeof(struct Vertex), NULL );
     glColorPointer  (4, GL_UNSIGNED_BYTE, sizeof(struct Vertex), (GLvoid*)(offsetof(struct Vertex,color)));
+    glNormalPointer (GL_FLOAT,            sizeof(struct Vertex), (GLvoid*)(offsetof(struct Vertex,color)) );
     
+    glEnableClientState( GL_NORMAL_ARRAY );
     glEnableClientState( GL_VERTEX_ARRAY );
     glEnableClientState( GL_COLOR_ARRAY  );
 

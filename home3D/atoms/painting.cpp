@@ -15,12 +15,19 @@ glPainting::glPainting()
     m_frame_width      = 1.5;
     m_matting_width    = 2;
     m_object_type_name = "painter";
+    m_painting = NULL;
+    m_frame    = NULL;
+    m_matting  = NULL;
 }
 
 glPainting::~glPainting()
 {
-    if (m_painting->m_texture)
-        delete m_painting->m_texture;
+    if (m_painting)
+        delete m_painting;
+    if (m_frame)
+        delete m_frame;
+    if (m_matting)
+        delete m_matting;
 }
 
 void glPainting::create_components()

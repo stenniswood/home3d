@@ -5,7 +5,10 @@
 #define _ROOM_H_
 
 #include <vector>
-#include "wall.hpp"
+#include "rectangle.h"
+#include "full_wall.h"
+
+#include "super_string.hpp"
 
 using namespace std;
 
@@ -13,25 +16,34 @@ using namespace std;
    Derive a class from it which adds the walls (create_apartment)
  
  */
-class glRoom  : public glMap2D
+class Room  : public Rectangle
 {
 public:
-	glRoom	(  );
+	Room  ();
+    ~Room ();
 
-    void    update_line_info  ( );      // wall origins and vectors.
-	void 	create_apartment( );
-    void    create_room     ( float width, float length );
+    void    place_next_to_x   ( Room& mReference );
+    void    place_next_to_y   ( Room& mReference );
+    MathVector get_room_center( );
     
-	float               m_height;
-	unsigned long int   m_color ;
-
-	// FOR 2D Drawing (and maze solving):
-	glMap2D             create_map( );
-
-	vector<glObject>	m_furniture;
-	vector<glObject>	m_things;
-
+    bool    contains          ( MathVector mLocation );
+    
+    void    create_room       ( float width, float length );      // create the walls bounding the room.
+    void    update_line_info  ( );      // wall origins and vectors.
+    
+    
+	SuperString                 m_names;
+private:
+    float                       m_height;
+    
+    vector<glFullWall*>         m_bounding_walls;
+    vector<glDoor*>             m_doors;
+    vector<struct stWindow*>    m_windows;
+    
 };
 
-#endif
 
+int scan_rooms( vector<Room>& mRooms, MathVector mv );
+
+
+#endif

@@ -57,4 +57,8 @@ extern list<glAtom*>    m_scene;
 void                    change_route( MathVector mSource, MathVector mDestination );
 extern glWalkingRobot   robot;           // Used in proc_client_commands()
 
+#define __FILENAME__ (strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : __FILE__)
+#define dprintf if (Debug) printf("%s ", __FILENAME__); if (Debug) printf
+
+
 

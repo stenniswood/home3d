@@ -34,10 +34,10 @@ public:
     void    set_tilt  ( float mDegrees );
     
     // Use these for viewing what the robot views:
-    MathVector    get_left_coordinate     ();
-    MathVector    get_right_coordinate    ();
-    MathVector    get_cyclops_coordinate  ();
-    glm::vec4     get_cyclops_fov_center_coordinate();
+    MathVector    get_left_coordinate     (bool mPupil=false);      /* In head coordinates - center of eye (add EYE_RADIUS to Z for pupil) */
+    MathVector    get_right_coordinate    (bool mPupil=false);      /* In head coordinates - center of eye (add EYE_RADIUS to Z for pupil) */
+    MathVector    get_cyclops_coordinate  ();                       /* In head coordinates */
+    glm::vec4     get_cyclops_fov_center_coordinate();              /* In head coordinates */
     
     glSphere*    m_head;
     glSphere*    m_eye1;

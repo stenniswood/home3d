@@ -30,9 +30,6 @@ void glMolecule::Initialize	( )
 
 void glMolecule::relocate	( float mX, float mY, float mZ )
 {
-//    float deltaX = m_x - mX;
-//    float deltaY = m_y - mY;
-//    float deltaZ = m_z - mZ;
     m_x = mX;
     m_y = mY;
     m_z = mZ;
@@ -168,6 +165,13 @@ void glMolecule::gl_unregister    ( )
     for (int i=0; i<m_components.size(); i++)
         m_components[i]->gl_unregister();
 }
+
+void glMolecule::release_memory(  )
+{
+    for (int i=0; i<m_components.size(); i++)
+        m_components[i]->release_memory();
+}
+
 
 void glMolecule::draw_body( )
 {

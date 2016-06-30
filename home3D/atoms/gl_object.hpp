@@ -2,10 +2,6 @@
 #define _OBJECT_H_
 
 #include <vector>
-#include "vector.hpp"
-#include "moving_object.h"
-//#include "verbal_object.h"
-#include "tk_colors.h"
 
 
 using namespace std;
@@ -17,6 +13,10 @@ using namespace std;
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+
+#include "vector.hpp"
+#include "moving_object.h"
+#include "tk_colors.h"
 
 
 struct Vertex_p
@@ -67,24 +67,25 @@ public:
 	virtual void	relocate        ( float mX, float mY, float mZ );
     void            relocate        ( MathVector mNewLocation );
 
-    virtual void 	set_color       ( Color mColor    );
+    virtual void 	set_color       ( Color mColor      );
 	virtual void 	set_color       ( long mColor       );
     void            stamp_color     ( struct Vertex& mV );
 
     virtual void	gl_register     (  );
     virtual void    gl_unregister   (  );
-
+    
+    virtual void    release_memory  (  ) { };
+    
     // Returns a matrix with translate and rotations (same as drawn) for compute purposes.
     // mOne,mTwo,mThree - selects the ordering of the rotations.
     glm::mat4       get_body_matrix         ( int mOne=0, int mTwo=1, int mThree=2 );
     glm::mat4       get_body_matrix_inverse ( int mOne=2, int mTwo=1, int mThree=0 );
     glm::vec4       get_position            ( );
 
-
     MathVector      map_coords              ( MathVector mObjectCoordinate );
     MathVector      map_to_object_coords    ( MathVector mParentCoordinate );
-    glm::vec4       map_coords              ( glm::vec4 mObjectCoordinate );
-    glm::vec4       map_to_object_coords    ( glm::vec4 mParentCoordinate );
+    glm::vec4       map_coords              ( glm::vec4 mObjectCoordinate  );
+    glm::vec4       map_to_object_coords    ( glm::vec4 mParentCoordinate  );
     
 
 	virtual void	draw_body		( );	// Override this with open gl commands.

@@ -40,9 +40,7 @@ public:
     MathVector m_acceleration;
     MathVector m_velocity;
     MathVector m_position;
-    
     MathVector m_prev_position;     // not sure this is right way to do it (used to restore after a collision)
-    
 
     // ROTATIONAL:
     MathVector Inertia;               // 3 axis.

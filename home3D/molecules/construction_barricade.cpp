@@ -31,38 +31,45 @@ void glBarricade::Initialize	( )
 
 void glBarricade::create_components()
 {
-    long bcolor = 0xFF8F3030;
+    //long bcolor = 0xFF8F3030;
     
     //*** Three Boards :
-    glBox* board = new glBox();
+    glFaceBox* board = new glFaceBox();
     board->width  = 70.;
     board->height = 10.;
     board->depth  = 1.5;
     board->m_y    = 10;
-    board->change_bottom_color(bcolor);
-    board->change_top_color   (bcolor);
+    board->set_color(0xFFFFFFFF);
+    Mat* txt = board->load_image("textures/barricade_texture.png");
+    CuboidTexture*  texture = (CuboidTexture*)board->m_texture;
+    texture->apply_front( txt, 1 );
+    texture->apply_back ( txt, 1 );
     board->setup();
     board->grab_right();
     m_components.push_back( board );
 
-    glBox* board2 = new glBox();
+    glFaceBox* board2 = new glFaceBox();
     board2->width  = 70.;
     board2->height = 10.;
     board2->depth  = 1.5;
     board2->m_y    = 30;
-    board2->change_bottom_color(bcolor);
-    board2->change_top_color   (bcolor);
+    board2->set_color(0xFFFFFFFF);
+    texture = (CuboidTexture*)board2->m_texture;
+    texture->apply_front( txt, 1 );
+    texture->apply_back ( txt, 1 );
     board2->setup();
     board2->grab_right();
     m_components.push_back( board2 );
 
-    board2 = new glBox();
+    board2 = new glFaceBox();
     board2->width  = 70.;
     board2->height = 10.;
     board2->depth  = 1.5;
     board2->m_y    = 50;
-    board2->change_bottom_color(bcolor);
-    board2->change_top_color   (bcolor);
+    board2->set_color(0xFFFFFFFF);
+    texture = (CuboidTexture*)board2->m_texture;
+    texture->apply_front( txt, 1 );
+    texture->apply_back ( txt, 1 );
     board2->setup();
     board2->grab_right();
     m_components.push_back( board2 );

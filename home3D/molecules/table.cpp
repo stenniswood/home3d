@@ -16,10 +16,12 @@ glTable::glTable(  )
 glTable::~glTable(  )
 {
     // Delete legs:
-    delete m_components[1];
-    delete m_components[2];
-    delete m_components[3];
-    delete m_components[4];
+    if (m_components.size()>=4) {
+        delete m_components[1];
+        delete m_components[2];
+        delete m_components[3];
+        delete m_components[4];
+    }
 }
 
 
@@ -52,32 +54,34 @@ void glTable::create_components( )
     set_relative_xyz(  tmp, -m_table_top.width/2., 0., -m_table_top.depth/2. );
     //  m_y is the center of the cylinder (middle of leg)
 	m_table_legs.push_back( tmp );
-    tmp->setup( m_table_height, 1 );
+    tmp->set_la(m_table_height, 1 );
+    tmp->setup( );
     m_components.push_back( tmp );
 
     tmp = new glCylinder(24);
 	tmp->m_radius = 1.5;
     set_relative_xyz(  tmp, +m_table_top.width/2., 0., -m_table_top.depth/2. );
 	m_table_legs.push_back( tmp );
-    tmp->setup(m_table_height, 1);
+    tmp->set_la(m_table_height, 1 );
+    tmp->setup ();
     m_components.push_back( tmp );
     
     tmp = new glCylinder(24);
 	tmp->m_radius = 1.5;
     set_relative_xyz(  tmp, -m_table_top.width/2., 0., +m_table_top.depth/2. );
     m_table_legs.push_back( tmp );
-    tmp->setup(m_table_height, 1);
+    tmp->set_la(m_table_height, 1 );
+    tmp->setup();
     m_components.push_back( tmp );
 
     tmp = new glCylinder(24);
 	tmp->m_radius = 1.5;
     set_relative_xyz(  tmp, m_table_top.width/2., 0., m_table_top.depth/2. );
 	m_table_legs.push_back( tmp );
-    tmp->setup(m_table_height, 1);
+    tmp->set_la(m_table_height, 1 );
+    tmp->setup();
     m_components.push_back( tmp );
 }
-
-
 
 
 /*void glTable::relocate( float mX, float mY, float mZ )

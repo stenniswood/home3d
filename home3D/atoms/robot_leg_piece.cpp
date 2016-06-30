@@ -1,17 +1,25 @@
-#include <stddef.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <vector>
 #include <math.h>
+
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 #include <OpenGL/OpenGL.h>
 #include <GLUT/glut.h>
 #include <OpenGL/glext.h>
-#include "all_objects.h"
 
+#include "gl_atom.hpp"
+
+#include "bk_system_defs.h"
+#include "robot_leg_piece.hpp"
 
 const float shank_radius = 3./16.;
 const float round_radius = 3./16.;
 const float LEG_THICKNESS= 2.5;
-const int SHANK_SAMPLES  = 36.;
+const int   SHANK_SAMPLES= 36.;
 
 #define  TOP_AND_BOTTOM 2
 #define  BUFFER_OFFSET(i) ((GLuint*)NULL + (i))
@@ -22,18 +30,21 @@ Outer and Inner could be the same 2D shape!
 just turn them around from each other and make the inner thicker.
 */
 glInner::glInner()
+:glExtrusion()
 {
 	m_extrusion_length  = 3.;		// inches
 	m_layer_one_indices	= 12;
 }
+
 
 // Cut a hole for the "axle"
 void glInner::generate_shank_vertices( )		// 2D
 {
 	float angle       = 0.0;
 	float increment   = 2.*M_PI/SHANK_SAMPLES;
-	struct Vertex v;
+    struct Vertex_pnc v;
     set_vertex_color(v);
+    
 	for (int i=0; i<SHANK_SAMPLES; i++)	
 	{		
 		v.position[0] = shank_radius*sin(angle);
@@ -52,7 +63,7 @@ void glInner::generate_round_vertices( )		// 2D
 	// not sure which quadrant we'll need.  Let's try going from [-PI/2 to +PI/2]
 	float angle       = -2.*M_PI/4.;			
 	float increment   = M_PI/SAMPLES;	// half circle only!
-	struct Vertex v;
+	struct Vertex_pnc v;
     set_vertex_color(v);
 	for (int i=0; i<SAMPLES; i++)	
 	{
@@ -68,7 +79,7 @@ void glInner::generate_round_vertices( )		// 2D
 void	glInner::generate_layer_vertices( )
 {
 	m_layer_one_vertices = 13;
-	struct Vertex v;
+	struct Vertex_pnc v;
     set_vertex_color(v);
 	
 	// Go along bottom first:
@@ -107,11 +118,10 @@ GLbyte 	glInner::generate_disc_indices( GLbyte mStartingVertexIndex )
 	return 0;
 }
 
-/*************************************************************************************/
-/* My leg (approximately):
-Ankle to Knee - 17"
-Knee  to Hip  - 17"			*/
-
+/*************************************************************************************
+        glLegSegment
+*************************************************************************************/
+// Ctor:
 glLegSegment::glLegSegment( float mLength )
 : glCylinder( 16 )
 {
@@ -120,21 +130,29 @@ glLegSegment::glLegSegment( float mLength )
     m_extrusion_length    = mLength-FORK_CENTER_LENGTH-TONGUE_CENTER_LENGTH;
 	m_number_fork_indices = 0;
 }
-
+glLegSegment::~glLegSegment()
+{    
+}
 void glLegSegment::setup( )
 {
-	glCylinder::setup( -1, 1 );
+    glCylinder::set_la( -1.0, 1 );
+	glCylinder::setup( );
     
     m_fork_start_vertex   = (int)m_vertices.size();
 
-	//Let the Center of the fork be halfway between these two :    
+	//Let the Center of the fork be halfway between these two :
+    long color = m_color;
+    set_color( 0xFF4f4f4f );
 	generate_fork_vertices( TONGUE_WIDTH, m_extrusion_length+0.0 );
 	generate_fork_vertices( TONGUE_WIDTH, m_extrusion_length+FORK_CENTER_LENGTH*2 );
+    set_color( color );
 
-	generate_fork_indices ( );
+    generate_fork_indices ( );
 	m_stud_start_vertex   = (int)m_indices.size();
-	generate_stud_vertices( TONGUE_WIDTH, TONGUE_CENTER_LENGTH, TONGUE_WIDTH*0.95 );		// mRadius, mLength, mWidth 
-	//printf("Total LegSegment vertices = %lu \n", m_vertices.size() );
+    set_color( 0xFF8f8f8f );
+    generate_stud_vertices( TONGUE_WIDTH, TONGUE_CENTER_LENGTH, TONGUE_WIDTH*0.95 );		// mRadius, mLength, mWidth
+    set_color( color );
+    //printf("Total LegSegment vertices = %lu \n", m_vertices.size() );
 }
 
 /* 
@@ -241,7 +259,7 @@ void glLegSegment::generate_stud_vertices( float mRadius, float mLength, float m
 {
 	struct Vertex   v;
 //	v.color[0] = 0x9F;		v.color[1] = 0x7F;		v.color[2] = 0x9F;		v.color[3] = 0x7F;
-//    v.color[0] = 0x7F;		v.color[1] = 0x7F;		v.color[2] = 0x7F;		v.color[3] = 0x7F;
+//  v.color[0] = 0x7F;		v.color[1] = 0x7F;		v.color[2] = 0x7F;		v.color[3] = 0x7F;
     set_vertex_color(v);
 	int   i;
 	float half_key_width = mWidth / 2.0;
@@ -387,6 +405,8 @@ void glLegSegment::draw_body()
 				   (GLvoid*)BUFFER_OFFSET( m_stud_start_vertex ) );
 }
 
+
+
 /***************************************************************************/
 /*************************   glLeg   ***************************************/
 /***************************************************************************/
@@ -415,14 +435,16 @@ void glLeg::create_components()
 	Initialize();
     m_upper_leg.set_color(0xFFFF0000);
 	m_upper_leg.setup();
-    m_upper_leg.set_color(0xFFFF0000);
+    
+    m_lower_leg.set_color(0xFFFF0000);
     m_lower_leg.setup();
-    m_upper_leg.set_color(0xFFFF9F00);
+    
+    m_foot.set_color(0xFFFF9F00);
     m_foot.setup(  );
 
     m_components.push_back( &m_upper_leg );
     m_components.push_back( &m_lower_leg );
-    m_components.push_back( &m_foot );
+    m_components.push_back( &m_foot      );
     
 	float offset = m_upper_leg.m_extrusion_length + FORK_CENTER_LENGTH;
 	m_upper_leg.add_offset( 0, -offset, 0 );    // ie hold at top.
@@ -482,7 +504,7 @@ bool	glLeg::set_hip_rotate_angle( float mDegrees )
 	m_hip_rotate_angle = mDegrees;
 	return true;
 }
-bool	glLeg::set_hip_swing_angle( float mDegrees )
+bool	glLeg::set_hip_sideways_swing_angle( float mDegrees )
 {
     if (mDegrees<MIN_HIP_SS_SWING_ANGLE)  return false;
     if (mDegrees>MAX_HIP_SS_SWING_ANGLE)  return false;
@@ -540,7 +562,7 @@ float glLeg::get_length()  // from hip to heel
 {
     // can modify this later for when the knee is bent.
     // but it works okay for our robot.place heel at (since the leg is straight)
-    return ( m_upper_leg.m_joint_length + m_lower_leg.m_joint_length + m_foot.m_ankle_to_heel );
+    return ( m_upper_leg.m_joint_length + m_lower_leg.m_joint_length + m_foot.m_ankle_height );
 }
 
 /* Computation can be reduced significantly by storing the matrices.  Marking them 
@@ -557,11 +579,13 @@ glm::vec4 glLeg::map_foot_to_robot_coords( glm::vec4 mFootCoord )
  invalid and recomputing only when a change occurs.  */
 glm::vec4 glLeg::map_foot_to_leg_coords( glm::vec4 mFootCoord )
 {
+    transfer_angles();
     glm::mat4 upper_leg_mat    = m_upper_leg.get_body_matrix( 1,0,2 );  // rotates for the hip
     glm::mat4 lower_leg_mat    = m_lower_leg.get_body_matrix( );        // is rotate and lower leg length
     glm::mat4 foot_mat         = m_foot.get_body_matrix     ( );
     glm::mat4 combined_mat     = upper_leg_mat * lower_leg_mat * foot_mat;
 
+//    glm::vec4 leg_coord  = upper_leg_mat * mFootCoord;
     glm::vec4 leg_coord  = combined_mat * mFootCoord;
     return leg_coord;
 }
@@ -587,8 +611,23 @@ glm::vec4 glLeg::map_leg_to_foot_coords( glm::vec4 mLegCoord )    // result in m
 
 
 /* Gets the HEEL position in robot coordinates and stores this in the foot. */
+glm::vec4 glLeg::get_knee_in_robot_coords( )
+{
+    transfer_angles();
+    // Start in Foot Coordinates:
+    glm::vec4 knee_location( 0.0, -m_upper_leg.m_joint_length, 0.0, 1. );     // upper leg coords
+    glm::mat4 upper_leg_mat  = m_upper_leg.get_body_matrix( 1,0,2 );          // upper leg -> leg coords
+    glm::vec4 knee_location2 = upper_leg_mat * knee_location;
+    glm::vec4 knee_location3 = map_coords( knee_location2 );
+
+    //glm::vec4 knee_in_robot_coords = map_foot_to_robot_coords( knee_location );
+    return knee_location3;
+}
+
+/* Gets the HEEL position in robot coordinates and stores this in the foot. */
 glm::vec4 glLeg::get_heel_in_robot_coords( )
 {
+    // Start in Foot Coordinates:
     glm::vec4 heel_location( m_foot.m_foot_coords.heel[0], m_foot.m_foot_coords.heel[1], m_foot.m_foot_coords.heel[2], 1. );
     glm::vec4 heel_in_robot_coords = map_foot_to_robot_coords( heel_location );
     
@@ -598,6 +637,7 @@ glm::vec4 glLeg::get_heel_in_robot_coords( )
     m_foot.m_robot_coords.heel[2] = heel_in_robot_coords[2];
     return heel_in_robot_coords;
 }
+
 /* Gets the TOE position in robot coordinates and stores this in the foot. */
 glm::vec4 glLeg::get_toe_in_robot_coords( )
 {
@@ -611,31 +651,41 @@ glm::vec4 glLeg::get_toe_in_robot_coords( )
     return toe_in_robot_coords;
 }
 
-
-/*static float radians( float degrees)
+float glLeg::get_lower_leg_angle_wrt_gravity()
 {
-    return (M_PI * degrees / 180.0);
+    // The m_hip_fb_swing_angle angles are negative in front of the body.  and Positive behind.  No!
+    // The knee angles are always positive.
+    
+    //float result = (m_hip_fb_swing_angle - m_knee_angle);
+    float result = (m_hip_fb_swing_angle + m_knee_angle);
+    return result;
+}
+
+/*double radians(double deg)
+{
+    return deg * M_PI / 180.0;
 }*/
 
 // distance from hip to heel vertically
-float glLeg::get_vertical_height( bool mHeelOnly )
+float glLeg::get_vertical_height( bool mAnkleOnly )
 {
     float retval = 0.0;
     // UPPER VERTICAL :
-    float angle = radians(m_hip_fb_swing_angle);
+    float angle        = radians(m_hip_fb_swing_angle);
     float upper_height = m_upper_leg.m_joint_length * cos(angle);
     retval += upper_height;
 
+
     // LOWER VERTICAL :
-    angle += m_knee_angle;
+    angle = radians (get_lower_leg_angle_wrt_gravity());
     float lower_height = m_lower_leg.m_joint_length * cos(angle);
     retval += lower_height;
     
     // FOOT VERTICAL :
-    if (mHeelOnly==false)
+    if (mAnkleOnly==false)
     {
         angle += m_ankle_angle;
-        float foot_height = m_foot.m_foot_length * cos(angle);
+        float foot_height = m_foot.m_ankle_to_heel * cos(angle);
         retval += foot_height;
     }
     return retval;
@@ -644,28 +694,82 @@ float glLeg::get_vertical_height( bool mHeelOnly )
 float glLeg::get_fore_aft( bool mHeelOnly )             // distance from hip to heel horizontally
 {
     // UPPER VERTICAL :
-    float angle = radians(m_hip_fb_swing_angle);
+    float angle      = - radians(m_hip_fb_swing_angle);
     float upper_fore = m_upper_leg.m_joint_length * sin(angle);
-    
+
     // LOWER VERTICAL :
-    angle += m_knee_angle;
+    angle            = - radians( get_lower_leg_angle_wrt_gravity() );      // Positive angles defined for knee bends.  so subtract not add!
     float lower_fore = m_lower_leg.m_joint_length * sin(angle);
-    
-    float retval = upper_fore + lower_fore;
+    float retval     = upper_fore + lower_fore;
+
     // FOOT VERTICAL :
-    if (mHeelOnly==false)
+    if (mHeelOnly==false)  // ie not toes
     {
-        angle += m_ankle_angle;
+        angle  += radians(m_ankle_angle);
         float foot_fore = m_foot.m_foot_length * sin(angle);
         retval += foot_fore;
     }
     return retval;
 }
 
+// given that the foot is firmly planted.  where is the hip?  (robot coordinates)
+MathVector glLeg::get_hip_anchor_position( MathVector mHeelPosition )
+{
+    MathVector anchor(3);
+//    mHeelPosition
+    return anchor;
+}
+
+/* This will set the ankle motor pivot point to position leg_coords (x,y,z)
+        ie. the ankle or position along the foot is not calculated.
+ 
+ */
+void glLeg::inverse_kinematic_ankle_2d( MathVector leg_coord )
+{
+    MathVector delta = leg_coord - m_position;
+    
+    /* Are there multiple solutions or just one?  The sum of 2 vectors:
+            of predetermined lengths.
+     
+     */
+    // DEG #1 Hip Swing:  (split the height)
+    float dh = delta[2] / 2.0;
+    float dx = delta[0] / 2.0;
+    m_hip_ss_swing_angle = atan2( dh, dh );
+    
+    
+    // possible knee positions:
+    
+    // DEG #2 Knee Swing:
+    m_knee_angle = 0;
+    
+    
+}
+void glLeg::inverse_kinematic_ankle_3d ( MathVector leg_coord )
+{
+    
+    
+}
+
+void glLeg::place_heel_at( glm::vec4 leg_coords )
+{
+
+}
+
+
 void glLeg::make_foot_level(  )       // with ground
 {
-    float angle = (m_hip_fb_swing_angle + m_knee_angle);
-    set_ankle_angle(angle);
+    // knee angle will always be positive!
+    // Ankle angle is positive when ... 
+    // so ankle should be :
+    /*  +20 +20 ==>  +0
+        +20 +10 ==>  +10
+        +10 +10 means  0
+        -10 +10 means 20;
+        -20 +10 means 30;
+    */
+    float angle = get_lower_leg_angle_wrt_gravity();
+    set_ankle_angle( angle );
 }
 
 void glLeg::standing_position( )
@@ -675,28 +779,13 @@ void glLeg::standing_position( )
     set_ankle_angle( 0.0 );
     set_hip_rotate_angle( 0.0 );
 }
-void glLeg::sitting_position( )
-{
-    set_hip_angle( 90.0 );
-    set_knee_angle( 90.0 );
-    set_ankle_angle( 0.0 );
-    set_hip_rotate_angle( 0.0 );
-}
-void glLeg::floor_sitting_position( )    // legs stretched out in front.
-{
-    set_hip_angle( 90.0 );
-    set_knee_angle( 0.0 );
-    set_ankle_angle( 0.0 );
-    set_hip_rotate_angle( 0.0 );
-}
-
-void glLeg::place_heel_at( float mheel[3] )
-{
-        
-}
 
 void glLeg::transfer_angles()
 {
+    m_hip_ss_swing_angle = 0.0;
+    m_lower_leg.m_y_angle = 0.0;
+    m_lower_leg.m_z_angle = 0.0;    
+
     //    m_upper_leg.m_x_angle = -m_hip_fb_swing_angle;
     //    m_upper_leg.m_y_angle = m_hip_rotate_angle;
     //    m_lower_leg.m_x_angle = m_knee_angle;
@@ -707,11 +796,11 @@ void glLeg::draw_body( )
 {
 	glPushMatrix();
     transfer_angles();
-    
+
     glTranslatef( m_upper_leg.m_x, m_upper_leg.m_y, m_upper_leg.m_z );
-    glRotatef   ( m_hip_rotate_angle, 0.0, 1.0, 0.0  );
-    glRotatef   ( -m_hip_fb_swing_angle, 1.0, 0.0,  0.0 );
-    //glRotatef   ( m_hip_ss_swing_angle, 0.0, 0.0,  1.0 );     // add later!
+    glRotatef   ( m_hip_rotate_angle,   0.0, 1.0,  0.0 );
+    glRotatef   ( m_hip_fb_swing_angle, 1.0, 0.0,  0.0 );
+    //glRotatef ( m_hip_ss_swing_angle, 0.0, 0.0,  1.0 );     // add later!
 	m_upper_leg.draw_body();
 
 	glTranslatef( m_lower_leg.m_x,   m_lower_leg.m_y, m_lower_leg.m_z );

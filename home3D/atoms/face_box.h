@@ -69,11 +69,12 @@ class glFaceBox : public glAtom
 public:
     glFaceBox();
     
-    virtual void            generate_vertices( );
-    virtual void            generate_indices ( );
+    virtual void    generate_vertices( );
+    virtual void    generate_indices ( );
+    CuboidTexture*  get_texture()  { return (CuboidTexture*)m_texture;  };
 
     // Show the texture just on 1 side ()
-    Mat*            load_image				(string mFilename, int mSide=1);
+    Mat*            load_image				(string mFilename, int mSide=1, int mOrientation=0);
     
     GLuint			generate_texture_coords_4_side_stretch( );
     GLuint			generate_texture_coords	( int mSide );
@@ -87,9 +88,9 @@ public:
     int             m_repetitions_x;
     int             m_repetitions_y;
     
-    float 	width;          // X axis
-    float 	height;         // Y axis
-    float 	depth;          // Z axis
+    float           width;          // X axis
+    float           height;         // Y axis
+    float           depth;          // Z axis
     
     vector<struct stTextCoord>	m_TexCoords;    
     char             m_orientations[6];

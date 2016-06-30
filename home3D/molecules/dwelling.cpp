@@ -8,6 +8,7 @@
 
 #include "dwelling.h"
 #include "all_objects.h"
+#include "roof.h"
 
 
 glDwelling::glDwelling()
@@ -27,8 +28,19 @@ void glDwelling::add_level( glDwellingLevel* mLevel )
     m_components.push_back( mLevel );
     m_levels.push_back(mLevel);
 
-    
     m_level_height += 10*12;
+}
+
+void glDwelling::add_roof()
+{
+    MathVector corner1(3);
+    MathVector corner2(3);
+    
+    m_roof = new glRoof(corner1, corner2);
+    m_roof->setup();
+    m_roof->relocate( 0, 0, 0 );
+    m_components.push_back(m_roof);
+    
 }
 
 /*glDoor* glDwelling::get_door( string mName   )

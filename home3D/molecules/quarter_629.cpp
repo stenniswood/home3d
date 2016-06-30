@@ -10,7 +10,8 @@
 
 
 #define SELECTED_BRICK 10
-
+#define ALUMINUM_SIDING 14
+#define ALUMINUM_SIDING_BLUISH 15
 
 glUpstairs::glUpstairs()
 {
@@ -42,7 +43,7 @@ void glUpstairs::create_exterior_walls   ( )
     w->m_z = 0.;
     w->m_x = 0.;
     m_components.push_back( w );
-    m_fwalls.push_back( w );
+    m_fwalls.push_back    ( w );
     
     // Update height stored in glDwellingLevel
     m_height = m_fwalls[0]->m_bare_wall.m_wall_height;
@@ -68,7 +69,7 @@ void glUpstairs::create_exterior_walls   ( )
     w->m_bare_wall.add_window(  12  +6+111+6+153+48+6, s, 80.5 );
     s.width =  48;     s.height = 34.;
     w->m_bare_wall.add_window( 6*12 +6+111+6+153+48+6, s, 46.25 );
-    w->set_texture( SELECTED_BRICK );
+    w->set_texture( ALUMINUM_SIDING );
     w->setup    (  );
     w->m_y_angle = 0.0;
     w->m_z = 24*12+6;                         // 288
@@ -91,6 +92,7 @@ void glUpstairs::create_exterior_walls   ( )
     w->add_door  ( 25*12-(6+28+4.75+tdoor->m_width), tdoor );      // closet is 28 inch deep.
     s.width = 95.5;    s.height = 59.;
     w->m_bare_wall.add_window( +41+6, s, 22. );
+    w->set_texture( SELECTED_BRICK );    
     w->setup    (  );
     w->m_y_angle = -90.0;
     w->m_z = 0.;
@@ -106,6 +108,7 @@ void glUpstairs::create_exterior_walls   ( )
     w->m_bare_wall.add_window( 67+6, s, 46. );
     s.width = 48.25;    s.height = 34.;
     w->m_bare_wall.add_window( 25*12-67-48.25-6, s, 46. );
+    w->set_texture( 14 );
     w->setup    (  );
     w->m_y_angle = -90.0;
     w->m_z = 0.;
@@ -140,15 +143,17 @@ void glUpstairs::create_exterior_walls   ( )
  */
 void glUpstairs::create_interior_walls ( )
 {
+    const int WALL_TEXTURE = 3;
+    
     glDoor* tdoor;
-    struct stSize s;		// for windows
+    //struct stSize s;		// for windows
     static glFullWall* w;
 
     // Closet Boys room (Stairway)
     w = new glFullWall();
     w->clear( );
     w->set_length( 41 );
-    w->m_bare_wall.set_texture(4);
+    w->set_texture(4);
     w->setup    (  );
     w->m_y_angle = -90.0;
     w->m_z = +6;
@@ -159,7 +164,7 @@ void glUpstairs::create_interior_walls ( )
     w = new glFullWall();
     w->clear( );
     w->set_length( 34.25 );
-    w->m_bare_wall.set_texture(4);
+    w->set_texture(4);
     w->setup    (  );
     w->m_y_angle = 0.0;
     w->m_z = +41;
@@ -189,6 +194,7 @@ void glUpstairs::create_interior_walls ( )
     tdoor->setup         (     );
     tdoor->open          ( 0.4 );
     w->add_door  ( 112.+43., tdoor );
+    w->set_texture(WALL_TEXTURE);
     w->setup            (  );
     w->m_y_angle = 0.0;
     w->m_z = 144.;
@@ -201,6 +207,7 @@ void glUpstairs::create_interior_walls ( )
     w->clear( );
     w->set_length( 181 );
     w->m_bare_wall.set_texture(4);
+    w->set_texture(WALL_TEXTURE);
     w->setup    (  );
     w->m_y_angle = 0.0;
     w->m_z = 25*12-(88.75+28.+6);
@@ -223,6 +230,7 @@ void glUpstairs::create_interior_walls ( )
     w->add_door          ( 33., tdoor );
     //w->m_bare_wall.add_door( 122.+40.5+64.5, DEFAULT_DOOR_WIDTH, 79.0, false );
     w->setup    (  );
+    w->set_texture(WALL_TEXTURE);
     w->m_y_angle = 0.0;
     w->m_z = 25*12-6-114; // was 144.+37.;
     w->m_x = 153+6+48+6+111;
@@ -233,6 +241,7 @@ void glUpstairs::create_interior_walls ( )
     w = new glFullWall();
     w->clear        ( );
     w->set_length   ( 12*12.);         // 88.5 + 54.75 = 143.25
+    w->set_texture(WALL_TEXTURE);
     w->setup        (  );
     w->m_y_angle = -90.0;
     w->m_z       = 0.;
@@ -244,6 +253,7 @@ void glUpstairs::create_interior_walls ( )
     w = new glFullWall  ( );
     w->clear            ( );
     w->set_length       ( 12*12.);
+    w->set_texture      ( WALL_TEXTURE);
     w->setup            (  );
     w->m_y_angle = -90.0;
     w->m_z = 0.;
@@ -255,6 +265,7 @@ void glUpstairs::create_interior_walls ( )
     w = new glFullWall();
     w->clear( );
     w->set_length( 10*12.);
+    w->set_texture(WALL_TEXTURE);
     w->setup    (  );
     w->m_y_angle = -90.0;
     w->m_z = 25*12-6-114;
@@ -275,6 +286,7 @@ void glUpstairs::create_interior_walls ( )
     tdoor->setup         (     );
     tdoor->open          ( 0.4 );
     w->add_door          ( 3., tdoor );
+    w->set_texture(WALL_TEXTURE);
     w->setup    (  );
     w->m_y_angle = -90.0;
     w->m_z = 144.;
@@ -298,13 +310,13 @@ void glUpstairs::create_interior_walls ( )
     w = new glFullWall();
     w->clear( );
     w->set_length( 111+5.25 );
-    tdoor = new glDoor();                   // Bathroom Door
-    tdoor->set_params(30.);
-    tdoor->set_hinge     (false);
-    tdoor->set_swing_side(true);
-    tdoor->setup         (     );
-    tdoor->open          ( 0.4 );
+    glDoorWay* doorw = new glDoorWay();                   // Kitchen Doorway
+    doorw->m_width  = 35;
+    doorw->m_height = 81;
+    doorw->setup(     );
+    //w->add_door(37.75, doorw);
     w->m_bare_wall.add_door( 37.75, 35, 81.0, false );   //122.+40.5+64.5
+    w->set_texture(6);
     w->setup    (  );
     w->m_y_angle = -90.0;
     w->m_z = 25*12-6-111-5.25;
@@ -327,7 +339,7 @@ void glUpstairs::create_interior_walls ( )
 
 void glUpstairs::add_light_switches      ( )
 {
-    glLightSwitch*      ls;
+    //glLightSwitch*      ls;
     glDualLightSwitch* dls;
     // 44 inches to bottom of cover
 

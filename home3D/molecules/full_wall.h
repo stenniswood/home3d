@@ -18,6 +18,8 @@
 #include "verbal_object.h"
 
 
+#define hang_picture add_fixture
+
 
 class glFullWall : public glMolecule
 {
@@ -26,9 +28,9 @@ public:
     glFullWall ( glFullWall& mSrc );
     ~glFullWall(  );
     
-    void	Initialize        ( );
-    void	create_components ( );
-    void    clear             ( );
+    void            Initialize        ( );
+    void            create_components ( );
+    void            clear             ( );
     
     virtual void	setup               ( );
     virtual void 	set_color           ( Color mColor   );
@@ -43,7 +45,7 @@ public:
     void            extract_2d_line_info();
     
     glComputeableWall           m_bare_wall;
-    vector<glDoorWay*>             m_doors;
+    vector<glDoorWay*>          m_doors;
     vector<VerbalObject*>       m_fixtures;         // light switch, plug, combos, phone jack, cable, painting, etc.
     vector<struct stWindow>     m_windows;          // bare wall has the window bay info
     

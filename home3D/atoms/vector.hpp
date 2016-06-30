@@ -1,13 +1,14 @@
 #ifndef _VECTOR_
 #define _VECTOR_
 
+
 #include <list>
 #include <vector>
 #include <string>
 
-using namespace std;
+//using namespace std;
 
-extern float radians( float degrees );
+//extern float radians( float degrees );
 
 /* An object in a 2D floor plan	*/
 class MathVector
@@ -16,13 +17,13 @@ public:
 	MathVector ( );
 	MathVector ( int mDimension );
     MathVector ( float* mValues, int mDimension );
-	MathVector ( string mName, int mDimension );	
+	MathVector ( std::string mName, int mDimension );
 	~MathVector( );
 
 	void 			Initialize				(                   );
 	void 			print					( bool mLF = true   );
 	void 			dimension				( int mDimension    );
-	void 			set_xyz                 ( double x, double y, double z );
+	void 			set_xyz                 ( double x, double y, double z ); 
     double          get_distance            ( MathVector& mPt2  );
 
 	bool		 	operator==(const MathVector &rhs);	
@@ -44,11 +45,11 @@ public:
     
 	double			magnitude( );
 	double		 	dot		 ( const MathVector &rhs);
-    MathVector      cross    ( MathVector lhs,  MathVector rhs);
+    MathVector      cross    ( MathVector rhs );
 	double&		 	operator[](int index);
 	
-	string			m_name;		// for debug, showing calculations.
-	vector<double>  m_elements;
+    std::string			m_name;		// for debug, showing calculations.
+	std::vector<double>  m_elements;
 };
 
 class Line
@@ -91,7 +92,7 @@ public:
     int                 generate_samples( float mIncrement );
 
     float               m_increment;
-    vector<MathVector>  m_samples;
+    std::vector<MathVector>  m_samples;
 };
 
 /* Represents a node comprise an entire tree */
@@ -102,13 +103,13 @@ public:
 
     void        clear       ( );
     void        add_node    ( MathVector& mPoint        );
-    void        add_nodes   ( list<MathVector>& mPoints );
-    void        extract_path( vector<MathVector>& mVector      ); // Walk up the parents to the root. recording the item at each.
-    void        extract_path_pointers( vector<MathVectorTree*>& mVector ); // Walk up the parents to the root. recording the item at each.
+    void        add_nodes   ( std::list<MathVector>& mPoints );
+    void        extract_path( std::vector<MathVector>& mVector      ); // Walk up the parents to the root. recording the item at each.
+    void        extract_path_pointers( std::vector<MathVectorTree*>& mVector ); // Walk up the parents to the root. recording the item at each.
     
     MathVectorTree*      parent;
     MathVector           item;
-    list<MathVectorTree> children;
+    std::list<MathVectorTree> children;
 };
 
 

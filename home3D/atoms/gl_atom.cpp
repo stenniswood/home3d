@@ -13,6 +13,7 @@
 
 glAtom::glAtom( )
 {
+    m_uses_normals = false;
     m_object_class  = 2;
 	m_IBO = 0;
 	m_VBO = 0;
@@ -22,6 +23,11 @@ glAtom::glAtom( )
 
 glAtom::~glAtom( )
 {
+    // What if Texture is shared between objects?!?!
+    if (m_texture)
+        delete m_texture;
+    // So give texture a reference count.
+    
     //m_scene.remove(this);
 }
 
@@ -134,6 +140,11 @@ void glAtom::add_offset(float mX, float mY, float mZ)
     }
 }
 
+void glAtom::release_memory      (   )
+{
+    m_vertices.clear();
+    m_indices.clear();
+}
 void glAtom::compute_min_max( 	)
 {
     compute_min();
@@ -250,12 +261,14 @@ void 	glAtom::generate_VBO( )
 	glBindBuffer( GL_ARRAY_BUFFER, m_VBO );	// Make the new VBO active  GL_COLOR_ARRAY
 
 	// Generate & Upload vertex data to the video device 
-	int size = (int)m_vertices.size() * sizeof(Vertex);
+	int size = (int)m_vertices.size() * sizeof(Vertex_pnc);
 	glBufferData		 ( GL_ARRAY_BUFFER, size, m_vertices.data(), GL_STATIC_DRAW );
 	glVertexAttribPointer( 0, 3, GL_FLOAT, GL_FALSE, 0, 0   );   // vertex positions
-	glVertexAttribPointer( 2, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(Vertex), (void*)(offsetof(struct Vertex,color)));	// color
-	glBindBuffer		 ( GL_ARRAY_BUFFER, m_VBO           );
-
+	glVertexAttribPointer( 2, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(Vertex_pnc), (void*)(offsetof(struct Vertex_pnc,color)));	// color
+    if (m_uses_normals)
+        glVertexAttribPointer( 1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex_pnc), (void*)(offsetof(struct Vertex_pnc,normal)) );
+    glBindBuffer		 ( GL_ARRAY_BUFFER, m_VBO           );
+    
 	//Draw Triangle from VBO - do each time window, view point or data changes
 	//Establish its 3 coordinates per vertex with zero stride in this array; necessary here
 
@@ -333,6 +346,8 @@ void glAtom::draw_body()
     glVertexPointer(3, GL_FLOAT, 		 sizeof(struct Vertex), NULL);
     // Establish array contains m_vertices (not normals, colours, texture coords etc)
     glEnableClientState(GL_VERTEX_ARRAY);
+    if (m_uses_normals)
+        glEnableClientState( GL_NORMAL_ARRAY );
 
     if (m_texture==NULL)
     {

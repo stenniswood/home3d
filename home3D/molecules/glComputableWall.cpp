@@ -229,7 +229,7 @@ void glComputeableWall::extract_2d_line_info()
     m_line.m_origin[2] = m_z;
     
     // Convert the wall angle to a unit vector.  This might better be done when creating the dwelling in the first place.
-    float rad = -radians(m_y_angle);
+    float rad = -glm::radians(m_y_angle);
     m_line.m_vector.dimension(3);
     m_line.m_vector[0] = cos(rad);
     m_line.m_vector[1] = 0.0;        // y is height!

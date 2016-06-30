@@ -4,75 +4,44 @@
 //  Created by Stephen Tenniswood on 6/6/15.
 //  Copyright (c) 2015 Stephen Tenniswood. All rights reserved.
 //
+#include <stdlib.h>
 
 #include "simulator_memory.h"
 #include "sequencer_memory.h"
 #include "proc_client_cmds.h"
 #include "all_objects.h"
 
+#include "truss.h"
+#include "rafter.h"
+#include "hinge.h"
+#include "road.h"
+#include "sign.h"
+#include "basketball_arena.h"
 
 
+#include "robot.hpp"
+#include "walking_robot.h"
+#include "init_samples.hpp"
+#include "room2.hpp"
 
-/* Direct Robot Movement command */
-void process_robot_command(  )
-{
-    int cmd = 0;    // ipc_memory_sim->RobotCommand
-    switch (cmd)
-    {
-        case ROBOT_CMD_LIFT_LEG :   // 0,1,2 - left right, both
-
-            break;
-        case ROBOT_CMD_LIFT_ARM :
-            
-            break;
-        case ROBOT_CMD_BEND_LEG :  // FURNITURE, MOVEABLES, etc
-            
-            break;
-        case ROBOT_CMD_BEND_ARM :
-            
-            break;
-        case ROBOT_CMD_MOVE_OBJ :
-
-            break;
-        default : break;
-    }
-}
+extern glWalkingRobot robot;
 
 
-void process_command(  )
-{
-    int cmd = 0;    // ipc_memory_sim->Command
-    switch (cmd)
-    {
-    case CMD_MOVE_OBJ :
-        break;
-    case CMD_CLEAN_SLATE :
-        break;
-    case CMD_ONLY_SHOW :  // FURNITURE, MOVEABLES, etc.
-        break;
-    case CMD_ROBOT_CMD : process_robot_command();
-        break;
-    case CMD_CREATE_SHAPE :
-        break;
-    case CMD_CREATE_FILE_OBJ :  // downloaded object from sketch up or such.
-        break;
-
-    default:
-        break;
-    }
-}
 
 VerbalObject* new_object( long mObject_type )
 {
     VerbalObject* obj = NULL;
+    enum eObjectTypes  obj_type = (enum eObjectTypes) mObject_type;
+    Texture* one_brick_texture=NULL;
+    txtContainer*  mb=NULL;
     
-    switch (mObject_type)
+    switch (obj_type)
     {
-        case 1: obj = new VerbalObject();
+        case VERBAL_OBJECT: obj = new VerbalObject();
             break;
-        case 2: obj = new glAtom();
+        case ATOM       : obj = new glAtom();
             break;
-        case 3: obj = new glBox();
+        case BOX        : obj = new glBox();
             ((glBox*)obj)->height = ipc_memory_sim->Location1.x;
             ((glBox*)obj)->width  = ipc_memory_sim->Location1.y;
             ((glBox*)obj)->depth  = ipc_memory_sim->Location1.z;
@@ -80,13 +49,16 @@ VerbalObject* new_object( long mObject_type )
                    ipc_memory_sim->Location1.x, ipc_memory_sim->Location1.y, ipc_memory_sim->Location1.z );
             obj->create();
             break;
-        case 4: obj = new glDoor();
+        case DOOR       : obj = new glDoor();
             break;
-        case 5: obj = new glIbeam( ipc_memory_sim->Location1.x );
-            printf("New ibeam: %6.2f \n", ipc_memory_sim->Location1.x );
+        case IBEAM      : obj = new glIbeam( 12*10 );
+            //ipc_memory_sim->Location1.x
+            //obj->m_ends_color  = 0xFFFF0000;
+            obj->m_color       = 0xFFFFFFFF;
+            ((glIbeam*)obj)->m_is_closed   = true;
             obj->create();
             break;
-        case 6: obj = new glCylinder((int)(ipc_memory_sim->object_datum1&0xFFFF));
+        case CYLINDER   : obj = new glCylinder((int)(ipc_memory_sim->object_datum1&0xFFFF));
             ((glCylinder*)obj)->m_radius           = ipc_memory_sim->Location1.x;
             ((glCylinder*)obj)->m_extrusion_length = ipc_memory_sim->Location1.y;
             ((glCylinder*)obj)->m_extrusion_axis   = (int)(ipc_memory_sim->object_datum2&0xFF);
@@ -94,52 +66,155 @@ VerbalObject* new_object( long mObject_type )
                    ipc_memory_sim->Location1.x, ipc_memory_sim->Location1.y, ipc_memory_sim->object_datum2);
             obj->create();
             break;
-        case 7: obj = new glExtrusion();
+        case EXTRUSION  : obj = new glExtrusion();
             break;
-        case 8: obj = new glPaper( 10 );
+        case PAPER      : obj = new glPaper( 10 );
             break;
-        case 9: obj = new glStairway();
+        case STAIRWAY   : obj = new glStairway();
             obj->create();
             break;
-        case 10: obj = new txtContainer();
+        case TEXTURE_CONTAINER: obj = new txtContainer();
             obj->create();
             break;
-        case 11: obj = new glRoute();
+        case ROUTE      : obj = new glRoute();
             break;
-        case 12: obj = new glFullWall();
+        case FULL_WALL  : obj = new glFullWall();
+            ((glFullWall*)obj)->set_length( ipc_memory_sim->object_datum2 );
             obj->create();
             break;
-        case 13: obj = new glChair();
+        case CHAIR      : obj = new glChair();
             obj->create();
             break;
-        case 14: obj = new glTableCenterPole();
+        case TABLE_4LEGS: obj = new glTable();
             obj->create();
             break;
-//        case 15: obj = new glTable();
-  //          obj->create();
-    //        break;
-        case 16: obj = new glDrawer();
+        case TABLE_CENTER_POLE: obj = new glTableCenterPole();
             obj->create();
             break;
-        case 17: obj = new Palette();
+        case DRAWER      : obj = new glDrawer();
             obj->create();
             break;
-        case 18: obj = new glBarricade();
+        case PALLETTE    : obj = new Palette();
             obj->create();
             break;
-//        case 21: obj = new glLightSwitch();
-//            break;
-        case 23: obj = new glBookcase();            
+        case BARRICADE  : obj = new glBarricade();
+            obj->create();
+            break;
+        case BOOKCASE   : obj = new glBookcase();
+            obj->create();
+            break;
+            
+        case SPHERE : obj = new glSphere( 25, 25, 36 );
+            obj->set_color(0x5f5f5f5f);
+            obj->create();
+            break;
+            
+        case PICNIC_TABLE :
+            obj = new glPicnicTable();
+            obj->create();
+            break;
+            
+        case BRICK :
+            one_brick_texture = new Texture();
+            one_brick_texture->load_image("textures/cinder-block-texture.jpg");
+            mb   = new txtContainer();
+            mb->width  = 7.625;
+            mb->height = 3.625;
+            mb->depth  = 2.125;
+            mb->set_color( 0xFF7FFF7F );
+            mb->setup();
+            mb->m_texture = one_brick_texture;
+            mb->grab_bottom();
+            mb->grab_left();
+            break;
+        case CABINET : obj = new glCabinet();
             obj->create();
             break;
 
-/*      case 18: obj = new glCounter();
+        case TRUSS2D : obj = new glTruss2D();
+            obj->create();
             break;
-        case 19: obj = new glCabinet();
+        case TRUSS3D : obj = new glTruss();
+            obj->create();
             break;
-        case 20: obj = new glBrickWall();
+        case TRUSSHIGHWAY : obj = new glHighwayOverhead();
+            obj->create();
+            break;            
+        case RAFTER : obj = new glRafter();
+            obj->create();
             break;
-        case 24: obj = new glArm();
+        case LIGHTSWITCH : obj = new glLightSwitch();
+            obj->create();
+            break;
+        case HINGE : obj = new glHinge();
+            obj->create();
+            break;
+        case ROAD : obj = new glRoad();
+            obj->create();
+            break;
+        case TERRAIN : obj = new glTerrain();
+            obj->create();
+            break;
+        case PAINTING : obj = new glPainting();
+            obj->create();
+            break;
+
+        case BASKETBALL : obj = new glSphere(NBA_BASKET_BALL_RADIUS, 10, 64);
+            obj->is_participating = true;
+            obj->coef_of_restitution = COEFF_RESTITUTION_BASKETBALL;
+            obj->set_color( 0xFF7F7F00);
+            ((glSphere*)obj)->load_texture("textures/basketball_texture.jpg" );
+            obj->create();
+            break;
+        case SOCCERBALL_5 : obj = new glSphere(FIFA_SOCCER_BALL_RADIUS_SIZE5, 10, 64);
+            obj->is_participating = true;
+            obj->coef_of_restitution = COEFF_RESTITUTION_SOCCERBALL;
+            obj->set_color( 0xFFFF0000);
+            ((glSphere*)obj)->load_texture("textures/soccer_ball_3.jpg" );
+            obj->create();
+            break;
+        case SOCCERBALL_4 : obj = new glSphere(FIFA_SOCCER_BALL_RADIUS_SIZE4, 10, 64);
+            obj->is_participating = true;
+            obj->coef_of_restitution = COEFF_RESTITUTION_SOCCERBALL;
+            obj->set_color( 0xFF5F7F2F);
+            ((glSphere*)obj)->load_texture("textures/soccer_ball_world_cup.jpg" );            
+            obj->create();
+            break;
+        case BASEBALL : obj = new glSphere(BASEBALL_RADIUS, 10, 64);
+            obj->is_participating = true;
+            obj->coef_of_restitution = COEFF_RESTITUTION_BASEBALL;
+            obj->set_color( 0xFF0F0000);
+            ((glSphere*)obj)->load_texture("textures/baseball_texture.jpg" );
+            obj->create();
+            break;
+
+            
+            //        case 18: obj = new glCounter();
+            //            break;
+            //        case 20: obj = new glBrickWall();
+            break;
+        case ROBOT_LEG :  obj = new glLightSwitch();
+            obj->create();
+            break;
+        case ROBOT_ARM :  obj = new glLightSwitch();
+            obj->create();
+            break;
+        case ROBOT :    obj = new glLightSwitch();
+            obj->create();
+            break;
+        case STREET_SIGN : obj = new StreetSign();
+            ((StreetSign*)obj)->m_sign_name = "stop";
+            obj->create();
+            break;
+        case BASKETBALL_ARENA:  obj = new glArena();
+            obj->create();
+            obj->relocate( -40*12, 2, -94*12 );
+            ((glArena*)obj)->create_cam_routes();
+            break;
+        case SKETCHUP_IMPORT :
+            
+            break;
+/*        case 24: obj = new glArm();
             break; */
         default:
             break;
@@ -155,6 +230,40 @@ void print_ids()
         printf("%lu, ", mIDs[i]);
     printf("\n");
 }
+
+
+
+void perform_predefined_seq( int mSequenceNumber, int mRepetitions )
+{
+    //float fraction=0.;
+    enum PredefinedPoses pose_num = (enum PredefinedPoses) mSequenceNumber;
+    switch (pose_num)
+    {
+        case STAND      :    robot.stand();                  break;
+        case SIT        :    robot.sit();                    break;
+        case FLOOR_SIT  :    robot.floor_sit();              break;
+        case ONE_KNEE_KNEEL :robot.one_knee_kneel(true);     break;
+        case KNEEL      :    robot.kneel();                  break;
+        case SQUAT      :    //fraction = 0.5;
+                             robot.squat_fraction(mRepetitions/100.);      break;
+
+        case HANDS_ON_HIP               :    robot.hands_on_hip();           break;
+        case FOLDED_ARMS                :    robot.folded_arms();            break;
+        case ZOMBIE_ARMS                :    robot.zombie_arms();            break;
+        case ARMS_DOWN_BY_SIDE          :    robot.arms_down_by_side();      break;
+
+        case ARM_STRAIGHT_UP            :    robot.arm_straight_up(true);           break;
+        case ARM_STRETCHED_SIDE_LEFT    :    robot.arm_stretched_to_side_left();    break;
+        case ARM_STRETCHED_SIDE_RIGHT   :    robot.arm_stretched_to_side_right();   break;
+
+        case ATTENTION_1    :    robot.attention_1();      break;
+        case ATTENTION_2    :    robot.attention_2();      break;
+        default : break;
+    }
+    
+}
+
+extern union uGlobalVars theGlobals;
 
 /* sim_read_move_object     (  Object_id,    MathVector& mNewLocation, MathVector& mNewOrientation );
  sim_read_new_object        (  Object_type,  int mQuantity                                     );
@@ -179,6 +288,7 @@ void proc_sim_command()
     MathVector NewOrientation(3);
     MathVector RobotAngles(3);
     MathVector Source(3);
+    MathVector xyz(3);
     glObject*  obj = NULL;
     string searchname    = "master bedroom";
     string searchtypename = "door";
@@ -187,19 +297,36 @@ void proc_sim_command()
     long  size;
     vector<VerbalObject*> object_hier;
     bool result=false;
+    int room_index;
 
-    printf( "Command=%lx \n", ipc_memory_sim->Command );
+    struct stBodyPosition bp;
+    float* bp_ptr = (float*)&bp;
+    int num_floats=0;
+    int num_servos=0;
+    int servo_index=0;
+    float ServoAngle=0;
+    int global_index=0;
     
+    printf( "Command=%lx \n", ipc_memory_sim->Command );    
     switch (ipc_memory_sim->Command)
     {
-        case COMMAND_MOVE_OBJECT :
+        case COMMAND_MOVE_OBJECT :  /* Instantaneous, no robot */
             sim_read_move_object( Object_id, NewLocation, NewOrientation );
+            if (Object_id==-1)
+                break;
             obj = theWorld.find_object_id( Object_id );
-            printf(" MOVE OBJECT %lu - %x\n", Object_id, obj );
-            obj->relocate( NewLocation );
-            NewLocation.print();
-            
-            if (ipc_memory_sim->object_type==2) {
+            if (obj==NULL)  {
+                printf( "Unable to find object %lu\n", Object_id );
+                break;
+            }
+            if ((ipc_memory_sim->object_datum1 & 0x0001)) {
+                printf(" MOVE OBJECT %lu - %x\n", Object_id, obj );
+                obj->relocate( NewLocation );
+                NewLocation.print();
+            }
+
+            if (ipc_memory_sim->object_datum1 & 0x0002)
+            {
                 obj->m_x_angle = NewOrientation[0];
                 obj->m_y_angle = NewOrientation[1];
                 obj->m_z_angle = NewOrientation[2];
@@ -241,6 +368,30 @@ void proc_sim_command()
                 ipc_memory_sim->ResponseCounter++;
             }
             break;
+        case COMMAND_WHERE_IS :            
+            if (ipc_memory_sim->object_type==0)
+            {
+                glObject* obj = theWorld.find_object_id(ipc_memory_sim->object_id);
+                xyz = obj->m_position;
+            } else {
+                xyz[0] =ipc_memory_sim->Location1.x;
+                xyz[1] =ipc_memory_sim->Location1.y;
+                xyz[2] =ipc_memory_sim->Location1.z;
+            }
+            room_index = scan_rooms(Rooms, xyz );
+            if (room_index == -1)
+                strcpy (ipc_memory_sim->Response, "Object is outside.");
+            else {
+                strcpy (ipc_memory_sim->Response, "Object is in the ");
+                strcat (ipc_memory_sim->Response, Rooms[room_index].m_names.c_str() );
+            }
+            
+            ipc_memory_sim->ResponseCounter++;
+            break;
+            
+        case COMMAND_WHAT_IS_IN :
+            
+            break;
             
         case COMMAND_ROBOT_MOVE_OBJECT:
             // Use the robot to move an object.
@@ -249,6 +400,11 @@ void proc_sim_command()
             NewLocation.print();
             break;
 
+        case COMMAND_ROBOT_STOP :
+            robot.stop_walking();
+            printf(" ROBOT STOPPED:  "); 
+            break;
+            
         case COMMAND_ROBOT_MOVE :
             // Walk to X Y Z:
             uses_source = sim_read_move_robot( Robot_id, Source,  NewLocation );
@@ -264,15 +420,31 @@ void proc_sim_command()
                 curr[2] = robot.m_z;
                 change_route( curr, NewLocation );
             }
+            robot.start_walking();
+            break;
+
+        case COMMAND_ROBOT_ANGLE :  /* Move a single servo to a specified position */
+            sim_read_robot_angle( Robot_id, servo_index, ServoAngle );
+            // how to set 1 motor?
+            robot.set_servo_angle( servo_index, ServoAngle);
+            printf(" ROBOT ANGLE: (%lu) servo[%d]=%6.2ff\t", Robot_id, servo_index, ServoAngle );
             break;
             
-        case COMMAND_ROBOT_ANGLES :
+        case COMMAND_ROBOT_ANGLES : /* An Entire pose - ie all servos */
             sim_read_robot_angles( Robot_id, RobotAngles );
+            num_floats = sizeof(struct stBodyPosition) / sizeof(float);
+            num_servos = MIN( RobotAngles.m_elements.size(), num_floats );
+            for (int i=0; i<num_servos; i++)
+                bp_ptr[i] = RobotAngles[i];
+            robot.set_body_pose( &bp );
+            
             printf(" ROBOT ANGLES: (%lu) \t", Robot_id );
             RobotAngles.print();
             break;
+            
         case COMMAND_ROBOT_PREDEFINED_SEQ :
-            sim_read_robot_predefined_move(  Robot_id, MoveSequenceIndex, Repetitions );
+            sim_read_robot_predefined(  Robot_id, MoveSequenceIndex, Repetitions );
+            perform_predefined_seq( MoveSequenceIndex, Repetitions );
             printf(" ROBOT PREDEFINED SEQ:  (%lu) Seq #%d  Repetition=%d \n", Robot_id, MoveSequenceIndex, Repetitions );            
             break;
             
@@ -412,8 +584,12 @@ void proc_sim_command()
         case ACTION_OBJECT_RELEASE :
             // User may request coordinate of bedroom door, or kitchen sink, or living room center.
             // The response will be a variable number of coordinates in shared memory.
-            
             printf(" Action Release Object: \n" );
+            break;
+
+        case COMMAND_CHANGE_GLOBAL_VAR :
+            global_index = (ipc_memory_sim->object_id & 0xFF);          // variable id (ie index into array)
+            theGlobals.raw_array[global_index] = (ipc_memory_sim->object_datum1 & 0xFF);
             break;
             
         default:
@@ -440,3 +616,49 @@ void respond_to_client_timeslice()
 
 
 
+/* Direct Robot Movement command */
+void process_robot_command(  )
+{
+    int cmd = 0;    // ipc_memory_sim->RobotCommand
+    switch (cmd)
+    {
+        case ROBOT_CMD_LIFT_LEG :   // 0,1,2 - left right, both
+            
+            break;
+        case ROBOT_CMD_LIFT_ARM :
+            
+            break;
+        case ROBOT_CMD_BEND_LEG :  // FURNITURE, MOVEABLES, etc
+            
+            break;
+        case ROBOT_CMD_BEND_ARM :
+            
+            break;
+        case ROBOT_CMD_MOVE_OBJ :
+            
+            break;
+        default : break;
+    }
+}
+void process_command(  )
+{
+    int cmd = 0;    // ipc_memory_sim->Command
+    switch (cmd)
+    {
+        case CMD_MOVE_OBJ :
+            break;
+        case CMD_CLEAN_SLATE :
+            break;
+        case CMD_ONLY_SHOW :  // FURNITURE, MOVEABLES, etc.
+            break;
+        case CMD_ROBOT_CMD : process_robot_command();
+            break;
+        case CMD_CREATE_SHAPE :
+            break;
+        case CMD_CREATE_FILE_OBJ :  // downloaded object from sketch up or such.
+            break;
+            
+        default:
+            break;
+    }
+}

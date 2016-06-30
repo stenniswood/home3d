@@ -28,7 +28,7 @@ Inertia("inertia",3)
     Inertia[1] = 1.0;
     Inertia[2] = 1.0;
     is_active = false;
-    is_participating = false;   // no physics by default.
+    is_participating    = false;   // no physics by default.
     m_collision_handled = false;
 }
 

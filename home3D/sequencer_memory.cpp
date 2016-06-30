@@ -35,6 +35,8 @@
 #include "sequencer_memory.h"
 #include "Sim3D_defines.h"
 
+//#include
+
 
 char* 	sequencer_shared_memory;
 int 	sequencer_segment_id;
@@ -74,15 +76,18 @@ void seq_save_segment_id(char* mFilename)
 int seq_read_segment_id(char* mFilename)
 {
     FILE* fd = fopen( mFilename, "r" );
-    fscanf( fd, "%d", &sequencer_segment_id );
-    fclose( fd );
+    if (fd) {
+        fscanf( fd, "%d", &sequencer_segment_id );
+        fclose( fd );
+    } else
+        sequencer_segment_id = -1;
     return sequencer_segment_id;
 }
 
 int seq_allocate_memory( )
 {
     const int 	shared_segment_size = sizeof(struct sequencer_ipc_memory_map);
-    printf("seq shared_seg_size=%d\n", shared_segment_size);
+    printf("seq shared_seg_size=%d;  \n", shared_segment_size );
     
     /* Allocate a shared memory segment. */
     sequencer_segment_id = shmget( IPC_KEY_SEQ, shared_segment_size, IPC_CREAT | 0666 );
@@ -139,6 +144,66 @@ void seq_deallocate_memory(int msegment_id)
     shmctl (msegment_id, IPC_RMID, 0);
 }
 
+#if (PLATFORM==Mac)
+char seq_segment_id_filename[] = "/Users/stephentenniswood/code/Mac/bk_code/aseq/seq_segment_id.cfg";
+#elif (PLATFORM==RPI)
+char seq_segment_id_filename[] = "/home/pi/bk_code/aseq/seq_shared_memseg_id.cfg";
+#elif (PLATFORM==linux_desktop)
+char seq_segment_id_filename[] = "/home/steve/bk_code/aseq/seq_shared_memseg_id.cfg";
+#endif
+
+bool  is_seq_ipc_memory_available()
+{
+    struct shmid_ds buf;			// shm data descriptor.
+    
+    printf("Checking for sequencer IPC memory... ");
+    printf("reading segment id: %s\n", seq_segment_id_filename );
+    
+    // First see if the memory is already allocated:
+    sequencer_segment_id = seq_read_segment_id( seq_segment_id_filename );
+    int retval = shmctl(sequencer_segment_id, IPC_STAT, &buf);
+    if (retval==-1) {
+        printf("Error: %s\n", strerror(errno) );
+        return false;
+    }
+    printf( " Found segment, size=%ld and %d attachments.\n", buf.shm_segsz, buf.shm_nattch );
+    
+    if ((buf.shm_segsz > 0)			// segment size > 0
+        && (buf.shm_nattch >= 0))	// number of attachments.
+        return true;
+    return false;
+}
+
+int   connect_shared_sequencer_memory( char mAllocate )
+{
+    bool available = is_seq_ipc_memory_available();
+    
+    if ((!available) && (mAllocate))
+    {
+        int result = seq_allocate_memory( );
+        if (result == -1)	{
+            printf("Cannot allocate shared memory!\n");
+        }
+        seq_attach_memory( );
+        seq_fill_memory  ( );
+        
+        printf("Saving segment id: ");
+        seq_save_segment_id( seq_segment_id_filename );
+        if ((ipc_memory_seq!=(struct sequencer_ipc_memory_map*)-1) && (ipc_memory_seq != NULL))
+            return 1;
+    }
+    else
+    {
+        seq_attach_memory();
+        if ((ipc_memory_seq!=(struct sequencer_ipc_memory_map*)-1) && (ipc_memory_seq != NULL))
+            return 1;
+    }
+    return 0;
+}
+
+
+
+
 /* WRITE IMPLIES TO SHARED MEMORY.  And since we are the abkInstant task,
 	the writes will be transfer to avisual
  FORMAT:
@@ -182,7 +247,7 @@ void ipc_write_active_page( short NewActivePage )
 
 
 // Return true if added.
-bool ipc_add_sequence           ( struct one_vector  mVector )
+bool ipc_add_sequence           ( struct stBodyPosition*  mVector )
 {
     if (ipc_memory_seq == NULL)  return false;
     
@@ -193,14 +258,22 @@ bool ipc_add_sequence           ( struct one_vector  mVector )
     return ipc_write_sequence( index, mVector);
 }
 
-bool ipc_write_sequence     ( int mIndex, struct one_vector  mVector )
+bool ipc_write_sequence( int mIndex, struct stBodyPosition* mBP )
+{
+    if ((mIndex >= MAX_SEQUENCE_LENGTH) || (ipc_memory_seq == NULL))
+        return false;
+    
+    ipc_memory_seq->sequence[mIndex] = *mBP;
+    return true;
+}
+/*bool ipc_write_sequence     ( int mIndex, struct one_vector  mVector )
 {
     if ((mIndex >= MAX_SEQUENCE_LENGTH) || (ipc_memory_seq == NULL))
         return false;
 
     ipc_memory_seq->sequence[mIndex] = mVector;
     return true;
-}
+}*/
 
 bool ipc_write_instance_index( int mIndex, unsigned char mInstance )
 {

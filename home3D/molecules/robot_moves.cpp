@@ -8,6 +8,10 @@
 #include <fstream>
 #include <iostream>
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 #include "robot_moves.h"
 #include "all_objects.h"
 
@@ -39,18 +43,21 @@ void load_position( ifstream& ifile, struct stBodyPosition* bp )
     getline( ifile, tail);
 }
 
-/* Load ASCII file! Holds static positions  */
+/* Load ASCII file! Holds static positions.
+    These are meant to be used for selecting different poses,
+    however could also be used to store a sequence.
+ */
 void glStaticMovesRobot::load_file( string mFilename )
 {
     struct stBodyPosition position;
     ifstream ifile;
     ifile.open( mFilename);
-    while (ifile.eof()==false)
+    while (ifile.eof()==false)                  // Read all positions within the file and store.
     {
         load_position( ifile, &position );
         m_positions.push_back( position );
-         m_left_arm.m_gripper.read_angles ( ifile );
-         m_right_arm.m_gripper.read_angles( ifile );
+        m_left_arm.m_gripper.read_angles ( ifile ); // ?? prolly gripper is treated separate from the rest of the body.
+        m_right_arm.m_gripper.read_angles( ifile ); // ??
     }
     ifile.close();
 }
@@ -75,10 +82,10 @@ void glStaticMovesRobot::save_file( string mFilename  )
     int count=1;
     struct stBodyPosition bp;
     bool   result = false;
-    while (result==false)
+    while (result==false)                           // Loop thru all positions within the demo() function.
     {
         result = demo();
-        extract_robot_position(&bp);
+        extract_body_pose(&bp);
         outfile << "Move #" << count++ << endl;
         save_position( outfile, &bp );
         m_left_arm.m_gripper.write_angles ( outfile );
@@ -89,27 +96,36 @@ void glStaticMovesRobot::save_file( string mFilename  )
 
 void glStaticMovesRobot::activate_position  ( int mIndex )
 {
-    set_robot_position( &m_positions[mIndex] );
+    set_body_pose( &m_positions[mIndex] );
 }
+
+float glStaticMovesRobot::compute_max_squat_distance()
+{
+    //float max_knee_angle = glm::radians(MAX_KNEE_ANGLE);
+    float max_hip_angle  = glm::radians(MAX_KNEE_ANGLE / 2.);
+
+    float upper_vertical = m_left_leg.m_upper_leg.m_joint_length * cos(max_hip_angle);
+    // We use max_hip_angle below b/c - it represents the lower leg angle wrt to gravity.
+    // the actual knee angle is twice that (first half achieves vertical with graivty ie. makes up
+    // for the upper leg):
+    float lower_vertical = m_left_leg.m_lower_leg.m_joint_length * cos(max_hip_angle);
+    float upper_plus_lower_length = m_left_leg.m_upper_leg.m_joint_length +
+                                    m_left_leg.m_lower_leg.m_joint_length;
+    float delta = upper_plus_lower_length - upper_vertical - lower_vertical;
+    return delta;
+}
+
 
 /*
  mDeltaY    : Distance to shrink from standing.
  */
 void glStaticMovesRobot::squat( float mAngle )
 {
-    // THE HEIGHT, will be: distance (ankle to Knee) + (knee to hip) + (ankle height)
-    // Come back to this.
     // (start simple - ie flat floor.  Later expand to hills)
-    // Make flat footed - ie toe level with heel.
-    
-    m_left_leg.set_hip_angle   ( mAngle );
-    m_left_leg.set_knee_angle  ( mAngle );
-    m_left_leg.set_ankle_angle ( mAngle );
-    
-    // RIGHT LEG (copy Left Leg) :
-    m_right_leg.set_hip_angle   ( m_left_leg.get_hip_angle()  );
-    m_right_leg.set_knee_angle  ( m_left_leg.get_knee_angle() );
-    m_right_leg.set_ankle_angle ( m_left_leg.get_ankle_angle());
+    lift_left_leg ( mAngle );
+    lift_right_leg( mAngle );
+    float new_height = m_torso.height/2. + m_left_leg.get_vertical_height();
+    relocate(m_x, new_height, m_z);
 }
 
 //#define MIN(a,b) (((a)<(b))?(a):(b))
@@ -125,41 +141,73 @@ void glStaticMovesRobot::squat_fraction( float mfraction )
 }
 void glStaticMovesRobot::squat_distance( float mDeltaY )
 {
+    // THE HEIGHT, will be: distance (ankle to Knee) + (knee to hip) + (ankle height)
     // Horizontal distance absorbed by legs.
-    // let's ask the legs:
-    
+    float new_height = m_torso.height/2. + m_left_leg.get_length() - mDeltaY;
+    relocate(m_x, new_height, m_z);
+    lift_leg_from_standing( mDeltaY, true );
+    lift_leg_from_standing( mDeltaY, false);
 }
 
 
 void glStaticMovesRobot::stand(  )
 {
+    float prev_foreaft      = m_left_leg.get_fore_aft();
+    //float upper_leg_length  = m_left_leg.m_upper_leg.m_joint_length;
+    move_fore_aft( prev_foreaft );
+        
+    float standing_height    = m_left_leg.get_length();
+    float torso_height = m_torso.height/2.;
+    relocate( m_x, torso_height+standing_height, m_z );
+
     m_left_leg.set_hip_angle          ( 0.0 );
     m_left_leg.set_hip_rotate_angle   ( 0.0 );
-    m_left_leg.set_hip_swing_angle    ( 0.0 );
+    m_left_leg.set_hip_sideways_swing_angle( 0.0 );
     m_left_leg.set_knee_angle         ( 0.0 );
     m_left_leg.set_ankle_angle        ( 0.0 );
     
     m_right_leg.set_hip_angle         ( 0.0 );
     m_right_leg.set_hip_rotate_angle  ( 0.0 );
-    m_right_leg.set_hip_swing_angle   ( 0.0 );
+    m_right_leg.set_hip_sideways_swing_angle( 0.0 );
     m_right_leg.set_knee_angle        ( 0.0 );
     m_right_leg.set_ankle_angle       ( 0.0 );
-
 }
+
 void glStaticMovesRobot::sit(  )
 {
-    m_left_leg.set_hip_angle          ( 0.0 );
-    m_left_leg.set_hip_rotate_angle   ( 0.0 );
-    m_left_leg.set_hip_swing_angle    ( 0.0 );
-    m_left_leg.set_knee_angle         ( 0.0 );
-    m_left_leg.set_ankle_angle        ( 0.0 );
+    //float prev_foreaft      = m_left_leg.get_fore_aft();
+    float upper_leg_length  = m_left_leg.m_upper_leg.m_joint_length;
+    float delta             = upper_leg_length - 0;//prev_foreaft;
+    move_fore_aft( -delta );
     
-    m_right_leg.set_hip_angle         ( 0.0 );
-    m_right_leg.set_hip_rotate_angle  ( 0.0 );
-    m_right_leg.set_hip_swing_angle   ( 0.0 );
-    m_right_leg.set_knee_angle        ( 0.0 );
-    m_right_leg.set_ankle_angle       ( 0.0 );
+    m_left_leg.set_hip_angle          ( -90.0 );
+    m_left_leg.set_hip_rotate_angle   ( 0.0  );
+    m_left_leg.set_hip_sideways_swing_angle( 0.0  );
+    m_left_leg.set_knee_angle         ( 90.0 );
+    m_left_leg.set_ankle_angle        ( 0.0  );
     
+    m_right_leg.set_hip_angle         ( -90.0 );
+    m_right_leg.set_hip_rotate_angle  ( 0.0  );
+    m_right_leg.set_hip_sideways_swing_angle( 0.0  );
+    m_right_leg.set_knee_angle        ( 90.0 );
+    m_right_leg.set_ankle_angle       ( 0.0  );
+
+    float sitting_height2   = m_left_leg.get_vertical_height(false);
+    float torso_height = m_torso.height/2.;
+    relocate( m_x, torso_height+sitting_height2, m_z );
+}
+
+void glStaticMovesRobot::floor_sit(  )
+{
+    m_left_leg.set_hip_angle       ( 90.0 );
+    m_left_leg.set_knee_angle      ( 0.0 );
+    m_left_leg.set_ankle_angle     ( 0.0 );
+    m_left_leg.set_hip_rotate_angle( 0.0 );
+
+    m_right_leg.set_hip_angle       ( 90.0 );
+    m_right_leg.set_knee_angle      ( 0.0 );
+    m_right_leg.set_ankle_angle     ( 0.0 );
+    m_right_leg.set_hip_rotate_angle( 0.0 );
 }
 
 void glStaticMovesRobot::one_knee_kneel     ( bool mLeft  )        // out in front
@@ -201,6 +249,69 @@ void glStaticMovesRobot::kneel              (  )        // out in front
     m_right_leg.set_knee_angle        ( 90.0 );
     m_right_leg.set_ankle_angle       ( 90.0 );
 }
+/*
+ Calculate the angles needed to raise the leg from standing position to a certain vertical height (mInches)
+ 
+ */
+void  glStaticMovesRobot::lift_leg_from_standing      ( float mInches, bool mLeftLeg )
+{
+    if (mInches<0)  return ;
+        
+    float upper_lower_length = m_left_leg.m_upper_leg.m_joint_length + m_left_leg.m_lower_leg.m_joint_length;
+    float upper_distance     = mInches * (m_left_leg.m_upper_leg.m_joint_length / upper_lower_length);
+    float upper_vertical     = m_left_leg.m_upper_leg.m_joint_length - upper_distance;
+    
+    // Now find the angle needed to raise upper leg from m_upper_leg.m_joint_length by upper_distance;
+    float hypotenus = m_left_leg.m_upper_leg.m_joint_length;
+    
+    // upper_vertical = hypotenus * cos(mAngle);
+    float hip_angle = degrees( acos(upper_vertical / hypotenus) );
+    if (mLeftLeg)
+        lift_left_leg(hip_angle);
+    else
+        lift_right_leg(hip_angle);
+}
+
+void  glStaticMovesRobot::lift_left_leg      ( float mAngle )
+{
+    m_left_leg.set_hip_angle  (-mAngle);
+    m_left_leg.set_knee_angle (2*mAngle);
+    m_left_leg.make_foot_level();
+}
+void  glStaticMovesRobot::lift_right_leg     ( float mAngle )
+{
+    m_right_leg.set_hip_angle  (-mAngle);
+    m_right_leg.set_knee_angle (2*mAngle);
+    m_right_leg.make_foot_level();
+}
+
+void  glStaticMovesRobot::lift_left_keep_lower_vertical( float mAngle, bool mLeftLeg )
+{
+    if (mLeftLeg) {
+        m_left_leg.set_hip_angle  (-mAngle);
+        m_left_leg.set_knee_angle (mAngle);
+        m_left_leg.make_foot_level();
+    } else {
+        m_right_leg.set_hip_angle  (-mAngle);
+        m_right_leg.set_knee_angle (mAngle);
+        m_right_leg.make_foot_level();
+    }
+}
+
+void  glStaticMovesRobot::w_question         (  )
+{
+    m_left_arm.set_shoulder_rotate_angle   (  0.0 );      // rotate forward backward (1st rotation)
+    m_left_arm.set_shoulder_angle          (  45.0 );     // arm swing (ie. 2nd rotation)
+    m_left_arm.set_upper_arm_rotate_angle  (  90.0 );     // arm rotate (ie. 3rd rotation)
+    m_left_arm.set_elbow_angle             (  90.0 );     //
+    m_left_arm.set_wrist_angle             (  45.0 );
+    
+    m_right_arm.set_shoulder_rotate_angle   (  0.0 );
+    m_right_arm.set_shoulder_angle          ( 45.0 );
+    m_right_arm.set_upper_arm_rotate_angle  (  90.0 );     // arm rotate (ie. 3rd rotation)
+    m_right_arm.set_elbow_angle             (  90.0 );
+    m_right_arm.set_wrist_angle             (  45.0 );
+}
 
 void  glStaticMovesRobot::hands_on_hip       (  )
 {
@@ -209,7 +320,7 @@ void  glStaticMovesRobot::hands_on_hip       (  )
     m_left_arm.set_upper_arm_rotate_angle  ( -90.0 );     // arm rotate (ie. 3rd rotation)
     m_left_arm.set_elbow_angle             (  90.0 );     //
     m_left_arm.set_wrist_angle             (  90.0 );
-    
+
     m_right_arm.set_shoulder_rotate_angle   (  0.0 );
     m_right_arm.set_shoulder_angle          ( 45.0 );
     m_right_arm.set_upper_arm_rotate_angle  ( -90.0 );     // arm rotate (ie. 3rd rotation)
@@ -219,12 +330,12 @@ void  glStaticMovesRobot::hands_on_hip       (  )
 
 void  glStaticMovesRobot::folded_arms        (  )
 {
-    m_left_arm.set_shoulder_rotate_angle   ( 20.0 );
+    m_left_arm.set_shoulder_rotate_angle   ( -20.0 );
     m_left_arm.set_shoulder_angle          (  0.0 );
     m_left_arm.set_upper_arm_rotate_angle  ( -90.0 );     // arm rotate (ie. 3rd rotation)
     m_left_arm.set_elbow_angle             ( 90.0 );
 
-    m_right_arm.set_shoulder_rotate_angle   ( 30.0 );
+    m_right_arm.set_shoulder_rotate_angle   ( -30.0 );
     m_right_arm.set_shoulder_angle          (  0.0 );
     m_right_arm.set_upper_arm_rotate_angle  ( -90.0 );     // arm rotate (ie. 3rd rotation)
     m_right_arm.set_elbow_angle             ( 90.0 );
@@ -232,12 +343,12 @@ void  glStaticMovesRobot::folded_arms        (  )
 
 void glStaticMovesRobot::zombie_arms        (  )        // out in front
 {
-    m_left_arm.set_shoulder_rotate_angle   ( 90.0 );
+    m_left_arm.set_shoulder_rotate_angle   ( -90.0 );
     m_left_arm.set_shoulder_angle          (  0.0 );
     m_left_arm.set_upper_arm_rotate_angle  (  0.0 );     // arm rotate (ie. 3rd rotation)
     m_left_arm.set_elbow_angle             (  0.0 );
 
-    m_right_arm.set_shoulder_rotate_angle   ( 90.0 );
+    m_right_arm.set_shoulder_rotate_angle   ( -90.0 );
     m_right_arm.set_shoulder_angle          (  0.0 );
     m_right_arm.set_upper_arm_rotate_angle  (  0.0 );     // arm rotate (ie. 3rd rotation)
     m_right_arm.set_elbow_angle             (  0.0 );    
@@ -261,7 +372,7 @@ void glStaticMovesRobot::wave_1( bool mLeftHand )
     glArm* arm = NULL;
     if (mLeftHand)  arm = &m_left_arm;  else  arm = &m_right_arm;
 
-    arm->set_shoulder_rotate_angle   ( 90.0 );
+    arm->set_shoulder_rotate_angle   ( -90.0 );
     arm->set_shoulder_angle          ( 45.0 );
     arm->set_upper_arm_rotate_angle  ( -20.0 );     // arm rotate (ie. 3rd rotation)
     arm->set_elbow_angle             ( 100.0 );
@@ -273,7 +384,7 @@ void glStaticMovesRobot::wave_2( bool mLeftHand )
     glArm* arm = NULL;
     if (mLeftHand)  arm = &m_left_arm;  else  arm = &m_right_arm;
 
-    arm->set_shoulder_rotate_angle   (  90.0 );
+    arm->set_shoulder_rotate_angle   (  -90.0 );
     arm->set_shoulder_angle          (  45.0 );
     arm->set_upper_arm_rotate_angle  (  20.0 );     // arm rotate (ie. 3rd rotation)
     arm->set_elbow_angle             (  80.0 );
@@ -283,7 +394,7 @@ void glStaticMovesRobot::wave_2( bool mLeftHand )
 
 void glStaticMovesRobot::arm_stretched_to_side_left(  )
 {
-    m_left_arm.set_shoulder_rotate_angle    ( 0.0 );
+    m_left_arm.set_shoulder_rotate_angle    ( -45.0  );
     m_left_arm.set_shoulder_angle           ( 90.0 );
     m_left_arm.set_upper_arm_rotate_angle   ( 0.0 );
     m_left_arm.set_elbow_angle              ( 0.0 );
@@ -310,12 +421,12 @@ void glStaticMovesRobot::arm_straight_up( bool mLeftHand )
 
 void glStaticMovesRobot::attention_1(  )
 {
-    m_left_arm.set_shoulder_rotate_angle   ( 150.0);
+    m_left_arm.set_shoulder_rotate_angle   ( -150.0);
     m_left_arm.set_shoulder_angle          (  0.0 );
     m_left_arm.set_upper_arm_rotate_angle  (  0.0 );     // arm rotate (ie. 3rd rotation)
     m_left_arm.set_elbow_angle             (  0.0 );
 
-    m_right_arm.set_shoulder_rotate_angle   (150.0 );
+    m_right_arm.set_shoulder_rotate_angle   (-150.0 );
     m_right_arm.set_shoulder_angle          (  0.0 );
     m_right_arm.set_upper_arm_rotate_angle  (  0.0 );     // arm rotate (ie. 3rd rotation)
     m_right_arm.set_elbow_angle             (  0.0 );
@@ -323,12 +434,12 @@ void glStaticMovesRobot::attention_1(  )
 
 void glStaticMovesRobot::attention_2(  )
 {
-    m_left_arm.set_shoulder_rotate_angle   ( 150.0 );
+    m_left_arm.set_shoulder_rotate_angle   ( -150.0 );
     m_left_arm.set_shoulder_angle          (  30.0 );
     m_left_arm.set_upper_arm_rotate_angle  (   0.0 );     // arm rotate (ie. 3rd rotation)
     m_left_arm.set_elbow_angle             (   0.0 );
 
-    m_right_arm.set_shoulder_rotate_angle   ( 150.0 );
+    m_right_arm.set_shoulder_rotate_angle   ( -150.0 );
     m_right_arm.set_shoulder_angle          (  30.0 );
     m_right_arm.set_upper_arm_rotate_angle  (   0.0 );     // arm rotate (ie. 3rd rotation)
     m_right_arm.set_elbow_angle             (   0.0 );
@@ -337,14 +448,14 @@ void glStaticMovesRobot::attention_2(  )
 // for lifting a table.
 void glStaticMovesRobot::lift_with_both_hands_1( float hand_separation )
 {
-    m_left_arm.set_shoulder_rotate_angle   (  10.0 );
+    m_left_arm.set_shoulder_rotate_angle   (  -10.0 );
     m_left_arm.set_shoulder_angle          (  30.0 );
     m_left_arm.set_upper_arm_rotate_angle  (  90.0 );     // arm rotate (ie. 3rd rotation)
     m_left_arm.set_elbow_angle             (   0.0 );
     m_left_arm.m_gripper.fingers_straight  (     );
     m_left_arm.m_gripper.fingers_bend_mid  ( 90.0);
     
-    m_right_arm.set_shoulder_rotate_angle   (  10.0 );
+    m_right_arm.set_shoulder_rotate_angle   (  -10.0 );
     m_right_arm.set_shoulder_angle          (  30.0 );
     m_right_arm.set_upper_arm_rotate_angle  (  90.0 );     // arm rotate (ie. 3rd rotation)
     m_right_arm.set_elbow_angle             (   0.0 );
@@ -384,8 +495,8 @@ void glStaticMovesRobot::scan_arms( )
             uar += 2;
     }
     
-    m_left_arm.set_shoulder_rotate_angle ( sra );
-    m_right_arm.set_shoulder_rotate_angle( sra );
+    m_left_arm.set_shoulder_rotate_angle ( -sra );
+    m_right_arm.set_shoulder_rotate_angle( -sra );
     
     m_left_arm.set_shoulder_angle       ( sa );
     m_right_arm.set_shoulder_angle      ( sa );
@@ -406,18 +517,19 @@ bool glStaticMovesRobot::demo ( )
         case 9 :    kneel( );                                break;
 
         case 10 :    arms_down_by_side  (  );               break;
-        case 11 :    hands_on_hip       (  );               break;
-        case 12 :    folded_arms        (  );               break;
-        case 13 :    zombie_arms        (  );               break;
-        case 14 :    arm_straight_up    ( true  );          break;
-        case 15 :    arm_straight_up    ( false );          break;
-        case 16 :    wave_1             ( true );           break;
-        case 17 :    wave_2             ( true );           break;
-        case 18 :    arm_stretched_to_side_left (  );       break;
-        case 19 :    arm_stretched_to_side_right(  );       break;
-        case 20 :    attention_1        (  );               break;
-        case 21 :    attention_2        (  );               break;
-        case 22 :    move_number = 10.;    return true;     break;
+        case 11 :    w_question         (  );               break;
+        case 12 :    hands_on_hip       (  );               break;
+        case 13 :    folded_arms        (  );               break;
+        case 14 :    zombie_arms        (  );               break;
+        case 15 :    arm_straight_up    ( true  );          break;
+        case 16 :    arm_straight_up    ( false );          break;
+        case 17 :    wave_1             ( true );           break;
+        case 18 :    wave_2             ( true );           break;
+        case 19 :    arm_stretched_to_side_left (  );       break;
+        case 20 :    arm_stretched_to_side_right(  );       break;
+        case 21 :    attention_1        (  );               break;
+        case 22 :    attention_2        (  );               break;
+        case 23 :    move_number = 1.;    return true;      break;
         default:    break;
     }
     move_number++;

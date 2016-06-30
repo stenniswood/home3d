@@ -17,12 +17,13 @@
 
 #include <stdio.h>
 #include "Sim3D_defines.h"
+#include "robot.hpp"
 
 #ifdef  __cplusplus
 extern "C" {
 #endif
 
-#define IPC_KEY_SEQ 1235
+#define IPC_KEY_SEQ 0x04D3          // 1235 in decimal!
     
 extern char* 	sequencer_shared_memory;
 extern int 		sequencer_segment_id;
@@ -56,7 +57,7 @@ struct sequencer_ipc_memory_map
 
     int                number_of_vectors;
     int                last_read_vector;
-    struct one_vector  sequence[MAX_SEQUENCE_LENGTH];
+    struct stBodyPosition  sequence[MAX_SEQUENCE_LENGTH];
     unsigned char      instance_mapping[MAX_SERVOS];
 
     long int ResponseCounter;       //
@@ -72,9 +73,10 @@ void seq_dump_ipc			();
 void seq_save_segment_id	(char* mFilename);
 int  seq_read_segment_id	(char* mFilename);
 
-int  seq_allocate_memory	();
-void seq_deallocate_memory	(int msegment_id);
-
+bool  is_seq_ipc_memory_available();
+int   connect_shared_sequencer_memory( char mAllocate );
+int   seq_allocate_memory	();
+void  seq_deallocate_memory	(int msegment_id);
 long  seq_attach_memory		();
 void  seq_reattach_memory	();
 void  seq_detach_memory		();
@@ -83,8 +85,9 @@ unsigned long seq_get_segment_size();
 void seq_fill_memory              ();
 
 
-bool ipc_add_sequence           ( struct one_vector  mVector);
-bool ipc_write_sequence         ( int mIndex, struct one_vector  mVector );
+bool ipc_add_sequence           ( struct stBodyPosition*  mVector);
+bool ipc_write_sequence         ( int mIndex, struct stBodyPosition* mBP );
+//bool ipc_write_sequence         ( int mIndex, struct one_vector  mVector );
 bool ipc_write_instance_index   ( int mIndex, unsigned char mInstance    );
 
     

@@ -162,7 +162,7 @@ glm::mat4 glObject::get_body_matrix_inverse ( int mOne, int mTwo, int mThree )
     return ViewTranslate;
 }
 
-MathVector glObject::map_coords              ( MathVector mObjectCoordinate )
+MathVector glObject::map_coords ( MathVector mObjectCoordinate )
 {
     glm::vec4 oc;
     oc[0] = mObjectCoordinate[0];

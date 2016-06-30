@@ -75,7 +75,9 @@ void	Palette::create( int mCols, int  mRows, int mLayers )
 	m_width  = b->width * mRows;
 	
 	for (int h=0; h<mLayers; h++)
-		create_one_layer( mCols, mRows, h*b->height );	
+		create_one_layer( mCols, mRows, h*b->height );
+    //gl_register();
+    
 }
 
 float	Palette::get_brick_length ( )

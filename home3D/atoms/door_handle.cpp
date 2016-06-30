@@ -8,7 +8,7 @@
 
 #include "door_handle.h"
 
-const float center_offset_from_door_edge = 2.5;
+//const float center_offset_from_door_edge = 2.5;
 const float knob_distance_from_door      = 3.0;
 
 

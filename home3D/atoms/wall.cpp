@@ -317,7 +317,8 @@ void glBareWall::set_length_height( float mLength, int  mHeight )
 
 void glBareWall::setup( )
 {
-    glExtrusion::setup( m_wall_thickness, 2 );    
+    glExtrusion::set_la(m_wall_thickness, 2 );
+    glExtrusion::setup ( );
 }
 
 /* Call this :
@@ -636,10 +637,10 @@ void glBareWall::set_texture( int mSelection )
      case 0:	m_texture->load_image("textures/light-stucco-texture.jpg" 	);  m_texture->m_width_in_inches = 12;  m_texture->m_height_in_inches= 12;  break;
      case 1:	m_texture->load_image("textures/stucco-texture.jpg" 		);  m_texture->m_width_in_inches = 12;  m_texture->m_height_in_inches= 12;  break;
      case 2:	m_texture->load_image("textures/stucco-2-texture.jpg" 		);  m_texture->m_width_in_inches = 12;  m_texture->m_height_in_inches= 12;  break;
-     case 3:	m_texture->load_image("textures/wall-texture.jpg" 			);  m_texture->m_width_in_inches = 12;  m_texture->m_height_in_inches= 12;  break;
-     case 4:	m_texture->load_image("textures/drywall-texture.jpg" 		);	m_texture->m_width_in_inches = 12;  m_texture->m_height_in_inches= 12;  break;
+     case 3:	m_texture->load_image("textures/wall-texture.jpg" 			);  m_texture->m_width_in_inches = 3*12;  m_texture->m_height_in_inches= 3*12;  break;
+     case 4:	m_texture->load_image("textures/drywall-texture.jpg" 		);	m_texture->m_width_in_inches = 3*12;  m_texture->m_height_in_inches= 3*12;  break;
      case 5:	m_texture->load_image("textures/concrete-texture.jpg" 		);  m_texture->m_width_in_inches = 12;  m_texture->m_height_in_inches= 12;  break;
-     case 6:	m_texture->load_image("textures/bump-wall-texture.jpg" 		);  m_texture->m_width_in_inches = 12;  m_texture->m_height_in_inches= 12;  break;
+     case 6:	m_texture->load_image("textures/bump-wall-texture.jpg" 		);  m_texture->m_width_in_inches = 3*12;  m_texture->m_height_in_inches= 3*12;  break;
      case 7:	m_texture->load_image("textures/bamboo-fence-texture.jpg"	);  m_texture->m_width_in_inches = 12;  m_texture->m_height_in_inches= 12;  break;
 
      case 8:	m_texture->load_image("textures/brick_wall_seamless.jpg"	);  m_texture->m_width_in_inches = 6*12;  m_texture->m_height_in_inches= 8*12;  break;
@@ -648,7 +649,9 @@ void glBareWall::set_texture( int mSelection )
      case 11:	m_texture->load_image("textures/brick_wall_2.jpg"           );  m_texture->m_width_in_inches = 2.5*12;  m_texture->m_height_in_inches= 28;  break;
      case 12:	m_texture->load_image("textures/stone_brick_wall.jpg"       );  m_texture->m_width_in_inches = 2.5*12;  m_texture->m_height_in_inches= 14;  break;
      case 13:	m_texture->load_image("textures/red_brick_wall.jpg"         );  m_texture->m_width_in_inches = 5*12;  m_texture->m_height_in_inches= 4*12;  break;
-
+     case 14:	m_texture->load_image("textures/metal_exterior_siding.jpg"  );  m_texture->m_width_in_inches = 1*12;  m_texture->m_height_in_inches= 1.5*12;  break;
+     case 15:	m_texture->load_image("textures/aluminum_siding_bluish.jpg" );  m_texture->m_width_in_inches = 1.5*12;  m_texture->m_height_in_inches= 2*12;  break;
+             
      case 20:	m_texture->load_image("textures/entry_wall_paper.jpg"           );  m_texture->m_width_in_inches = 2*12;  m_texture->m_height_in_inches= 2*12;  break;
              
      default:  break;

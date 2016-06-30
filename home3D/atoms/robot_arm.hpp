@@ -10,20 +10,16 @@
 #define __home3D__robot_arm__
 
 #include <stdio.h>
-//#include "all_objects.h"
-//#include "robot_gripper.h"
 #include "glMolecule.h"
 #include "robot_leg_piece.hpp"
 #include "robot_gripper.h"
 
 
+const float MAX_SHOULDER_ROTATE_ANGLE = 120.0;          //
+const float MIN_SHOULDER_ROTATE_ANGLE = -180.0;          //
 
-
-const float MAX_SHOULDER_ROTATE_ANGLE = 180.0;          //
-const float MIN_SHOULDER_ROTATE_ANGLE = -120.0;          //
-
-const float MAX_SHOULDER_SWING_ANGLE = 100.0;   // UPPER ARM FORWARD/BACKWARD
-const float MIN_SHOULDER_SWING_ANGLE =   0.0;
+const float MAX_SHOULDER_SWING_ANGLE = +100.0;   // UPPER ARM FORWARD/BACKWARD
+const float MIN_SHOULDER_SWING_ANGLE = -10.0;
 
 const float MAX_UPPERARM_ROTATE_ANGLE = +90.0;   // UPPER ARM FORWARD/BACKWARD
 const float MIN_UPPERARM_ROTATE_ANGLE = -90.0;
@@ -52,8 +48,21 @@ public:
     bool			inverse_xyz              ( float mX,  float mY,  float mZ   );
     void			forward_xyz              ( float *mX, float *mY, float *mZ  );
     
-    MathVector      get_wrist_position       (  );
+    MathVector      get_elbow_position       (  );
+    MathVector      get_wrist_position       (  );                          /* in Robot coordinates */
     void            set_wrist_position       ( MathVector& mArmCoord );
+    void            reposition_fore_arm      ();        // updates the translates based on upper arm.
+    
+    // STUBS FILL IN! :
+    MathVector      get_index_finger_position (  );                          /* in Robot coordinates */
+    MathVector      get_middle_finger_position(  );                          /* in Robot coordinates */
+    MathVector      get_pinky_finger_position (  );                          /* in Robot coordinates */
+    MathVector      get_thumb_position        (  );                          /* in Robot coordinates */
+
+    glFinger*       get_index_finger         (  );
+    glFinger*       get_middle_finger        (  );
+    glFinger*       get_pinky_finger         (  );
+    glThumb*        get_thumb                (  );
     
     void            move_arms_up_down        ( float mX );
 
@@ -85,13 +94,17 @@ public:
     
     void            position_gripper              ( );  // move gripper object to the end of the forearm.
     
+
     // Each leg piece should have translates relative to previous.
     glLegSegment  	m_upper_arm;
     glLegSegment  	m_fore_arm;
     glGripper       m_gripper;
-    // glHand        m_hand;
+    //glHand        m_hand;
+    
+    glBox*           m_shoulder_pan;
+    
 
-    float 			m_shoulder_angle;			// degrees  away from body.
+    float 			m_shoulder_angle;			// degrees  away from body (90 => stretched to side)
     float 			m_shoulder_rotate_angle;    // forward to backward
     float 			m_upper_arm_rotate_angle;   // implement!!
     
@@ -101,6 +114,4 @@ public:
     bool            m_left_arm;
 };
 
-
-
-#endif /* defined(__home3D__robot_arm__) */
+#endif  /* defined(__home3D__robot_arm__) */

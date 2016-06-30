@@ -30,9 +30,9 @@ public:
     void        set_angular_acceleration(); // transfers into all atoms/sub-molecules.
     void        set_angular_veloctiy();     // transfers into all atoms/sub-molecules.
     
-    void        set_relative_x( glObject* mObj, float mX );
-    void        set_relative_y( glObject* mObj, float mY );
-    void        set_relative_z( glObject* mObj, float mZ );
+    void        set_relative_x  ( glObject* mObj, float mX );
+    void        set_relative_y  ( glObject* mObj, float mY );
+    void        set_relative_z  ( glObject* mObj, float mZ );
     void        set_relative_xyz( glObject* mObj, float mX, float mY, float mZ);
 
     virtual void    compute_max();
@@ -45,7 +45,8 @@ public:
     
     void            gl_register      ( );
     void            gl_unregister    ( );
-
+    virtual void    release_memory(   );
+    
     /* A molecule could consist of atoms or other molecules.  
         In either case the base components needs a glRegister.
      */

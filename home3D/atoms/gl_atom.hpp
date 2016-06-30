@@ -1,12 +1,13 @@
 #ifndef _ATOM_H_
 #define _ATOM_H_
 
+#include <vector>
+
 #include <OpenGL/OpenGL.h>
 #include <GLUT/glut.h>
 #include <OpenGL/glext.h>
-//#include "gl_object.hpp"
 
-#include <vector>
+
 using namespace std;
 #include "texture.hpp"
 #include "verbal_object.h"
@@ -65,7 +66,7 @@ public:
     virtual void 	create      ( );    // Better to override setup and call gl_register() after.
 
 	void 	change_color        ( long mColor            );
-    void    set_vertex_color    ( struct Vertex_pc& mVertex );
+    void    set_vertex_color    ( struct Vertex_pc & mVertex );
     void    set_vertex_color    ( struct Vertex_pnc& mVertex );
     
     void    scale_drawing       ( float mScale           );
@@ -83,6 +84,7 @@ public:
     virtual void	compute_min	( 	);
     void	compute_min_max		( 	);
     
+    virtual void    release_memory(   );
     void	print_min_max		( 	);
     void    print_indexed_vertices( );
 
@@ -99,7 +101,8 @@ public:
 	void					print_vertices	( bool mShowColors = true );
 	vector<struct Vertex_pnc>	m_vertices;
 	GLuint					m_VBO;
-
+    bool                    m_uses_normals;
+    
     virtual void	gl_register  (  );
     virtual void    gl_unregister(  );
     virtual void	draw_body	 ( 	);          // Override this with open gl commands.

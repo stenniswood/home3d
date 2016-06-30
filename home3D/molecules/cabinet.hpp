@@ -28,23 +28,16 @@ public:
 };
 
 
-class glCabinet : public glExtrusion
+class glCabinet : public glMolecule
 {
 public:
 	glCabinet(  );
 
 	void	Initialize	( );
-
-	virtual void	generate_vertices();
-	void  	generate_cabinet_side_vertices( );
-	void  	generate_cabinet_side_IBO( GLubyte* iptr );
-
+    virtual void 	setup  		( );
 	void 	colorize	( );
 	void	create		( );
-	void 	generate_IBO( );
-	void 	generate_VBO( );
-	void	draw		( );
-
+    
 	void	open_drawer ( float mFractionOpen ) {
 		m_drawer.open(mFractionOpen);
 	};
@@ -52,9 +45,9 @@ public:
 		m_door.open (mFractionOpen);
 	};
 	
-	glCabinetEndPiece	m_end1;
+	
+    glCabinetEndPiece	m_end1;
 	glCabinetEndPiece	m_end2;
-
 	glBox               m_separator;
 	glBox               m_drawer_top_bar;
 	glBox               m_below_door;

@@ -26,9 +26,14 @@ glRoute::glRoute( )
 	m_end.position[0] = 0.;
 	m_end.position[2] = 0.;
 
+    m_line_width = 10.;
+    m_sample_spacing_inches = 2.0;
+    
 	// IBO / VBO:
-	//m_number_path_indices = 0;
 	m_number_path_vertices = 0;
+    
+    // 
+    m_direct_path.m_color = 0xFFFF0000;
 }
 
 float glRoute::get_angle_degrees( int mIndex )
@@ -60,13 +65,29 @@ void glRoute::start_over_at2( MathVector    mStart )
 {
     struct Vertex v;
     v.position[0] = mStart[0];
+    v.position[1] = mStart[1];
     v.position[2] = mStart[2];
     start_over_at( v );
 }
 
+void glRoute::show_direct_path( bool mDraw )
+{
+    MathVector tmp(3);
+    tmp[0] = m_start.position[0];
+    tmp[1] = m_start.position[1];
+    tmp[2] = m_start.position[2];
+    m_direct_path.m_Start = tmp;
+    tmp[0] = m_end.position[0];
+    tmp[1] = m_end.position[1];
+    tmp[2] = m_end.position[2];
+    m_direct_path.m_End   = tmp;
+    m_direct_path.m_is_shown = mDraw;
+}
+
 
 /* Compute samples from current location (last vertex) to
-	The specified location.  Sampling every 2 inches
+	the specified location in a straight line.
+    Sampling every 2 inches
     Linear Interpolate.
 */
 void glRoute::add_way_point( struct Vertex mWay )
@@ -83,10 +104,10 @@ void glRoute::add_way_point( struct Vertex mWay )
 	delta[2] = ( mWay.position[2] - v.position[2] );
     float magnitude = delta.magnitude();
     delta.unitize();
-    delta *= 2.;
+    delta *= m_sample_spacing_inches;
     
     // Normalize rr : 
-	int samples      = floor(fabs(magnitude/2.));
+	int samples      = floor(fabs(magnitude/m_sample_spacing_inches));
     set_vertex_color( v );
     
 	for (int i=0; i<samples; i++)
@@ -121,15 +142,15 @@ void glRoute::add_sample( MathVector   mPoint )
         m_start = v;
     
     m_number_path_vertices = (int)m_vertices.size();
-    
 }
+
 
 void glRoute::create_from_multi( glMultiRoute& mMulti )
 {
     // Generate Final Path (Walking Route)
-    reset                   ( );
-    start_over_at2          ( mMulti.FinalPath[0] );                 // NEED!!
-    set_color( 0xFFFFFF00);
+    reset           ( );
+    start_over_at2  ( mMulti.FinalPath[0] );                 // NEED!!
+    set_color       ( 0xFFFFFF00);
     
     long size = mMulti.FinalPath.size();
     for (long i=0; i<size; i++)
@@ -137,11 +158,13 @@ void glRoute::create_from_multi( glMultiRoute& mMulti )
     
     compute_slopes         ( );
     m_number_path_vertices = m_vertices.size();
-    
+    m_end = m_vertices[m_number_path_vertices-1];
+    show_direct_path();
     // call gl_register after this.
     // Not done here because virtual function.  derived classes may add more vertices (foot steps)
     // Need to call from the caller of this function.    
 }
+
 
 /* We only compute the rise and run! */
 void glRoute::compute_slopes( )
@@ -185,8 +208,21 @@ struct stRiseRun  glRoute::compute_perpendicular( int mIndex )
 	return rr;
 }
 
+MathVector glRoute::get_directional_vector( int mIndex )
+{
+    MathVector mv = compute_delta( mIndex );
+    mv.unitize();
+    return mv;
+}
 
-MathVector glRoute::get_perpendicular( int mIndex, float mPerpendicular_Distance )
+MathVector glRoute::get_perpendicular_vector( int mIndex )
+{
+    MathVector mv = compute_delta( mIndex );
+    MathVector perp = mv.get_perp_xz();
+    perp.unitize();
+    return perp;
+}
+MathVector glRoute::get_perpendicular_pt( int mIndex, float mPerpendicular_Distance )
 {
     MathVector mv = compute_delta( mIndex );
     MathVector perp = mv.get_perp_xz();
@@ -205,10 +241,11 @@ MathVector glRoute::get_perpendicular( int mIndex, float mPerpendicular_Distance
 
 void	glRoute::draw_body			 	( )
 {
+    
 	// Make the new VBO active. Repeat here incase changed since initialisation
-	glBindBuffer( GL_ARRAY_BUFFER, 		   m_VBO );
+	glBindBuffer  ( GL_ARRAY_BUFFER, 		   m_VBO );
 	//glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, m_IBO );
-	glLineWidth( 10.0 );
+	glLineWidth   ( m_line_width );
 
 	glVertexPointer(3, GL_FLOAT, 		 sizeof(struct Vertex), NULL);
 	glColorPointer (4, GL_UNSIGNED_BYTE, sizeof(struct Vertex), (GLvoid*)(offsetof(struct Vertex,color)));
@@ -220,6 +257,8 @@ void	glRoute::draw_body			 	( )
 	// Draw Route :
 	glDrawArrays  (GL_LINE_STRIP,  0,  m_number_path_vertices );
     
+    // Show Red line connecting end points :
+    m_direct_path.draw_body();
 }
 
 

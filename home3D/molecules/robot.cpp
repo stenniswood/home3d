@@ -50,7 +50,6 @@ void glRobot::Initialize( )
 	m_torso.width  = 18;
 	m_torso.height = 24;
 	m_torso.depth  = 8;
-    m_last_direction_forward = true;
 }
 
 bool glRobot::check_limits( )
@@ -62,18 +61,27 @@ bool glRobot::check_limits( )
 }
 
 // FIX AND USE THIS ONE - was located in Route.
-void glRobot::place_over_vertex( struct Vertex mVertex, struct Vertex mVertex2 )
+void glRobot::place_over_vertex( struct Vertex mVertex )
 {
-    float leg_height   = m_left_leg.get_length();
+    float leg_height   = m_left_leg.get_vertical_height();
     float torso_height = m_torso.height/2.;
     
     relocate( mVertex.position[0], mVertex.position[1]+leg_height+torso_height, mVertex.position[2] );
-
-    float rise = mVertex2.position[0] - mVertex.position[0];
-    float run  = mVertex2.position[2] - mVertex.position[2];
-    m_y_angle = atan2( rise, run ) * 180./M_PI;
 }
-
+void glRobot::adjust_body_vertical( float mGroundHeight )
+{
+    float leg_vertical = min( m_left_leg.get_vertical_height(), m_right_leg.get_vertical_height() );
+    relocate( m_x, mGroundHeight+leg_vertical, m_z );
+}
+void glRobot::adjust_body_vertical_for_leg( float mGroundHeight, bool mLeftLeg)
+{
+    float leg_vertical;
+    if (mLeftLeg)
+        leg_vertical = m_left_leg.get_vertical_height();
+    else
+        leg_vertical = m_right_leg.get_vertical_height();
+    relocate( m_x, mGroundHeight+leg_vertical, m_z );
+}
 void glRobot::create_components()
 {
     m_torso.setup    ( );
@@ -102,55 +110,69 @@ void glRobot::create_components()
     m_left_leg.relocate ( +m_torso.width/2., -m_torso.height/2., 0 );
     m_right_leg.relocate( -m_torso.width/2., -m_torso.height/2., 0 );
     m_head.relocate( 0.0, m_torso.height/2.+m_head.m_head->m_radius, 0.0 );
+    
+    m_nose_line.set_color( 0xFFFF005F );
+    update_nose_line();
+    m_nose_line.gl_register();
+    //m_components.push_back(&m_nose_line);
 }
 
-/*MathVector glRobot::map_to_world_coords( MathVector mRobotCoordinate )
+void glRobot::update_nose_line()
 {
-    glm::mat4 robot_mat      = get_body_matrix( );
-    glm::vec4 hip_location     = m_left_leg.get_position( );
-    glm::vec4 hip_coords_world = robot_mat * hip_location;  mRobotCoordinate
-    return hip_coords_world ; *
-} */
+    MathVector rc(3);
+    m_nose_line.m_Start = get_eye_location_world_coords();
 
+    MathVector tmp(3);
+    glm::vec4 center = get_eye_target_world_coords( );
+    tmp[0]=center[0];
+    tmp[1]=center[1];
+    tmp[2]=center[2];
+    m_nose_line.m_End = tmp;
+}
 
+void glRobot::relocate ( float mX, float mY, float mZ )
+{
+    glMolecule::relocate( mX, mY, mZ );
+    update_nose_line();
+}
 
-MathVector glRobot::get_eye_location    ( )        // in world cooridnates for viewing.
+MathVector glRobot::get_eye_location_robot_coords( )        // in world cooridnates for viewing.
 {
     MathVector eyeC = m_head.get_cyclops_coordinate();
-    glm::vec4 eye;
-    eye[0] = eyeC[0];
-    eye[1] = eyeC[1];
-    eye[2] = eyeC[2];
-    eye[3] = 1.0;
-
-    glm::mat4 head_rotate = m_head.get_body_matrix();
-    glm::vec4 eyeRobotCoords = head_rotate * eye;
-
-    glm::mat4 robot_matrix = get_body_matrix();
-    glm::vec4 world_coords = robot_matrix * eyeRobotCoords;
-    eyeC[0] = world_coords[0];
-    eyeC[1] = world_coords[1];
-    eyeC[2] = world_coords[2];
-    return eyeC;
+    MathVector tmp =  m_head.map_coords( eyeC );
+    return tmp;
 }
 
-glm::vec4  glRobot::get_eye_target( )        // in world cooridnates for viewing.
+glm::vec4  glRobot::get_eye_target_robot_coords( )        // in world cooridnates for viewing.
 {
     glm::vec4 center_head  = m_head.get_cyclops_fov_center_coordinate();
     glm::vec4 center_robot = m_head.map_coords(center_head);
-    glm::vec4 center_world = map_coords( center_robot );
-    return center_world;
+    //glm::vec4 center_world = map_coords( center_robot );
+    return center_robot;
 }
 
+MathVector  glRobot::get_eye_location_world_coords( )        // in world cooridnates for viewing.
+{
+    MathVector eye = get_eye_location_robot_coords();
+    return map_coords( eye );
+}
+glm::vec4  glRobot::get_eye_target_world_coords   ( )        // in world cooridnates for viewing.
+{
+    glm::vec4 eye = get_eye_target_robot_coords();
+    return map_coords( eye );
+}
+
+
 /* Each leg has been relocated relative to the torso.  So m_x,m_y,m_z for m_left_leg identify
- where the leg attaches to the torso.  To get real world coordinates, need to map these thru
+ where the leg attaches to the torso.  Using center of torso as origin.
+ 
+ To get real world coordinates, need to map these thru
  the body matrix for the torso.  (calc_hip_positions())
  */
 glm::vec4 glRobot::get_left_hip_coord( )
 {
     // Take Hip position prior to torso translate/rotates.
     // LegSegments are extruded on the 1 axis (y axis)
-    //glm::mat4 torso            = m_torso.get_body_matrix( );
     
     //glm::mat4 robot_mat        = get_body_matrix( );
     //glm::vec4 hip_coords_world = robot_mat * hip_location;
@@ -226,7 +248,7 @@ void glRobot::calc_world_right_foot_positions( )
     m_right_leg.m_foot.calc_angle( m_right_leg.m_foot.m_world_coords );
 }
 
-void  glRobot::extract_robot_position( struct stBodyPosition* bp)
+void  glRobot::extract_body_pose( struct stBodyPosition* bp)
 {
     //static struct stBodyPosition bp;
 
@@ -258,17 +280,17 @@ void  glRobot::extract_robot_position( struct stBodyPosition* bp)
     bp->r_wrist_rotate           = m_right_arm.m_wrist_rotate_angle;
 }
 
-void glRobot::set_robot_position( struct stBodyPosition* mBPosition )
+void glRobot::set_body_pose( struct stBodyPosition* mBPosition )
 {
     // LEGS:
     m_left_leg.set_hip_rotate_angle     ( mBPosition->l_hip_rotate );
-    m_left_leg.set_hip_swing_angle      ( mBPosition->l_hip_swing );
+    m_left_leg.set_hip_sideways_swing_angle( mBPosition->l_hip_swing );
     m_left_leg.set_hip_angle            ( mBPosition->l_hip_fb_swing  );
     m_left_leg.set_knee_angle           ( mBPosition->l_knee  );
     m_left_leg.set_ankle_angle          ( mBPosition->l_ankle );
 
     m_right_leg.set_hip_rotate_angle    ( mBPosition->r_hip_rotate );
-    m_right_leg.set_hip_swing_angle     ( mBPosition->r_hip_swing );
+    m_right_leg.set_hip_sideways_swing_angle( mBPosition->r_hip_swing );
     m_right_leg.set_hip_angle           ( mBPosition->r_hip_fb_swing  );
     m_right_leg.set_knee_angle          ( mBPosition->r_knee  );
     m_right_leg.set_ankle_angle         ( mBPosition->r_ankle );
@@ -292,6 +314,78 @@ void glRobot::set_robot_position( struct stBodyPosition* mBPosition )
     m_head.set_tilt ( mBPosition->head_tilt );
 
     // more to come...
+}
+float glRobot::get_servo_angle( int mServoIndex  )
+{
+    float retval=0.0;
+    switch(mServoIndex)
+    {
+        case 0: retval   = m_left_leg.get_hip_rotate_angle      ();      break;
+        case 1: retval   = m_right_leg.get_hip_rotate_angle     ();      break;
+        case 2: retval   = m_left_leg.get_hip_ss_swing_angle    ();      break;
+        case 3: retval   = m_right_leg.get_hip_ss_swing_angle   ();      break;
+        case 4: retval   = m_left_leg.get_hip_angle             ();      break;
+        case 5: retval   = m_right_leg.get_hip_angle            ();      break;
+            
+        case 6: retval  = m_left_leg.get_knee_angle    ();      break;
+        case 7: retval  = m_right_leg.get_knee_angle   ();      break;
+        case 8: retval  = m_left_leg.get_ankle_angle   ();      break;
+        case 9: retval  = m_right_leg.get_ankle_angle  ();      break;
+            
+            // ARMS:
+        case 10: retval   = m_left_arm.get_upper_arm_rotate_angle   ();      break;
+        case 11: retval   = m_left_arm.get_shoulder_rotate_angle    ();      break;
+        case 12: retval   = m_left_arm.get_shoulder_angle           ();      break;
+        case 13: retval   = m_left_arm.m_elbow_angle;               break;
+        case 14: retval   = m_left_arm.m_wrist_angle;               break;
+        case 15: retval   = m_left_arm.m_wrist_rotate_angle;        break;
+            
+        case 16: retval   = m_right_arm.get_upper_arm_rotate_angle();      break;
+        case 17: retval   = m_right_arm.get_shoulder_rotate_angle ();      break;
+        case 18: retval   = m_right_arm.get_shoulder_angle();       break;
+        case 19: retval   = m_right_arm.m_elbow_angle;              break;
+        case 20: retval   = m_right_arm.m_wrist_angle;              break;
+        case 21: retval   = m_right_arm.m_wrist_rotate_angle;       break;
+        default: break;
+    }
+    return retval;
+}
+
+void glRobot::set_servo_angle( int mServoIndex, float mServoAngle  )
+{
+    switch(mServoIndex)
+    {
+        // LEGS:
+        case 0: m_left_leg.set_hip_rotate_angle     ( mServoAngle       );      break;
+        case 1: m_left_leg.set_hip_sideways_swing_angle( mServoAngle       );      break;
+        case 2: m_left_leg.set_hip_angle            ( mServoAngle       );      break;
+        case 3: m_left_leg.set_knee_angle           ( mServoAngle       );      break;
+        case 4: m_left_leg.set_ankle_angle          ( mServoAngle       );      break;
+            
+        case 5: m_right_leg.set_hip_rotate_angle    ( mServoAngle       );      break;
+        case 6: m_right_leg.set_hip_sideways_swing_angle( mServoAngle       );      break;
+        case 7: m_right_leg.set_hip_angle           ( mServoAngle       );      break;
+        case 8: m_right_leg.set_knee_angle          ( mServoAngle       );      break;
+        case 9: m_right_leg.set_ankle_angle         ( mServoAngle       );      break;
+            
+        // ARMS:
+        case 12: m_left_arm.set_upper_arm_rotate_angle( mServoAngle );      break;
+        case 10: m_left_arm.set_shoulder_rotate_angle ( mServoAngle );      break;
+        case 11: m_left_arm.set_shoulder_angle        ( mServoAngle );      break;
+        case 13: m_left_arm.set_elbow_angle           ( mServoAngle );      break;
+        case 14: m_left_arm.set_wrist_angle          ( mServoAngle );      break;
+        case 15: m_left_arm.set_wrist_rotate_angle   ( mServoAngle );      break;
+        case 18: m_right_arm.set_upper_arm_rotate_angle( mServoAngle );      break;
+        case 16: m_right_arm.set_shoulder_rotate_angle ( mServoAngle );      break;
+        case 17: m_right_arm.set_shoulder_angle        ( mServoAngle );      break;
+        case 19: m_right_arm.set_elbow_angle           ( mServoAngle );      break;
+        case 20: m_right_arm.set_wrist_angle           ( mServoAngle );      break;
+        case 21: m_right_arm.set_wrist_rotate_angle    ( mServoAngle );      break;
+            
+        case 22: m_head.look_left( mServoAngle );     break;
+        case 23: m_head.set_tilt ( mServoAngle );     break;
+        default: break;
+    }
 }
 
 
@@ -319,9 +413,11 @@ void glRobot::center_body_between( float mLeftFoot[3], float mRightFoot[3] )
     printf("Robot Torso at : (%6.3f,%6.3f,%6.3f) \n", m_x, m_y, m_z );
 }
 
-void glRobot::angle_body_vertex( int mVertexIndex1, int mVertexIndex2 )
+void glRobot::angle_body_vertex( struct Vertex mVertex, struct Vertex mVertex2 )
 {
-    
+    float rise = mVertex2.position[0] - mVertex.position[0];
+    float run  = mVertex2.position[2] - mVertex.position[2];
+    m_y_angle = atan2( rise, run ) * 180./M_PI;
 }
 
 /* 
@@ -344,20 +440,25 @@ void glRobot::angle_body_between( struct stFootPosition mSwingFoot, struct stFoo
 }
 
 // vector pointing straight in front of torso (based on m_xyz_angles )
-glm::vec4 glRobot::get_robot_front_vector( )
+MathVector glRobot::get_robot_front_vector( )
 {
     glm::mat4 bm = get_body_matrix();
-    glm::vec4 bv( 0.0, 0.0, 1.0, 1.0);
+    glm::vec4 bv( 0.0, 0.0, 1.0, 0.0);
     glm::vec4 rbv = bm * bv;
-    return rbv;
+    MathVector f(3);
+    f[0]=rbv[0];
+    f[1]=rbv[1];
+    f[2]=rbv[2];
+    return f;
 }
+
 
 bool glRobot::is_in_front_of( MathVector mWorldLoc )
 {
     MathVector body_position(3);
     MathVector front_vector(3);
     MathVector front_perp(3);
-    glm::vec4 front = get_robot_front_vector();
+    MathVector front = get_robot_front_vector();
     
     Line body(3);
     Line test_pt(3);
@@ -385,6 +486,19 @@ bool glRobot::is_in_front_of( MathVector mWorldLoc )
         return true;
     else
         return false;
+}
+// increase distance towards Front vector.  relocate()
+void glRobot::push_forward_distance ( float mDistance )
+{
+    MathVector front = get_robot_front_vector();
+    front.unitize();
+    m_position += front * mDistance;
+}
+void glRobot::move_fore_aft( float mForeAftAmount )
+{
+    MathVector dir = get_robot_front_vector();
+    dir *= mForeAftAmount;
+    relocate( m_x+dir[0], m_y+dir[1], m_z+dir[2] );
 }
 
 
@@ -421,28 +535,28 @@ void glRobot::place_feet_at( struct stFootPosition lfp, struct stFootPosition rf
     m_left_leg.m_hip_rotate_angle  = +angle_diff_deg;
     m_right_leg.m_hip_rotate_angle = -angle_diff_deg;
 
-    // HIP SWING ANGLES :   Calc the Swing angle of the leg
+    // HIP SWING ANGLES :   Calc the Swing angle of the leg  NEEDS REDOING!!
     float hypotenus = m_left_leg.get_length ();
     glm::vec4 lhip  = get_left_hip_coord();
     lhip = map_coords( lhip );    //calc_left_hip_world_coords();
     float dx        = (lfp.heel[0]-lhip[0]);
     float dz        = (lfp.heel[2]-lhip[2]);
-    float floor_distance = sqrt( dx*dx + dz*dz );
-    float hangle_rad     = asin( floor_distance / hypotenus );
-    printf("place_left_foot: floor_dist=%6.3f; hyp=%6.3f  hangle_rad=%6.3f\n", floor_distance, hypotenus, hangle_rad );
+    float floor_distance = sqrt( dx*dx + dz*dz );       // where leg attaches to hip to the ankle projection.
+    float hip_swing_angle_rad     = asin( floor_distance / hypotenus );
+    printf("place_left_foot: floor_dist=%6.3f; hyp=%6.3f  hangle_rad=%6.3f\n", floor_distance, hypotenus, hip_swing_angle_rad );
 
     if (mLeftTurn)
     {
         m_left_leg.m_knee_angle  = 0.;
-        m_left_leg.set_hip_angle  (  degrees( hangle_rad ));
-        m_right_leg.set_hip_angle ( -degrees( hangle_rad ));
+        m_left_leg.set_hip_angle  (  degrees( hip_swing_angle_rad ));
+        m_right_leg.set_hip_angle ( -degrees( hip_swing_angle_rad ));
         m_right_leg.make_foot_level();
         m_left_leg.set_ankle_angle( 0 );
     } else {
         m_right_leg.m_knee_angle  = 0.;
         m_right_leg.m_ankle_angle = 0.;
-        m_left_leg.set_hip_angle  ( -degrees( hangle_rad ));
-        m_right_leg.set_hip_angle ( +degrees( hangle_rad ));
+        m_left_leg.set_hip_angle  ( -degrees( hip_swing_angle_rad ));
+        m_right_leg.set_hip_angle ( +degrees( hip_swing_angle_rad ));
         m_left_leg.make_foot_level();
         m_right_leg.set_ankle_angle( 0 );
     }
@@ -563,8 +677,6 @@ void	glRobot::place_right_toe_at( struct Vertex mHeel )
 { 
     
 }
-
-
 
 
 #include "glm/ext.hpp"

@@ -12,7 +12,7 @@
 #include <stdio.h>
 #include "dwelling_level.h"
 #include "stairway.hpp"
-
+#include "roof.h"
 
 class glDwelling : public glMolecule
 {
@@ -21,9 +21,11 @@ public:
     ~glDwelling();
 
     void    add_level( glDwellingLevel* mLevel );
+    void    add_roof ( );
     
     // Find door, window,
 
+    glRoof*                  m_roof;
     float                    m_level_height;    
     vector<glStairway*>      m_stairs;
     vector<glDwellingLevel*> m_levels;
@@ -31,3 +33,4 @@ public:
 
 
 #endif /* defined(__home3D__dwelling__) */
+

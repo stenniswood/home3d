@@ -57,8 +57,11 @@ void glExtrusion::extrude_vertices( float mExtrusionLength, int mLoftAxis )
 {	
 	if ((mLoftAxis>=0) && (mLoftAxis<=2))
 		m_extrusion_axis = mLoftAxis;
-	if (m_extrusion_axis==-1) return;
-	
+	if (m_extrusion_axis==-1)
+    {
+        printf("BAD EXTRUSION: glExtrusion::extrude_vertices() - no axis specified!");
+        return;
+    }
 	struct Vertex_pnc v;
 
 	// CEILING (DUPLICATE & SET HEIGHT)
@@ -151,17 +154,19 @@ void glExtrusion::generate_indices( )
 }
 
 //======================= END OF INDICES ================================
-void glExtrusion::setup( float mLength, int mAxis )
+void glExtrusion::set_la(float mLength, int mAxis)
 {
-	if (mLength>0)
-		m_extrusion_length = mLength;
-	if (mAxis>0)
-		m_extrusion_axis   = mAxis;
-
-	generate_vertices( );
-	extrude_vertices ( m_extrusion_length, m_extrusion_axis );
-	//change_vertices_colors( );
-	generate_indices ( );
+    if (mLength>0)
+        m_extrusion_length = mLength;
+    if (mAxis>0)
+        m_extrusion_axis   = mAxis;
+}
+void glExtrusion::setup( )
+{
+    generate_vertices( );
+    extrude_vertices ( m_extrusion_length, m_extrusion_axis );
+    //change_vertices_colors( );
+    generate_indices ( );
 }
 
 void glExtrusion::draw_body()

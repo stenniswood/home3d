@@ -65,15 +65,15 @@ void glCounter::open( int mIndex, float mFraction )
 void 	glCounter::generate_IBO( )
 {
 	m_counter_top.generate_IBO();
-	for (int i=0; i<m_cabinets.size(); i++)
-		m_cabinets[i].generate_IBO();
+//	for (int i=0; i<m_cabinets.size(); i++)
+//		m_cabinets[i].generate_IBO();
 }
 
 void 	glCounter::generate_VBO( )
 {
 	m_counter_top.generate_VBO();
-	for (int i=0; i<m_cabinets.size(); i++)
-		m_cabinets[i].generate_VBO();
+//	for (int i=0; i<m_cabinets.size(); i++)
+//		m_cabinets[i].generate_VBO();
 }
 
 void	glCounter::draw_body()

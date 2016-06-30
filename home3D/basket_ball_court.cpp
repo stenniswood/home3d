@@ -30,19 +30,20 @@ void  glBackboard::create_components( )
     
     // BACK BOARD #1 & 2:
     glBox* backboard = new glBox();
-    backboard->set_color( 0xFFFFFFFF);
+    //backboard->set_color( 0xFFFFFFFF);
     backboard->width  = BACKBOARD_WIDTH;
     backboard->height = 42;
     backboard->depth  = 1.0;
     backboard->setup();
-    backboard->grab_bottom();
+    //backboard->grab_bottom();
+    //backboard->gl_register();
     backboard->relocate( 0, 0, 0.5+BACKBOARD_FORWARD_FROM_POLE_DISTANCE );
     m_components.push_back(backboard);
 
     const float LENGTH_SHORTNESS = 4.;
     // TOP SUPPORT PIPE:
     glCylinder* pipe = new glCylinder(24);
-    pipe->set_color(0xFF2f2f2f);
+    pipe->set_color(0xFF2f2fDf);
     pipe->m_radius = 2.;
     pipe->m_extrusion_length = BACKBOARD_WIDTH - LENGTH_SHORTNESS;
     pipe->m_extrusion_axis   = 0;
@@ -53,7 +54,7 @@ void  glBackboard::create_components( )
     
     // BOTTOM SUPPORT PIPE:
     pipe = new glCylinder(24);
-    pipe->set_color(0xFF4f2f4f);
+    //pipe->set_color(0xFF4f2f4f);
     pipe->m_radius = 2.;
     pipe->m_extrusion_length = BACKBOARD_WIDTH - LENGTH_SHORTNESS;
     pipe->m_extrusion_axis   = 0;
@@ -66,7 +67,7 @@ void  glBackboard::create_components( )
 // Now pipes extending forward:
     // TOP LEFT FORWARD SUPPORT PIPE:
     pipe = new glCylinder(24);
-    pipe->set_color(0xFF4f2f4f);
+    pipe->set_color(0xFF7f5f7f);
     pipe->m_radius = 2.;
     pipe->m_extrusion_length = BACKBOARD_FORWARD_FROM_POLE_DISTANCE;
     pipe->m_extrusion_axis   = 2;
@@ -156,7 +157,7 @@ void  glBasketballCourt::select_floor( int mIndex )
 void  glBasketballCourt::create_floor( )
 {
     m_floor = new glFloor();
-    m_floor->cover_region(-25*12, 94*12/2, +25*12, 94*12/2 );
+    m_floor->cover_region(-25*12, -94*12/2, +25*12, 94*12/2 );
 /*    m_floor->m_cover[0]->width  = 50*12;
     m_floor->m_cover[0]->height = 1.0  ;
     m_floor->m_cover[0]->depth  = 94*12; */
@@ -164,8 +165,8 @@ void  glBasketballCourt::create_floor( )
     //m_floor->m_cover[0]->setup();
     m_components.push_back( (m_floor->m_cover[0]));
 
-    // wall around court (with advertisements)
-    glBox* tmpw = new glBox();
+    // WALL Around Court (with advertisements)
+    glBox* tmpw = new glBox();          // Side 1
     tmpw->set_color( 0xFFFF0000 );
     tmpw->width  = 1.0;
     tmpw->height = 4*12;
@@ -176,7 +177,7 @@ void  glBasketballCourt::create_floor( )
     tmpw->relocate( -25*12, 0, 0*12 );
     m_components.push_back( tmpw );
     
-    tmpw = new glBox();
+    tmpw = new glBox();                 // Side 2
     tmpw->set_color( 0xFFFF0000 );
     tmpw->width  = 1.0;
     tmpw->height = 4*12;
@@ -187,7 +188,7 @@ void  glBasketballCourt::create_floor( )
     tmpw->relocate( 25*12, 0, 0*12 );
     m_components.push_back( tmpw );
     
-    tmpw = new glBox();
+    tmpw = new glBox();                // End 1
     tmpw->set_color( 0xFFFF0000 );
     tmpw->width  = 50*12;
     tmpw->height = 4*12;
@@ -198,7 +199,7 @@ void  glBasketballCourt::create_floor( )
     tmpw->relocate( -25*12, 0, -94*12/2 );
     m_components.push_back( tmpw );
     
-    tmpw = new glBox();
+    tmpw = new glBox();                 // End 2
     tmpw->set_color( 0xFFFF0000 );
     tmpw->width  = 50*12;
     tmpw->height = 4*12;
@@ -261,7 +262,7 @@ void glBasketballCourt::create_cam_routes       ( )
 
 void    glBasketballCourt::create_baskets ( )
 {
-    // POLES:
+    // POLE #1:
     const float margin = 0.925;
     glCylinder* tmp = new glCylinder(24);
     tmp->m_radius = 1.5;
@@ -269,7 +270,7 @@ void    glBasketballCourt::create_baskets ( )
     tmp->setup();
     m_components.push_back(tmp);
     tmp->relocate( 0, 0, -margin*m_floor->m_cover[0]->depth/2);
-
+    // POLE #2 :
     tmp = new glCylinder(24);
     tmp->m_radius = 1.5;
     tmp->m_extrusion_length = 10*12;        // ?
@@ -277,12 +278,13 @@ void    glBasketballCourt::create_baskets ( )
     m_components.push_back(tmp);
     tmp->relocate( 0, 0, margin * m_floor->m_cover[0]->depth/2);
     
-    // BACK BOARD #1 & 2:
+    // BACK BOARD #1:
     glBackboard* backboard = new glBackboard();
     backboard->setup();
     backboard->relocate( 0, 9*12, -margin*m_floor->m_cover[0]->depth/2 );
     m_components.push_back(backboard);
-
+    
+    // BACK BOARD #2:
     backboard = new glBackboard();
     backboard->setup();
     backboard->m_y_angle =180.;
@@ -434,9 +436,9 @@ void    glBasketballCourt::create_components       ( )
     m_balls.push_back(ball);
     m_components.push_back(ball);
 
-    create_team1();
+/*    create_team1();
     create_team2();
-    position_lineup_tunnel();
+    position_lineup_tunnel(); */
 }
 
 

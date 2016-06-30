@@ -145,6 +145,16 @@ void glPhysicalWorld::list_object_ids(  )
 
 extern glApartment apartment;
 
+void glPhysicalWorld::release_vertex_memories()
+{
+    list<glObject*>::iterator iter = m_moveables.begin();
+    for (; iter != m_moveables.end(); iter++)
+    {
+        (*iter)->release_memory();
+    }
+}
+
+/* Physics Simulator.  Passive objects only - does not do the robot. */
 void glPhysicalWorld::time_slice( float time_period )
 {
     list<glObject*>::iterator iter = m_moveables.begin();

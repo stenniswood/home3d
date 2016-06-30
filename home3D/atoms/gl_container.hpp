@@ -37,7 +37,6 @@ public:
 
     bool            evaluate_collision( glSphere* mOther );
     
-    
 	float 	width;          // X axis
 	float 	height;         // Y axis
 	float 	depth;          // Z axis

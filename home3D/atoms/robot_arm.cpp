@@ -44,23 +44,44 @@ void glArm::create_components( )
     m_upper_arm.setup();
     m_fore_arm.setup ();
     m_gripper.setup  ();
-
     m_components.push_back( &m_upper_arm );
     m_components.push_back( &m_fore_arm  );
     m_components.push_back( &m_gripper   );
 
+    
+    m_shoulder_pan = new glBox();
+    m_shoulder_pan->set_color( 0xFF7f7f00 );
+    m_shoulder_pan->width  = 5.0;
+    m_shoulder_pan->height = 5.0;
+    m_shoulder_pan->depth  = 1.0;
+    m_shoulder_pan->setup();
+    m_shoulder_pan->gl_register();
+    
+    // Zero is top of upper arm.
     float offset = m_upper_arm.m_extrusion_length + FORK_CENTER_LENGTH;
     m_upper_arm.add_offset( 0, -offset, 0 );    // ie hold at top
 
+    // Zero is elbow of fore arm:
     offset = m_fore_arm.m_extrusion_length + FORK_CENTER_LENGTH;
     m_fore_arm.add_offset( 0, -offset, 0 );    // ie hold fore arm at its top
 
-    // Want it to pivot at the elbow :
+    // Want it to pivot at the elbow:
     offset += TONGUE_CENTER_LENGTH;
-    m_upper_arm.relocate( 0.0,  0.,    0.0 );
-    m_fore_arm.relocate ( 0.0,  -UPPER_ARM_LENGTH,  0.0 );
+    m_upper_arm.relocate( 0.0,  0.,  0.0 );
+    //m_fore_arm.relocate ( 0.0,  -UPPER_ARM_LENGTH,  0.0 );
+    m_fore_arm.relocate ( 0.0,  -m_upper_arm.m_joint_length,  0.0 );
 
     position_gripper();
+}
+
+void glArm::reposition_fore_arm()        // updates the translates based on upper arm.
+{
+    // NO!  Don't do this because Everything is relative coordinates.
+    
+    MathVector fa(3);
+    fa[0]=0.0;    fa[1]=-m_upper_arm.m_joint_length;        fa[2]=0.0;
+    //fa = m_upper_arm.map_coords(fa);
+    m_fore_arm.relocate ( fa[0],  fa[1],  fa[2] );
 }
 
 // How to find the end of the arm?
@@ -106,6 +127,9 @@ bool glArm::set_shoulder_angle( float mAngle )
         m_shoulder_angle = mAngle;
     else
         m_shoulder_angle = -mAngle;
+    
+    transfer_angles();
+    reposition_fore_arm();
     return true;
 }
 
@@ -114,6 +138,8 @@ bool glArm::set_shoulder_rotate_angle( float mAngle )
     if (mAngle > MAX_SHOULDER_ROTATE_ANGLE)  return false;
     if (mAngle < MIN_SHOULDER_ROTATE_ANGLE)  return false;
     m_shoulder_rotate_angle = mAngle;
+    transfer_angles();
+    reposition_fore_arm();
     return true;
 }
 bool glArm::set_upper_arm_rotate_angle( float mAngle )
@@ -124,6 +150,8 @@ bool glArm::set_upper_arm_rotate_angle( float mAngle )
         m_upper_arm_rotate_angle = mAngle;
     else
         m_upper_arm_rotate_angle = -mAngle;
+    transfer_angles();
+    reposition_fore_arm();
     return true;
 }
 
@@ -174,13 +202,17 @@ bool glArm::increase_shoulder_angle	( float mRelativeAngle )
 {
     float  angle = m_shoulder_angle + mRelativeAngle;
     if (m_left_arm) {
-        if (angle > MAX_SHOULDER_SWING_ANGLE)  angle = MAX_SHOULDER_SWING_ANGLE;
-        if (angle < MIN_SHOULDER_SWING_ANGLE)  angle = MIN_SHOULDER_SWING_ANGLE;
+        if (angle > MAX_SHOULDER_SWING_ANGLE)
+            angle = MAX_SHOULDER_SWING_ANGLE;
+        if (angle < MIN_SHOULDER_SWING_ANGLE)
+            angle = MIN_SHOULDER_SWING_ANGLE;
         m_shoulder_angle = angle;
     } else {
         angle = -m_shoulder_angle + mRelativeAngle;
-        if (angle > MAX_SHOULDER_SWING_ANGLE)  angle = MAX_SHOULDER_SWING_ANGLE;
-        if (angle < MIN_SHOULDER_SWING_ANGLE)  angle = MIN_SHOULDER_SWING_ANGLE;
+        if (angle > MAX_SHOULDER_SWING_ANGLE)
+            angle = MAX_SHOULDER_SWING_ANGLE;
+        if (angle < MIN_SHOULDER_SWING_ANGLE)
+            angle = MIN_SHOULDER_SWING_ANGLE;
         m_shoulder_angle = -angle;
     }
     transfer_angles();
@@ -189,8 +221,10 @@ bool glArm::increase_shoulder_angle	( float mRelativeAngle )
 bool glArm::increase_shoulder_rotate_angle( float mRelativeAngle )
 {
     m_shoulder_rotate_angle += mRelativeAngle;
-    if (m_shoulder_rotate_angle > MAX_SHOULDER_ROTATE_ANGLE)  m_shoulder_rotate_angle = MAX_SHOULDER_ROTATE_ANGLE;
-    if (m_shoulder_rotate_angle < MIN_SHOULDER_ROTATE_ANGLE)  m_shoulder_rotate_angle = MIN_SHOULDER_ROTATE_ANGLE;
+    if (m_shoulder_rotate_angle > MAX_SHOULDER_ROTATE_ANGLE)
+        m_shoulder_rotate_angle = MAX_SHOULDER_ROTATE_ANGLE;
+    if (m_shoulder_rotate_angle < MIN_SHOULDER_ROTATE_ANGLE)
+        m_shoulder_rotate_angle = MIN_SHOULDER_ROTATE_ANGLE;
     transfer_angles();
     return true;
 }
@@ -208,8 +242,10 @@ bool glArm::increase_upper_arm_rotate_angle( float mRelativeAngle )
 bool glArm::increase_elbow_angle	( float mRelativeAngle )
 {
     m_elbow_angle += mRelativeAngle;
-    if (m_elbow_angle > MAX_ELBOW_ANGLE)  m_elbow_angle = MAX_ELBOW_ANGLE;
-    if (m_elbow_angle < MIN_ELBOW_ANGLE)  m_elbow_angle = MIN_ELBOW_ANGLE;
+    if (m_elbow_angle > MAX_ELBOW_ANGLE)
+        m_elbow_angle = MAX_ELBOW_ANGLE;
+    if (m_elbow_angle < MIN_ELBOW_ANGLE)
+        m_elbow_angle = MIN_ELBOW_ANGLE;
     return true;
 }
 bool glArm::increase_wrist_angle( float mRelativeAngle )
@@ -236,8 +272,8 @@ float glArm::get_arm_length  ()
 
 #include <math.h>
 
-static float degrees( float angle )
-{  return angle*180./M_PI; }
+/*static float degrees( float angle )
+{  return angle*180./M_PI; } */
 
 /*
    Incoming coordinates must be in robot coords
@@ -261,7 +297,7 @@ bool glArm::inverse_xyz( float mX, float mY, float mZ )
     else
         elbow_angle = asin( (distance/2.) / m_upper_arm.m_joint_length) * 2.;
 
-    elbow_angle = degrees( elbow_angle );
+    elbow_angle      = degrees( elbow_angle );
     m_elbow_angle    = 180. - elbow_angle;
 
     float phi        = 90. - elbow_angle/2.;
@@ -287,22 +323,72 @@ void glArm::forward_xyz( float *mX, float *mY, float *mZ )
     arm_coord = bm * wrist_loc;
 }
 
-// forward calculation :
+/* forward calculation :
+    Result is in Robot coordinates (because mapped thru upper arm)
+*/
+MathVector glArm::get_elbow_position(  )
+{
+    transfer_angles();
+    
+    // VECTOR IN Upper (Arm Coorindates) :
+    glm::vec4 elbow_loc;
+    elbow_loc[0]=0.0;  elbow_loc[1]= -m_upper_arm.m_joint_length;  elbow_loc[2] = 0.0;  elbow_loc[3] = 0.0; //1.0 should still work!
+
+    // UPPER ARM TRANSFORM MATRIX:
+    glm::mat4 upper_arm_bm  = m_upper_arm.get_body_matrix(0, 2, 1);
+
+    // MAP IT:
+    glm::vec4 elbow_loc_mapd = upper_arm_bm * elbow_loc;    // Upper Arm coords -> Arm cooridnates.
+    elbow_loc_mapd[3] = 1.0;
+
+    glm::vec4 elbow_loc_robot_coords;
+    elbow_loc_robot_coords = map_coords( elbow_loc_mapd );  // Arm Coords -> Robot coords.
+    
+    MathVector arm_coord(3);
+    arm_coord[0] = elbow_loc_robot_coords[0];
+    arm_coord[1] = elbow_loc_robot_coords[1];
+    arm_coord[2] = elbow_loc_robot_coords[2];
+    return arm_coord;
+
+    //    glm::vec4 elbow_loc_mapd     =  m_upper_arm.map_coords( elbow_loc );
+    //
+    //wrist_loc3 = m_upper_arm.map_coords( wrist_loc2 );
+    /*wrist_loc4[0] = elbow_loc_mapd[0]+m_x;
+     wrist_loc4[1] = elbow_loc_mapd[1]+m_y;
+     wrist_loc4[2] = elbow_loc_mapd[2]+m_z; */
+}
+
 MathVector glArm::get_wrist_position(  )
 {
-    glm::mat4 ua_bm = m_upper_arm.get_body_matrix();
-    glm::mat4 fa_bm = m_fore_arm.get_body_matrix();
-    glm::mat4 bm = ua_bm * fa_bm;
+    transfer_angles();
+
+    // FORM MATRICES:
+    glm::mat4 upper_arm_bm  = m_upper_arm.get_body_matrix(0, 2, 1);
     
-    glm::vec4 wrist_loc;
-    wrist_loc[0] = 0.0;  wrist_loc[1] = -m_fore_arm.m_joint_length;  wrist_loc[2] = 0.0;  wrist_loc[3] = 1.0;
+    // To go from Upper arm to Fore arm:
+    //m_fore_arm.relocate( 0.0, -m_upper_arm.m_joint_length, 0.0 );     // upper arm coordinates.
+    glm::mat4 fore_arm_bm   = m_fore_arm.get_body_matrix(0, 1, 2);
+
+    // WRIST LOCATION (in fore arm coords):
+    glm::vec4 wrist_loc ;
+    glm::vec4 wrist_loc2;
+    glm::vec4 wrist_loc3;
+    glm::vec4 wrist_loc4;
+    wrist_loc[0]=0.0;  wrist_loc[1]= -m_fore_arm.m_joint_length;  wrist_loc[2] = 0.0;  wrist_loc[3] = 1.0;
+
+    wrist_loc2 = fore_arm_bm * wrist_loc;       // in upper arm coordinates
+    wrist_loc3 = upper_arm_bm * wrist_loc2;     // now in arm coords
+    wrist_loc3[3] = 1.0;
     
-    wrist_loc = fa_bm * wrist_loc;
-    wrist_loc = ua_bm * wrist_loc;
+    //glm::vec4 elbow_loc_mapd     =  m_upper_arm.map_coords( elbow_loc );  // need to make this orderable.
+    //wrist_loc3 = m_upper_arm.map_coords( wrist_loc2 );
+    //wrist_loc4 = map_coords( elbow_loc_mapd );
+    wrist_loc4 = map_coords( wrist_loc3 );
+    
     MathVector arm_coord(3);
-    arm_coord[0] = wrist_loc[0];
-    arm_coord[1] = wrist_loc[1];
-    arm_coord[2] = wrist_loc[2];
+    arm_coord[0] = wrist_loc4[0];
+    arm_coord[1] = wrist_loc4[1];
+    arm_coord[2] = wrist_loc4[2];
     return arm_coord;
 }
 
@@ -311,6 +397,49 @@ void glArm::set_wrist_position       ( MathVector& mArmCoord )
 {
     
 }
+
+/****************************************/
+MathVector      glArm::get_index_finger_position (  )                          /* in Robot coordinates */
+{
+    MathVector retval(3);
+    
+    return retval;
+}
+MathVector      glArm::get_middle_finger_position(  )                          /* in Robot coordinates */
+{
+    MathVector retval(3);
+    
+    return retval;
+}
+MathVector      glArm::get_pinky_finger_position (  )                          /* in Robot coordinates */
+{
+    MathVector retval(3);
+    
+    return retval;
+}
+MathVector      glArm::get_thumb_position (  )                                 /* in Robot coordinates */
+{
+    MathVector retval(3);
+    
+    return retval;
+}
+glFinger*      glArm::get_index_finger (  )
+{
+    return &(m_gripper.m_pointing);
+}
+glFinger*      glArm::get_middle_finger(  )
+{
+    return &(m_gripper.m_index);
+}
+glFinger*      glArm::get_pinky_finger (  )
+{
+    return &(m_gripper.m_pinky);
+}
+glThumb*       glArm::get_thumb        (  )
+{
+    return &(m_gripper.m_thumb);
+}
+/****************************************/
 
 
 
@@ -361,15 +490,32 @@ using namespace glm;
 
 void glArm::transfer_angles  ()
 {
-    m_upper_arm.m_x_angle = -m_shoulder_rotate_angle;
-    m_upper_arm.m_y_angle = m_shoulder_angle;
-    m_upper_arm.m_z_angle = m_upper_arm_rotate_angle;
-    
+    m_upper_arm.m_x_angle = m_shoulder_rotate_angle;       //
+    m_upper_arm.m_y_angle = m_upper_arm_rotate_angle;               // about the plane defined by m_shoulder_rotate_angle
+    m_upper_arm.m_z_angle = m_shoulder_angle;       //
+
     m_fore_arm.m_x_angle = -m_elbow_angle;
-    m_fore_arm.m_z_angle = m_wrist_rotate_angle;
-    
+    m_fore_arm.m_y_angle = 0.0;
+    m_fore_arm.m_z_angle = 0.0;
+
+    m_gripper.m_z_angle  =  m_wrist_rotate_angle;
     m_gripper.m_x_angle  =  m_wrist_angle;
 }
+
+
+/*
+          Returns a matrix with translate and rotations (same as drawn) for compute purposes.
+ INPUTS:  allow different ordering of the rotations (default arguments go rotate X,rotate Y,rotate Z)
+ */
+#define arm_fa_rotate           m_shoulder_rotate_angle         // This is 'i' key!
+#define arm_shoulder_angle      m_shoulder_angle                // This is 'o' key!
+#define arm_longitudinal_angle  m_upper_arm_rotate_angle
+
+
+/* These angles are relative to begin with!  So there never was a need to specify the
+    shoulder angle about an absolute rotated vector.  Why did I think I had too?!
+    2 Days lost on this!! Argggh!
+ */
 
 void glArm::draw_body ( )
 {
@@ -377,30 +523,29 @@ void glArm::draw_body ( )
     transfer_angles();
     
     glTranslatef( m_upper_arm.m_x, m_upper_arm.m_y, m_upper_arm.m_z );
-    float rx = m_upper_arm.m_x_angle;
-    float ry = m_upper_arm.m_y_angle;
-    float rz = m_upper_arm.m_z_angle;
-    m_upper_arm.m_y_angle = 0.;
-    m_upper_arm.m_z_angle = 0.;
     
-    MathVector lx(4);  lx.set_xyz(1.0, 0.0, 0.0 );  lx[3] = 0.;
-    MathVector ly(4);  ly.set_xyz(0.0, 1.0, 0.0 );  ly[3] = 0.;
-    MathVector lz(4);  lz.set_xyz(0.0, 0.0, 1.0 );  lz[3] = 0.;
-
-    glRotatef   ( rx,   1.0, 0.0, 0.0 );
-    glRotatef   ( ry, lz[0], lz[1], lz[2] );
-    glRotatef   ( rz, ly[0], ly[1], ly[2] );
+    // MOTOR #1 ROTATION :
+    glRotatef( m_shoulder_rotate_angle, 1.0, 0.0, 0.0f );
+    m_shoulder_pan->draw_body();
+    // draw disc too.
+    
+    // MOTOR #2 ROTATION :
+    glRotatef( m_shoulder_angle, 0, 0, 1 );
+    
+    // MOTOR #3 ROTATION:
+    glRotatef( m_upper_arm_rotate_angle, 0, 1, 0 );
     m_upper_arm.draw_body();
-    
-    
-    glTranslatef( m_fore_arm.m_x, m_fore_arm.m_y, m_fore_arm.m_z );
+
+    // ELBOW:
+    glTranslatef( 0, -m_upper_arm.m_joint_length, 0 );
     glRotatef   ( m_fore_arm.m_x_angle,    1.0, 0.0, 0.0 );
+    //m_fore_arm.m_y_angle = 0;
+    //m_fore_arm.m_z_angle = 0;
     m_fore_arm.draw_body();
 
+    
     glTranslatef( 0.0, -m_fore_arm.m_joint_length+0, 0.0 );
-/*    m_gripper.m_x_angle = 0.;
-    m_gripper.m_y_angle = 0.;
-    m_gripper.m_z_angle = 0.;*/
+
     glRotatef   ( m_wrist_angle+180,    1.0, 0.0, 0.0 );
     glRotatef   ( m_wrist_rotate_angle, 0.0, 1.0, 0.0 );
     m_gripper.draw_body();
@@ -408,8 +553,3 @@ void glArm::draw_body ( )
     glPopMatrix();
 }
 
-//    MathVector mly = map_coords(ly)
-//    quat MyQuaternion;
-//    MyQuaternion = quat(0.0, m_x_angle, m_y_angle, m_z_angle );
-//    mat4 RotationMatrix = quaternion::toMat4(MyQuaternion);
-//    glMultMatrixf(RotationMatrix);

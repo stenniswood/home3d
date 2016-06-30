@@ -34,7 +34,8 @@ public:
     LineSegment  ls;
     MathVector m_Start;
     MathVector m_End;
-    //long m_color;
+    float      m_thickness;
+    bool       m_is_shown;
 };
 
 class glWallLine : public glLine

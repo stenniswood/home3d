@@ -11,7 +11,6 @@
 
 glBookcase::glBookcase(  )
 {
-    
     Initialize();
 }
 
@@ -51,7 +50,6 @@ void glBookcase::create_components()
     box->m_x = 0.;
     box->m_y = 0.;
     box->m_z = 0.;
-    box->gl_register();
     m_components.push_back(box);
 
     box  = new glBox();
@@ -66,7 +64,6 @@ void glBookcase::create_components()
     box->m_x = m_width;
     box->m_y = 0.;
     box->m_z = 0.;
-    box->gl_register();
     m_components.push_back(box);
     
     // Create back:
@@ -83,7 +80,6 @@ void glBookcase::create_components()
     box->grab_bottom();
     box->grab_right();
     box->grab_front();
-    box->gl_register();
     m_components.push_back(box);
 
     // Create shelves:
@@ -102,7 +98,6 @@ void glBookcase::create_components()
         box->grab_bottom();
         box->grab_right ();
         box->grab_front ();
-        box->gl_register();
         m_components.push_back(box);
         height += height_increment;
     }
@@ -120,7 +115,6 @@ void glBookcase::create_components()
     box->grab_bottom();
     box->grab_right  ();
     box->grab_front ();
-    box->gl_register();
     m_components.push_back(box);
     
 }

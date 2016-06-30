@@ -8,6 +8,8 @@
 #include <OpenGL/glext.h>
 #include "all_objects.h"
 
+int heel_index ;
+int toe_index  ;
 
 void print_foot_position(struct stFootPosition fp)
 {
@@ -29,9 +31,9 @@ void	glFootShape::generate_vertices( )
 	struct Vertex v;
 	v.position[1] =  0.0;
 	
-	v.position[0] =  3.;        // outside heel
+	v.position[0] =  3.;        // outside heel (   )
 	v.position[2] =  0.;
-	m_vertices.push_back( v );
+	m_vertices.push_back( v ); 
 
 	v.position[0] =  3.;        // pinky
 	v.position[2] =  9.;
@@ -41,21 +43,23 @@ void	glFootShape::generate_vertices( )
 	v.position[2] =  11.;
 	m_vertices.push_back( v );
 
-	v.position[0] =   0.;       // Big Toe
+	v.position[0] =   0.;       // Big Toe (Use this vertex as the official "Toe location")
 	v.position[2] =  11.;
-	m_vertices.push_back( v );
+	m_vertices.push_back( v );          // 3
+    toe_index = (int)m_vertices.size()-1;
 
-	v.position[0] =   0.;       // Inside Heel
-	v.position[2] =   1.;
-	m_vertices.push_back( v );
-
-    v.position[0] =   0.3;       // Inside Heel
+	v.position[0] =   0.;       // Inside Heel (Use this vertex as the official "Heel location")
+	v.position[2] =   0.;
+	m_vertices.push_back( v );          // 4
+    heel_index = (int)m_vertices.size()-1;
+    
+/*    v.position[0] =   0.3;       // Inside Heel
     v.position[2] =   0.5;
     m_vertices.push_back( v );
 
     v.position[0] =   1.0;       // Inside Heel
     v.position[2] =   1.0;
-    m_vertices.push_back( v );
+    m_vertices.push_back( v ); */
 
     add_offset( -1.5, 0.0, 0.0 );
 	m_layer_one_vertices = m_vertices.size();
@@ -109,6 +113,7 @@ void	glFootShape::draw_body			   ( )
 /****************************************************************************/
 glFoot::glFoot()
 {
+    m_ankle_height  =  4 ;        // need real measurement.
     m_foot_length   = 12.;
     m_ankle_to_heel = 3./2.;
 }
@@ -141,7 +146,7 @@ void glFoot::calc_angle( struct stFootPosition &mfp )
     mfp.angle[2] = 0.0;   // can't measure inside to outside!
 }
 
-void glFoot::make_flat_footed()
+/*void glFoot::make_flat_footed()
 {
     float dx = m_world_coords.toe[0] - m_world_coords.heel[0];
     float dy = m_world_coords.toe[1] - m_world_coords.heel[1];
@@ -155,12 +160,13 @@ void glFoot::make_flat_footed()
     //m_world_coords.toe[0] = m_world_coords.heel[0] + m_foot_length*dx/distance;
     //m_world_coords.toe[1] = m_world_coords.heel[1];
     //m_world_coords.toe[2] = m_world_coords.heel[0] + m_foot_length*dz/distance;
-}
+}*/
 
 void glFoot::setup()
 {
     const float extrude = 3.;
-    m_gl_foot.setup(  extrude,  1 );
+    m_gl_foot.set_la ( extrude, 1 );
+    m_gl_foot.setup  ( );
 
     m_ankle_to_heel = extrude / 2.;
     m_gl_foot.add_offset ( 0., -m_ankle_to_heel, -2. );
@@ -168,14 +174,18 @@ void glFoot::setup()
     //m_components.push_back( &m_gl_foot );
 
     // VECTOR OF HEEL/TOE:
-    m_foot_coords.heel[0] = m_gl_foot.m_vertices[m_gl_foot.m_layer_one_vertices].position[0];
+    m_foot_coords.heel[0] = m_gl_foot.m_vertices[heel_index].position[0];
     m_foot_coords.heel[1] = 0.0;
-    m_foot_coords.heel[2] = m_gl_foot.m_vertices[m_gl_foot.m_layer_one_vertices].position[2];
+    m_foot_coords.heel[2] = m_gl_foot.m_vertices[heel_index].position[2];
 
-    const int toe_vertex = 2;
-    m_foot_coords.toe[0] = m_gl_foot.m_vertices[toe_vertex].position[0];
+    /* Note we choose a toe_vertex which is in the center of the foot.  This has to be in alignment with the heel coordinate because
+        we calculate angles of the leg rotation from how the foot is positioned.  To avoid subtraction from a nominal heel and toe
+        position (thus simplifying and avoiding some needless complexity) we use heel and toes which are co-linear with the ankle projection.
+     */
+    
+    m_foot_coords.toe[0] = m_gl_foot.m_vertices[toe_index].position[0];
     m_foot_coords.toe[1] = 0.0;
-    m_foot_coords.toe[2] = m_gl_foot.m_vertices[toe_vertex].position[2];
+    m_foot_coords.toe[2] = m_gl_foot.m_vertices[toe_index].position[2];
 }
 
 MathVector glFoot::get_vector()

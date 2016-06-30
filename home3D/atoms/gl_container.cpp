@@ -41,7 +41,7 @@ glBox::glBox(  )
 
 void glBox::generate_vertices()
 {
-	struct Vertex v;
+	struct Vertex_pnc v;
 	float hw = width  / 2.;
 	float hh = height / 2.;
 	float hd = depth  / 2.;
@@ -153,8 +153,9 @@ void glBox::draw_body()
 	glBindBuffer(GL_ARRAY_BUFFER, 		  m_VBO	);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_IBO );
 
-	glVertexPointer(3, GL_FLOAT, 		 sizeof(struct Vertex), NULL);
-	glColorPointer (4, GL_UNSIGNED_BYTE, sizeof(struct Vertex), (GLvoid*)(offsetof(struct Vertex,color)));
+	glVertexPointer(3, GL_FLOAT, 		 sizeof(struct Vertex_pnc), NULL);
+    /* hmmm... is GL_UNSIGNED_BYTE Correct?  color is Byte*4  */
+	glColorPointer (4, GL_UNSIGNED_BYTE, sizeof(struct Vertex_pnc), (GLvoid*)(offsetof(struct Vertex_pnc,color)));
 
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_COLOR_ARRAY);

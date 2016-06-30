@@ -18,11 +18,11 @@ glFullWall::glFullWall (  )
 glFullWall::glFullWall( glFullWall& mSrc )
 {
     m_bare_wall = mSrc.m_bare_wall;
-    long size = mSrc.m_doors.size();
+    long size   = mSrc.m_doors.size();
     glDoorWay* dptr = NULL;
     for (int d=0; d<size; d++)
     {
-        dptr = new glDoorWay();
+        dptr  = new glDoorWay();
         *dptr = *(mSrc.m_doors[d]);
         m_doors.push_back( dptr );
     }
@@ -63,7 +63,7 @@ void glFullWall::extract_2d_line_info()
     m_bare_wall.m_line.m_origin[2] = m_z;
     
     // Convert the wall angle to a unit vector.  This might better be done when creating the dwelling in the first place.
-    float rad = -radians(m_y_angle);
+    float rad = -glm::radians(m_y_angle);
     m_bare_wall.m_line.m_vector.dimension(3);
     m_bare_wall.m_line.m_vector[0] = cos(rad);
     m_bare_wall.m_line.m_vector[1] = 0.0;        // y is height!

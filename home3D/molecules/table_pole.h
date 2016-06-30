@@ -26,7 +26,6 @@ public:
     glTableCenterPole( );
     
     void	Initialize	( );
-    //void	relocate	( float mX, float mY, float mZ );
     virtual void	create_components( );
     
     glCylinder          m_table_top;

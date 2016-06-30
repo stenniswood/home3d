@@ -32,7 +32,7 @@ void glApartment::create_vertical_walls()
     // Outside wall (sliding door)                  # 0
     w = new glFullWall();
     w->set_length(144.+36.+116.+120.);
-    s.width = 46.25;    s.height = 46.25;
+    s.width = 46.25;    s.height = 46.25;       // Window Dimensions!
     w->m_bare_wall.add_window( 66.5+144.+36.   , s, 33.5 );
     w->m_bare_wall.add_window( 144.+36.+116.+3., s, 33.5 );
     w->m_name = "outside";
@@ -43,9 +43,9 @@ void glApartment::create_vertical_walls()
     w->m_x = 0.;
     m_components.push_back( w );
     m_fwalls.push_back    ( w );
+    
     // Update height stored in glDwellingLevel
     m_height = m_fwalls[0]->m_bare_wall.m_wall_height;
-    
     // Hall way 1 :                             #1
     w = new glFullWall();
     w->clear( );
@@ -71,7 +71,7 @@ void glApartment::create_vertical_walls()
     w->setup     (  );
     w->m_y_angle = 0.0;
     w->m_z = 160.;
-    w->m_x = 144.;
+    w->m_x = 144.;                  //
     m_components.push_back( w );
     m_fwalls.push_back    ( w );
     
@@ -145,7 +145,7 @@ void glApartment::create_horizontal_walls()
     w->setup     (     );
     w->m_y_angle = -90.0;
     w->m_z       = 160.;
-    w->m_x       = 144.+122.+40.5+30.+2.;			// 338.5
+    w->m_x       = 144.+122.+40.5+30.+2.;			// 338.5 = (144 + 194.5)
     m_fwalls.push_back( w );
     m_components.push_back( w );
 
@@ -268,7 +268,7 @@ void glApartment::create_horizontal_walls()
     w = new glFullWall();
     w->clear();
     w->m_bare_wall.m_wall_height = 43.;
-    w->set_length( 70.5-4.25);  //, 43.
+    w->set_length( 70.5-4.25);      // 66.25
     w->set_color( PaleGreen );
     w->setup(  );
     w->m_y_angle = 0.0;
@@ -411,10 +411,10 @@ void glApartment::hang_paintings( )
     float scale = 6.0;
 //  sidewalk_painting.m_painting->load_texture( "textures/sidewalk_painting.jpg" );
     sidewalk_painting.select_work_of_art( 5 );
-    sidewalk_painting.m_painting->set_width_height( 5*scale, 5*scale );
-    sidewalk_painting.setup();
+//    sidewalk_painting.m_painting->set_width_height( 5*scale, 5*scale );
+//    sidewalk_painting.setup();
     sidewalk_painting.m_painting->grab_bottom();
-    sidewalk_painting.gl_register();
+  //  sidewalk_painting.gl_register();
     sidewalk_painting.relocate( 144-7, 60, 80 );
     sidewalk_painting.m_x_angle = 0.;
     sidewalk_painting.m_y_angle = 90;

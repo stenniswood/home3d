@@ -3,6 +3,7 @@
 #include <math.h>
 #include "vector.hpp"
 
+using namespace std;
 
 float radians( float Degrees)
 {
@@ -48,9 +49,9 @@ void MathVector::dimension( int mDimension )
 	for (int i=0; i<mDimension; i++)
 		m_elements.push_back( 0.0 );
 }
-void MathVector::set_xyz( double x, double y, double z )
-{
-	dimension(3);
+void MathVector::set_xyz( double x, double y, double z ) 
+{ 
+	dimension(3); 
 	m_elements[0] = x;
 	m_elements[1] = y;
 	m_elements[2] = z;
@@ -186,6 +187,27 @@ double MathVector::dot(const MathVector &rhs)
 	return result;
 }
 
+/*
+    The calling instance is the lhs (left hand side)
+ 
+    This instance nor the rhs is changed!
+ 
+    (Alternatively could be a static function call)
+ */
+MathVector MathVector::cross( MathVector rhs )
+{
+    int  size = (int)m_elements.size();
+    int rsize = (int)rhs.m_elements.size();
+    if ((size!=3) || (rsize!=3)) return -1;
+    
+    MathVector r(3);
+    r[0] = m_elements[1]*rhs[2] - rhs[1] * m_elements[2];
+    r[1] = m_elements[2]*rhs[0] - rhs[2] * m_elements[0];
+    r[2] = m_elements[0]*rhs[1] - rhs[0] * m_elements[1];
+    return r;
+}
+
+/* should be a static function call
 MathVector MathVector::cross( MathVector lhs,  MathVector rhs)
 {
     int  size = (int)m_elements.size();
@@ -197,9 +219,10 @@ MathVector MathVector::cross( MathVector lhs,  MathVector rhs)
     r[0] = lhs[1]*rhs[2] - rhs[1] * lhs[2];
     r[1] = lhs[2]*rhs[0] - rhs[2] * lhs[0];
     r[2] = lhs[0]*rhs[1] - rhs[0] * lhs[1];
-
+    
     return r;
-}
+}*/
+
 
 MathVector	MathVector::get_perp_xz()
 {

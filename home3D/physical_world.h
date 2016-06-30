@@ -22,17 +22,19 @@ public:
     glPhysicalWorld( bool hasGravity=false );
     ~glPhysicalWorld();
 
+    void    release_vertex_memories();
     void    time_slice( float time_period=0.01 );
     bool    is_out_of_bounds(MathVector mPos);
     void    check_boundaries();
+    
 
-    void    add_object      ( glObject* mObject );
-    void    remove_object   ( glObject* mObject );
-    void    block           ( )       { m_temporarily_block = true;  }
-    void    unblock         ( )       { m_temporarily_block = false; }
+    void        add_object      ( glObject* mObject );
+    void        remove_object   ( glObject* mObject );
+    void        block           ( )       { m_temporarily_block = true;  }
+    void        unblock         ( )       { m_temporarily_block = false; }
     MathVector  get_gravity ( );
     MathVector  snells_law  ( glObject* mObject, MathVector mSurfaceVector );
-    void    adjust_velocity_for_inelasticity( glObject* mObject, float mSpeedBefore );
+    void        adjust_velocity_for_inelasticity( glObject* mObject, float mSpeedBefore );
     
     void        floor_bounce( glObject* mObject );        // use snells law to calculate resulting velocity.    
     
@@ -47,16 +49,16 @@ public:
     glObject*   find_object_id( long mID );
     void        list_object_ids( );    
     
-    void    draw();
+    void        draw();
     
-    bool    m_temporarily_block;
+    bool        m_temporarily_block;
     
     list<glObject*>  m_moveables;
-    bool       m_has_gravity;
+    bool        m_has_gravity;
     MathVector  m_gravity;
     
-    MathVector max_corner;
-    MathVector min_corner;    
+    MathVector  max_corner;
+    MathVector  min_corner;    
 };
 
 

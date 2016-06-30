@@ -53,22 +53,26 @@ void glHead::create_components( )
     m_eye2->relocate( -2*EYE_RADIUS, 0.0, HEAD_RADIUS );
 }
 
-
-MathVector glHead::get_left_coordinate     ()
+/* In head coordinates */
+MathVector glHead::get_left_coordinate     (bool mPupil)
 {
     MathVector eyeL("Left",3);
     eyeL[0] = 2*EYE_RADIUS;
     eyeL[1] = 0.0;
     eyeL[2] = HEAD_RADIUS;
+    if (mPupil)
+        eyeL[2] = HEAD_RADIUS+EYE_RADIUS;
     return eyeL;
 }
-
-MathVector glHead::get_right_coordinate    ()
+/* In head coordinates */
+MathVector glHead::get_right_coordinate    (bool mPupil)
 {
     MathVector eyeR("Right",3);
     eyeR[0] = 2*EYE_RADIUS;
     eyeR[1] = 0.0;
     eyeR[2] = HEAD_RADIUS;
+    if (mPupil)
+        eyeR[2] = HEAD_RADIUS+EYE_RADIUS;
     return eyeR;
 }
 

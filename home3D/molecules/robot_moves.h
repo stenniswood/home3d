@@ -24,6 +24,20 @@
  
     Angles are designated so that the sign is the same for both arms.
     The 0.0's are for arms down by side, palms inward.
+
+ 
+     Robot's Left and Right Leg angle definitions :
+     Upper Leg Swing  :  Goes toward front and back of body.  Rotate about x axis.  Motor #1
+     + direction is forward (in front of the body)
+     Upper Leg Rotate :  Rotates left and right.              Rotate about y axis.  Motor #1
+     + direction is right (clockwise from top view)
+     Knee Rotate :  is the pivot for the lower leg.           Rotate about local x axis.    Motor #2
+     + direction is toward the rear (only way the knee can move)
+     Ankle Angle :  is the pivot for the foot.                Rotate about local x axis.    Motor #2
+     + direction is flexion (ie lifting toes).  Extension is -
+ 
+     Angles are designated so that the sign is the same for both legs.
+     The 0.0's are for legs in standing position.
  */
 
 class glStaticMovesRobot : public glRobot
@@ -37,15 +51,23 @@ public:
     void            activate_position  ( int mIndex );
     
     // Hard Coded Positions:
+    float           compute_max_squat_distance(                        );
     void            squat_distance     ( float mDeltaY                 );
-    void            squat_fraction     ( float mfraction               );
+    void            squat_fraction     ( float mfraction               );       // fraction of what's possible (ie knee stop)
     void            squat              ( float mAngle                  );
 
     void            stand              (                               );
     void            sit                (                               );
+    void            floor_sit          (                               );
     void            one_knee_kneel     ( bool mLeft );        // out in front
     void            kneel              (  );        // out in front
+
+    void            lift_leg_from_standing( float mInches, bool mLeftLeg );    
+    void            lift_left_leg      ( float mAngle );
+    void            lift_right_leg     ( float mAngle );
+    void            lift_left_keep_lower_vertical( float mAngle, bool mLeftLeg );
     
+    void            w_question         (  );
     void            hands_on_hip       (  );
     void            folded_arms        (  );
     void            zombie_arms        (  );        // out in front

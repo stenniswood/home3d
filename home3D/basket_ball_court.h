@@ -24,6 +24,7 @@ public:
     virtual void       create_components( );
 };
 
+
 const float NBA_COURT_WIDTH  = 50*12;       //  600
 const float NBA_COURT_LENGTH = 94*12;       // 1128
 

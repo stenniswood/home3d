@@ -25,9 +25,8 @@ The drawer positioning code could go either on the drawer, or on the cabinet.
 
 The Drawer Origin is located:
 
-
 */
-class glDrawer : public VerbalObject
+class glDrawer : public glMolecule
 {
 public:
 	glDrawer(  );
@@ -47,8 +46,8 @@ public:
 
 	void 			setup		( );
 	void			create		( );	// create vertices,indices,VBO/IBO/TBO's
-	virtual void	draw_body	( );	// 
-
+    virtual void    draw_body   ( );
+    
 	glBox 		m_bottom;
 	glBox 		m_left_side;	
 	glBox 		m_right_side;		

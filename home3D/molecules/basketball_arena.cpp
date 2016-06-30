@@ -15,7 +15,7 @@
 
 
 const int NUMBER_STEPS           = 20;
-const float AUDIENCE_TIER_LENGTH = 50*24;
+//const float AUDIENCE_TIER_LENGTH = 50*24;
 
 glArena::glArena ()
 {
@@ -61,8 +61,10 @@ void glArena::create_cam_routes       ( )
     }
 }
 
+/* The length of the basketball court.  */
 void glArena::create_stands           ( )
 {
+    // A "STAIRWAY" (supper long!)
     glStairway* tmp = new glStairway();
     tmp->m_run = 24.;
     tmp->m_extrusion_length = 94*12;
@@ -79,8 +81,9 @@ void glArena::create_stands           ( )
         tmpB = new glBench();
         tmpB->m_length = 50*12;
         tmpB->m_height = 2*12;
+        tmpB->set_color( 0xFF5f50AF);
         tmpB->setup();
-        ((glFaceBox*)(tmpB->m_components[0]))->m_texture = m_bench_texture;     // set pointer
+        //((glFaceBox*)(tmpB->m_components[0]))->m_texture = m_bench_texture;     // set pointer
         tmpB->m_y_angle = 90;
         tmpB->relocate( tmp->get_front_edge(i)+tmp->m_run*1.5+25*12, tmp->get_height(i), -94*12/4+NBA_COURT_LENGTH/2 );
         m_components.push_back( tmpB );
@@ -103,8 +106,9 @@ void glArena::create_stands           ( )
         tmpB = new glBench();
         tmpB->m_length = 50*12;
         tmpB->m_height = 2*12;
+        tmpB->set_color( 0xFF5f50AF);
         tmpB->setup();
-        ((glFaceBox*)(tmpB->m_components[0]))->m_texture = m_bench_texture;     // set pointer
+        //((glFaceBox*)(tmpB->m_components[0]))->m_texture = m_bench_texture;     // set pointer
         tmpB->m_y_angle = 90;
         tmpB->relocate( -(tmp->get_front_edge(i)+tmp->m_run*1.5+25*12), tmp->get_height(i), -94*12/4+NBA_COURT_LENGTH/2 );
         m_components.push_back( tmpB );
@@ -180,6 +184,7 @@ void glArena::setup( )
     Mat* image = m_bench_texture->load_image( "textures/corrogated_aluminum.jpg", FACE_TOP_ID );
     //Mat* image = m_bench_texture->load_image( "textures/corrogated_steel_metal.jpg", FACE_TOP_ID );
     m_bench_texture->apply_bottom( image ); */
+    
     m_bench_texture = NULL;
     
     glMolecule::setup();

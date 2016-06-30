@@ -64,7 +64,6 @@ void glSphere::generate_vertices( )
 //            ttmp.u = image_center_z + 0.5*t_radius*sin(2*M_PI * s * S);
             ttmp.u = s*S;
             ttmp.v = r*R;
-
             m_texture->m_TexCoords.push_back( ttmp );
         }
         

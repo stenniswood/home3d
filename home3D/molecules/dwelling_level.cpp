@@ -206,8 +206,8 @@ void glDwellingLevel::create_floor()        // to cover all.
  */
 void glDwellingLevel::find_all_possibilies( float mLinearDistance, float mWallAngleRadians, float mHeight )
 {
-    float perp_distance     = mLinearDistance * sin( mWallAngleRadians );
-    float parallel_distance = mLinearDistance * cos( mWallAngleRadians );
+    //float perp_distance     = mLinearDistance * sin( mWallAngleRadians );
+    //float parallel_distance = mLinearDistance * cos( mWallAngleRadians );
     
     // now go around all the wall and create a line segment set so far away from the wall.
     // if another wall passes within that distance, then cut the line there.

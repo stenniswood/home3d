@@ -19,6 +19,7 @@
 using namespace cv ;
 using namespace std;
 
+#define Debug 0
 
 Texture::Texture()
 {    
@@ -36,7 +37,7 @@ Texture::~Texture()
 
 void Texture::load_image( string mFilename )
 { 
-	printf("Texture::load_image( %s )\n", mFilename.c_str() );	
+	dprintf("Texture::load_image( %s )\n", mFilename.c_str() );
 	m_image = imread(mFilename);
 
     //imshow( "Display Image2", m_image );
@@ -61,11 +62,11 @@ GLuint	Texture::generate_TBO	( )
                 break;
         default: break;
     }
-    printf("Texture::generate_TBO: rows=%d; cols=%d\n", m_image.rows, m_image.cols);
+    dprintf("Texture::generate_TBO: rows=%d; cols=%d\n", m_image.rows, m_image.cols);
     glEnable     (GL_TEXTURE_2D );
     glGenTextures(1, &m_TBO     );
     glBindTexture(GL_TEXTURE_2D, m_TBO);
-    printf("Texture::generate_TBO: m_TBO=%d\n", m_TBO);		
+    //dprintf("Texture::generate_TBO: m_TBO=%d\n", m_TBO);
 
     /* may need these for odd sized images: */
     glPixelStorei(GL_UNPACK_ALIGNMENT,   1);

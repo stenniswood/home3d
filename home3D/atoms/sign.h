@@ -9,11 +9,20 @@
 #ifndef __home3D__sign__
 #define __home3D__sign__
 
+
 #include <stdio.h>
+#include <string>
 #include "gl_atom.hpp"
 #include "Texture.hpp"
+#include "gl_container.hpp"
 #include "glMolecule.h"
+#include "face_box.h"
 
+/*
+ 
+ 
+ 
+ */
 
 class glSign : public glAtom
 {
@@ -34,6 +43,15 @@ class StreetSign : public glMolecule
 public:
     StreetSign();
     ~StreetSign();
+    
+    void        create_components();
+    void        select_measurements( string mText );
+    void        select_image( string mText );
+    
+    string      m_sign_name;
+    glFaceBox*     m_sign;
+    glBox*      m_pole;
+    float       m_height_off_ground;
     
 };
 

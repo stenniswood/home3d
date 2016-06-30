@@ -22,10 +22,14 @@ public:
 
     void    generate_vertices();
     void    generate_indices ( );
+    void    select_texture();
+    
+    virtual void draw_primitive( );
     
     
     glRoute m_path;
     float   m_height;
+    float   m_road_width;
 };
 
 

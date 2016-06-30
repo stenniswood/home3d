@@ -22,14 +22,15 @@ glIbeam::glIbeam( float mExtrusionLength )
 {
     m_object_type_name = "i beam";
     m_object_class  = 6;
-    
-	m_extrusion_length = mExtrusionLength;
-	m_layer_one_indices	= 0;
+	m_layer_one_indices	= 0;    
+    set_la( mExtrusionLength, 2);
 }
 
 void	glIbeam::generate_vertices( )
 {
 	struct Vertex v;
+    // We set it to m_color (which presumably has already been set!):
+    set_vertex_color(v);
 	
 	// Go along bottom first:
 	v.position[0] =  0.0;

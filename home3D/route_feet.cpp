@@ -218,7 +218,8 @@ void glRouteWithFeet::compute_robot_path( float mStride, bool mLeftFootFirst, gl
 void glRouteWithFeet::generate_steps_vertices( )
 {
     struct Vertex v;
-    v.color[0]= 0xFF;  	v.color[1]= 0xFF;  	v.color[2]= 0;  	v.color[3]= 0xFF;
+    v.color[3]= 0xFF;
+    
     size_t lsize = m_left_steps.size();
     size_t rsize = m_right_steps.size();
      
@@ -226,11 +227,12 @@ void glRouteWithFeet::generate_steps_vertices( )
     for (int i=0; i<lsize; i++)
     {
         if (i==0)
-        {  v.color[0] = 0x70;       // Want red/greenish for "start".
+        {   v.color[2] = 0x0;  v.color[1]= 0xFF;   v.color[0]= 0x2F;     // Want red/greenish for "start".
+        } else if (i==(lsize-1))
+        {   v.color[2]= 0;  	v.color[1]= 0x00;   v.color[0] = 0xFF;
+        } else {
+            v.color[2]= 0;  	v.color[1]= 0xAF;  	v.color[0]= 0x7F;    // blue/red
         }
-        else if (i==(lsize-1))
-        {    v.color[0] = 0xFF;  v.color[1] = 0x0F; }
-        else v.color[0] = 0xAF;     // Then here orangish
  
         // HEEL:
         memcpy (v.position, m_left_steps[i].heel, sizeof(float)*3 );
@@ -241,15 +243,16 @@ void glRouteWithFeet::generate_steps_vertices( )
         m_vertices.push_back( v );
     }
 
-    v.color[0]= 0xFF;  	v.color[1]= 0xFF;  	v.color[2]= 0;  	v.color[3]= 0xFF;
-    // Right Foot First:
+    v.color[3]= 0xFF;  	    // Right Foot Second:
     for (int i=0; i<rsize; i++)
     {
-        if (i==0)
-             v.color[0] = 0x10;
-        else if (i==(rsize-1))
-        {  v.color[0] = 0xFF;  v.color[1] = 0x0F; }
-        else v.color[2] = 0x2F;
+        if (i==0) {
+           v.color[2] = 0x2F;  v.color[1]= 0xFF;    v.color[0]= 0x00;     // green
+        } else if (i==(rsize-1)) {
+           v.color[2]= 0;      v.color[1] = 0x00; 	v.color[0]= 0xFF;     // red
+        } else {                                                          // red/blue
+           v.color[2]= 0x7F;      v.color[1]= 0xAf;  	v.color[0]= 0x00;
+        }
         
         // HEEL:
         memcpy (v.position, m_right_steps[i].heel, sizeof(float)*3 );
@@ -269,8 +272,11 @@ void glRouteWithFeet::draw_body( )
     glRoute::draw_body();
     
     // Draw Foot steps :
-    if ( m_number_steps_vertices )
+    if ( m_number_steps_vertices ) {
+        glLineWidth( 4.0 );
         glDrawArrays(GL_LINES,  m_number_path_vertices, m_number_steps_vertices );
+        glLineWidth( 1.0 );
+    }
 
 }
 

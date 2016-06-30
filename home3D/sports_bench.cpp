@@ -23,20 +23,23 @@ glBench::~glBench()
     
 }
 
-void glBench::create_vertical_walls( )
+void glBench::create_components( )
 {
+    // CREATE THE SEAT:
     glFaceBox* tmp = new glFaceBox();
     tmp->width  = m_length;     // length of bench
     tmp->height = 1.0;          // 1 inch deep
     tmp->depth  = 18;           // 18 inches wide
+    tmp->set_color(m_color);
     tmp->setup();
     //tmp->load_image("textures/corrogated_steel_metal.jpg");
     tmp->relocate  ( 0, m_height-tmp->height/2, 0);
     tmp->grab_right( );
     m_components.push_back(tmp);
     
+    // PUT LEGS UNDER IT EVERY SO OFTEN:
+    glCylinder* leg = NULL;
     int num_legs = m_length / (LEG_SPACING);           // every 5 feet.
-    glCylinder* leg=NULL;
     float offset = LEG_SPACING/2;
     for (int i=0; i<num_legs; i++)
     {
@@ -51,16 +54,4 @@ void glBench::create_vertical_walls( )
     }
 }
 
-void    glBench::create_horizontal_walls ( )
-{
-    
-}
-void    glBench::add_light_switches      ( )
-{
-    
-}
-void    glBench::create_components       ( )
-{
-    create_vertical_walls();
-    
-}
+

@@ -34,24 +34,15 @@ public:
     glRouteWithFeet ( glRouteWithFeet& mCopy );
     ~glRouteWithFeet( );
 
-    virtual void			 start_over_at          ( struct Vertex mStart );
-    
+    virtual void	start_over_at              ( struct Vertex mStart );
     void            reset                      ( );
 
     // FOOT PRINTS :
     void            reset_foot_prints          ( );
-    //void            place_robot_over_vertex    ( size_t mVertexIndex, glRobot &mRobot );
     void 			compute_angle              ( struct stFootPosition& mfoot );
     void 			compute_angles             ( );
     virtual void    create_from_multi          ( glMultiRoute& mMulti );
-
     void 			colorize_center            ( int mVertexIndex );
-    
-    //float 			compute_robot_feet_standing( int mIndex,         glWalkingRobot &mRobot );
-    //void            compute_foot_print         ( float mVertexIndex, glWalkingRobot& mRobot,        bool mLeft       );
-    //void			compute_robot_steps		   ( float mStride,      glWalkingRobot& mRobot,        bool mLeftFootFirst=false );
-    //void			compute_robot_path		   ( float mStride,      bool    mLeftFootFirst, glWalkingRobot& mRobot );
-    // Does entire path (start to finish - standing at both postions)
 
     void			generate_steps_vertices	   ( );
     void 			change_vertices_colors     ( );	// makes robot feet in red.
@@ -60,11 +51,10 @@ public:
     void			print_step                 ( int mIndex, bool mLeft=true );
     
     bool			m_show_robot_feet;
-//    bool            m_valid_route;
+
     vector<struct stFootPosition>		m_left_steps;
     vector<struct stFootPosition>		m_right_steps;
     
-
     // IBO / VBO:
     int		m_number_steps_indices;
     int		m_number_steps_vertices;
@@ -74,6 +64,13 @@ public:
 #endif 
 /* defined(__home3D__route_feet__) */
 
+//bool            m_valid_route;
+//void            place_robot_over_vertex    ( size_t mVertexIndex, glRobot &mRobot );
+//float 			compute_robot_feet_standing( int mIndex,         glWalkingRobot &mRobot );
+//void            compute_foot_print         ( float mVertexIndex, glWalkingRobot& mRobot,        bool mLeft       );
+//void			compute_robot_steps		   ( float mStride,      glWalkingRobot& mRobot,        bool mLeftFootFirst=false );
+//void			compute_robot_path		   ( float mStride,      bool    mLeftFootFirst, glWalkingRobot& mRobot );
+// Does entire path (start to finish - standing at both postions)
 
 
 

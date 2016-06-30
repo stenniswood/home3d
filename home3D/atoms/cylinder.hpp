@@ -6,6 +6,8 @@
 #include "extrusion.hpp"
 
 
+/* Stretches lengthwise on the Y axis (up / down)
+ */
 class glCylinder : public glExtrusion
 {
 public:

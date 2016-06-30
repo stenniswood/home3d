@@ -19,9 +19,6 @@ public:
     glBench ();
     ~glBench();
     
-    void            create_vertical_walls   ( );
-    void            create_horizontal_walls ( );
-    virtual void    add_light_switches      ( );
     virtual void    create_components       ( );
     
     float       m_length;
