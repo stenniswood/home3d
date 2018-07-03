@@ -182,9 +182,7 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "707"
-            endingLineNumber = "707"
-            landmarkName = "drawScene()"
-            landmarkType = "7">
+            endingLineNumber = "707">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -529,8 +527,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "518"
             endingLineNumber = "518"
-            landmarkName = "init_objects()"
-            landmarkType = "7">
+            landmarkName = "unknown"
+            landmarkType = "0">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -560,7 +558,9 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "14"
-            endingLineNumber = "14">
+            endingLineNumber = "14"
+            landmarkName = "unknown"
+            landmarkType = "0">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -861,8 +861,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "204"
             endingLineNumber = "204"
-            landmarkName = "change_route( MathVector mSource, MathVector mDestination )"
-            landmarkType = "7">
+            landmarkName = "handleKeypress(unsigned char key, int x, int y)"
+            landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -876,9 +876,7 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "803"
-            endingLineNumber = "803"
-            landmarkName = "MouseMotion(int x, int y)"
-            landmarkType = "7">
+            endingLineNumber = "803">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1005,8 +1003,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "199"
             endingLineNumber = "199"
-            landmarkName = "change_route( MathVector mSource, MathVector mDestination )"
-            landmarkType = "7">
+            landmarkName = "handleKeypress(unsigned char key, int x, int y)"
+            landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1085,8 +1083,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "200"
             endingLineNumber = "200"
-            landmarkName = "change_route( MathVector mSource, MathVector mDestination )"
-            landmarkType = "7">
+            landmarkName = "handleKeypress(unsigned char key, int x, int y)"
+            landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1206,9 +1204,7 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "814"
-            endingLineNumber = "814"
-            landmarkName = "MouseMotion(int x, int y)"
-            landmarkType = "7">
+            endingLineNumber = "814">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1222,9 +1218,7 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "812"
-            endingLineNumber = "812"
-            landmarkName = "MouseMotion(int x, int y)"
-            landmarkType = "7">
+            endingLineNumber = "812">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1304,7 +1298,7 @@
             startingLineNumber = "48"
             endingLineNumber = "48"
             landmarkName = "Texture::generate_TBO ( )"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1320,7 +1314,7 @@
             startingLineNumber = "57"
             endingLineNumber = "57"
             landmarkName = "Texture::generate_TBO ( )"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1476,9 +1470,7 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "811"
-            endingLineNumber = "811"
-            landmarkName = "MouseMotion(int x, int y)"
-            landmarkType = "7">
+            endingLineNumber = "811">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1507,8 +1499,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "516"
             endingLineNumber = "516"
-            landmarkName = "init_objects()"
-            landmarkType = "7">
+            landmarkName = "unknown"
+            landmarkType = "0">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1539,8 +1531,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "239"
             endingLineNumber = "239"
-            landmarkName = "glPhysicalWorld::draw()"
-            landmarkType = "5">
+            landmarkName = "glPhysicalWorld::adjust_velocity_for_inelasticity( glObject* mObject, float mSpeedBefore )"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1587,8 +1579,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "245"
             endingLineNumber = "245"
-            landmarkName = "glPhysicalWorld::draw()"
-            landmarkType = "5">
+            landmarkName = "unknown"
+            landmarkType = "0">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1683,8 +1675,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "240"
             endingLineNumber = "240"
-            landmarkName = "glPhysicalWorld::draw()"
-            landmarkType = "5">
+            landmarkName = "glPhysicalWorld::adjust_velocity_for_inelasticity( glObject* mObject, float mSpeedBefore )"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1700,7 +1692,7 @@
             startingLineNumber = "122"
             endingLineNumber = "122"
             landmarkName = "glPhysicalWorld::add_object( glObject* mObject )"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1716,7 +1708,7 @@
             startingLineNumber = "54"
             endingLineNumber = "54"
             landmarkName = "glSphere::generate_vertices( )"
-            landmarkType = "5">
+            landmarkType = "7">
             <Locations>
                <Location
                   shouldBeEnabled = "No"
@@ -1764,7 +1756,7 @@
             startingLineNumber = "59"
             endingLineNumber = "59"
             landmarkName = "glSphere::generate_vertices( )"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1843,7 +1835,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "40"
             endingLineNumber = "40"
-            landmarkName = "class glFullWall"
+            landmarkName = "glFullWall"
             landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1968,7 +1960,7 @@
             startingLineNumber = "51"
             endingLineNumber = "51"
             landmarkName = "glSphere::generate_vertices( )"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -2095,8 +2087,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "528"
             endingLineNumber = "528"
-            landmarkName = "init_objects()"
-            landmarkType = "7">
+            landmarkName = "MouseButton(int button, int state, int x, int y)"
+            landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -2379,8 +2371,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "595"
             endingLineNumber = "595"
-            landmarkName = "init_objects()"
-            landmarkType = "7">
+            landmarkName = "main(int argc, char** argv)"
+            landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -2395,8 +2387,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "597"
             endingLineNumber = "597"
-            landmarkName = "init_objects()"
-            landmarkType = "7">
+            landmarkName = "main(int argc, char** argv)"
+            landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -2427,8 +2419,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "593"
             endingLineNumber = "593"
-            landmarkName = "init_objects()"
-            landmarkType = "7">
+            landmarkName = "main(int argc, char** argv)"
+            landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -2475,8 +2467,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "440"
             endingLineNumber = "440"
-            landmarkName = "draw_objects()"
-            landmarkType = "7">
+            landmarkName = "drawScene()"
+            landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -2516,6 +2508,7 @@
                   continueAfterRunningActions = "No"
                   symbolName = "glRoute::compute_slopes()"
                   moduleName = "home3D"
+                  usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/stephentenniswood/Documents/xcode_projects/home3D/home3D/route.cpp"
                   timestampString = "458416835.334395"
                   startingColumnNumber = "9223372036854775807"
@@ -2530,6 +2523,7 @@
                   continueAfterRunningActions = "No"
                   symbolName = "glRoute::compute_slopes()"
                   moduleName = "home3D"
+                  usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/stephentenniswood/Documents/xcode_projects/home3D/home3D/route.cpp"
                   timestampString = "458416835.334598"
                   startingColumnNumber = "9223372036854775807"
@@ -2553,8 +2547,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "202"
             endingLineNumber = "202"
-            landmarkName = "change_route( MathVector mSource, MathVector mDestination )"
-            landmarkType = "7">
+            landmarkName = "handleKeypress(unsigned char key, int x, int y)"
+            landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -2569,8 +2563,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "201"
             endingLineNumber = "201"
-            landmarkName = "change_route( MathVector mSource, MathVector mDestination )"
-            landmarkType = "7">
+            landmarkName = "handleKeypress(unsigned char key, int x, int y)"
+            landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -3082,7 +3076,7 @@
             startingLineNumber = "84"
             endingLineNumber = "84"
             landmarkName = "glSphere::draw_primitive( )"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -3224,9 +3218,7 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "748"
-            endingLineNumber = "748"
-            landmarkName = "update(int value)"
-            landmarkType = "7">
+            endingLineNumber = "748">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -3410,6 +3402,7 @@
                   continueAfterRunningActions = "No"
                   symbolName = "glPainting::glPainting()"
                   moduleName = "home3D"
+                  usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/stephentenniswood/Documents/xcode_projects/home3D/home3D/atoms/painting.cpp"
                   timestampString = "459554419.656446"
                   startingColumnNumber = "9223372036854775807"
@@ -3424,6 +3417,7 @@
                   continueAfterRunningActions = "No"
                   symbolName = "glPainting::glPainting()"
                   moduleName = "home3D"
+                  usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/stephentenniswood/Documents/xcode_projects/home3D/home3D/atoms/painting.cpp"
                   timestampString = "459554419.656682"
                   startingColumnNumber = "9223372036854775807"
@@ -3456,6 +3450,7 @@
                   continueAfterRunningActions = "No"
                   symbolName = "glPainting::glPainting()"
                   moduleName = "home3D"
+                  usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/stephentenniswood/Documents/xcode_projects/home3D/home3D/atoms/painting.cpp"
                   timestampString = "459556173.244967"
                   startingColumnNumber = "9223372036854775807"
@@ -3470,6 +3465,7 @@
                   continueAfterRunningActions = "No"
                   symbolName = "glPainting::glPainting()"
                   moduleName = "home3D"
+                  usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/stephentenniswood/Documents/xcode_projects/home3D/home3D/atoms/painting.cpp"
                   timestampString = "459556173.245153"
                   startingColumnNumber = "9223372036854775807"
@@ -3502,6 +3498,7 @@
                   continueAfterRunningActions = "No"
                   symbolName = "glPaper::glPaper(int)"
                   moduleName = "home3D"
+                  usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/stephentenniswood/Documents/xcode_projects/home3D/home3D/atoms/paper.cpp"
                   timestampString = "459555771.1271"
                   startingColumnNumber = "9223372036854775807"
@@ -3516,6 +3513,7 @@
                   continueAfterRunningActions = "No"
                   symbolName = "glPaper::glPaper(int)"
                   moduleName = "home3D"
+                  usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/stephentenniswood/Documents/xcode_projects/home3D/home3D/atoms/paper.cpp"
                   timestampString = "459555771.127245"
                   startingColumnNumber = "9223372036854775807"
@@ -3548,6 +3546,7 @@
                   continueAfterRunningActions = "No"
                   symbolName = "glPainting::glPainting()"
                   moduleName = "home3D"
+                  usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/stephentenniswood/Documents/xcode_projects/home3D/home3D/atoms/painting.cpp"
                   timestampString = "459556173.245973"
                   startingColumnNumber = "9223372036854775807"
@@ -3562,6 +3561,7 @@
                   continueAfterRunningActions = "No"
                   symbolName = "glPainting::glPainting()"
                   moduleName = "home3D"
+                  usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/stephentenniswood/Documents/xcode_projects/home3D/home3D/atoms/painting.cpp"
                   timestampString = "459556173.246122"
                   startingColumnNumber = "9223372036854775807"
@@ -3584,9 +3584,7 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "634"
-            endingLineNumber = "634"
-            landmarkName = "init_objects()"
-            landmarkType = "7">
+            endingLineNumber = "634">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -3610,6 +3608,7 @@
                   continueAfterRunningActions = "No"
                   symbolName = "glPainting::glPainting()"
                   moduleName = "home3D"
+                  usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/stephentenniswood/Documents/xcode_projects/home3D/home3D/atoms/painting.cpp"
                   timestampString = "459556213.042287"
                   startingColumnNumber = "9223372036854775807"
@@ -3624,6 +3623,7 @@
                   continueAfterRunningActions = "No"
                   symbolName = "glPainting::glPainting()"
                   moduleName = "home3D"
+                  usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/stephentenniswood/Documents/xcode_projects/home3D/home3D/atoms/painting.cpp"
                   timestampString = "459556213.042602"
                   startingColumnNumber = "9223372036854775807"
@@ -3694,9 +3694,7 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "635"
-            endingLineNumber = "635"
-            landmarkName = "init_objects()"
-            landmarkType = "7">
+            endingLineNumber = "635">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -3760,7 +3758,7 @@
             startingLineNumber = "399"
             endingLineNumber = "399"
             landmarkName = "handleKeypress(unsigned char key, int x, int y)"
-            landmarkType = "7">
+            landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -3904,7 +3902,7 @@
             startingLineNumber = "392"
             endingLineNumber = "392"
             landmarkName = "handleKeypress(unsigned char key, int x, int y)"
-            landmarkType = "7">
+            landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -3920,7 +3918,7 @@
             startingLineNumber = "393"
             endingLineNumber = "393"
             landmarkName = "handleKeypress(unsigned char key, int x, int y)"
-            landmarkType = "7">
+            landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -3934,9 +3932,7 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "763"
-            endingLineNumber = "763"
-            landmarkName = "update(int value)"
-            landmarkType = "7">
+            endingLineNumber = "763">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -4064,7 +4060,7 @@
             startingLineNumber = "77"
             endingLineNumber = "77"
             landmarkName = "glPhysicalWorld::find_component( string&amp; mRequestedName, string&amp; mTypeName, vector&lt;VerbalObject*&gt;* object_hier, bool mTypeMustMatch )"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -4080,7 +4076,7 @@
             startingLineNumber = "70"
             endingLineNumber = "70"
             landmarkName = "glPhysicalWorld::find_component( string&amp; mRequestedName, string&amp; mTypeName, vector&lt;VerbalObject*&gt;* object_hier, bool mTypeMustMatch )"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -4096,7 +4092,7 @@
             startingLineNumber = "82"
             endingLineNumber = "82"
             landmarkName = "glPhysicalWorld::find_component( string&amp; mRequestedName, string&amp; mTypeName, vector&lt;VerbalObject*&gt;* object_hier, bool mTypeMustMatch )"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -4112,7 +4108,7 @@
             startingLineNumber = "66"
             endingLineNumber = "66"
             landmarkName = "glPhysicalWorld::find_component( string&amp; mRequestedName, string&amp; mTypeName, vector&lt;VerbalObject*&gt;* object_hier, bool mTypeMustMatch )"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -4128,7 +4124,7 @@
             startingLineNumber = "86"
             endingLineNumber = "86"
             landmarkName = "glPhysicalWorld::find_component( string&amp; mRequestedName, string&amp; mTypeName, vector&lt;VerbalObject*&gt;* object_hier, bool mTypeMustMatch )"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -4176,7 +4172,7 @@
             startingLineNumber = "81"
             endingLineNumber = "81"
             landmarkName = "glPhysicalWorld::find_component( string&amp; mRequestedName, string&amp; mTypeName, vector&lt;VerbalObject*&gt;* object_hier, bool mTypeMustMatch )"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -4207,8 +4203,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "242"
             endingLineNumber = "242"
-            landmarkName = "glPhysicalWorld::draw()"
-            landmarkType = "5">
+            landmarkName = "glPhysicalWorld::adjust_velocity_for_inelasticity( glObject* mObject, float mSpeedBefore )"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -4334,9 +4330,7 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "761"
-            endingLineNumber = "761"
-            landmarkName = "update(int value)"
-            landmarkType = "7">
+            endingLineNumber = "761">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -4351,8 +4345,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "222"
             endingLineNumber = "222"
-            landmarkName = "glPhysicalWorld::snells_law( glObject* mObject, MathVector mSurfaceVector )"
-            landmarkType = "5">
+            landmarkName = "glPhysicalWorld::floor_bounce( glObject* mObject )"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -4448,7 +4442,7 @@
             startingLineNumber = "165"
             endingLineNumber = "165"
             landmarkName = "glPhysicalWorld::time_slice( float time_period )"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -4496,7 +4490,7 @@
             startingLineNumber = "63"
             endingLineNumber = "63"
             landmarkName = "glSphere::generate_vertices( )"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -4512,7 +4506,7 @@
             startingLineNumber = "79"
             endingLineNumber = "79"
             landmarkName = "glSphere::generate_vertices( )"
-            landmarkType = "5">
+            landmarkType = "7">
             <Locations>
                <Location
                   shouldBeEnabled = "No"
@@ -4520,6 +4514,7 @@
                   continueAfterRunningActions = "No"
                   symbolName = "glSphere::generate_vertices()"
                   moduleName = "home3D"
+                  usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/stephentenniswood/Documents/xcode_projects/home3D/home3D/atoms/glSphere.cpp"
                   timestampString = "459947813.035712"
                   startingColumnNumber = "9223372036854775807"
@@ -4534,6 +4529,7 @@
                   continueAfterRunningActions = "No"
                   symbolName = "glSphere::generate_vertices()"
                   moduleName = "home3D"
+                  usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/stephentenniswood/Documents/xcode_projects/home3D/home3D/atoms/glSphere.cpp"
                   timestampString = "459947813.035931"
                   startingColumnNumber = "9223372036854775807"
@@ -4558,7 +4554,7 @@
             startingLineNumber = "56"
             endingLineNumber = "56"
             landmarkName = "glSphere::generate_vertices( )"
-            landmarkType = "5">
+            landmarkType = "7">
             <Locations>
                <Location
                   shouldBeEnabled = "No"
@@ -4566,6 +4562,7 @@
                   continueAfterRunningActions = "No"
                   symbolName = "glSphere::generate_vertices()"
                   moduleName = "home3D"
+                  usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/stephentenniswood/Documents/xcode_projects/home3D/home3D/atoms/glSphere.cpp"
                   timestampString = "459947839.538234"
                   startingColumnNumber = "9223372036854775807"
@@ -4580,6 +4577,7 @@
                   continueAfterRunningActions = "No"
                   symbolName = "glSphere::generate_vertices()"
                   moduleName = "home3D"
+                  usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/stephentenniswood/Documents/xcode_projects/home3D/home3D/atoms/glSphere.cpp"
                   timestampString = "459947839.538444"
                   startingColumnNumber = "9223372036854775807"
@@ -4908,7 +4906,7 @@
             startingLineNumber = "120"
             endingLineNumber = "120"
             landmarkName = "Texture::generate_texture_coords( int mRotation )"
-            landmarkType = "5">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -4971,8 +4969,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "612"
             endingLineNumber = "612"
-            landmarkName = "init_objects()"
-            landmarkType = "7">
+            landmarkName = "unknown"
+            landmarkType = "0">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -5018,9 +5016,7 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "653"
-            endingLineNumber = "653"
-            landmarkName = "init_objects()"
-            landmarkType = "7">
+            endingLineNumber = "653">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -5242,9 +5238,7 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "751"
-            endingLineNumber = "751"
-            landmarkName = "update(int value)"
-            landmarkType = "7">
+            endingLineNumber = "751">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy

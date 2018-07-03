@@ -9,7 +9,7 @@
 
 
 using namespace std;
-#include "texture.hpp"
+#include "Texture.hpp"
 #include "verbal_object.h"
 
 

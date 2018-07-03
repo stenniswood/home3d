@@ -11,7 +11,7 @@
 
 #include <stdio.h>
 #include "glMolecule.h"
-#include "glComputablewall.h"
+#include "glComputableWall.h"
 #include "door.hpp"
 #include "light_switch.hpp"
 #include "gl_window.h"
