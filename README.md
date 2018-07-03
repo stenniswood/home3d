@@ -8,7 +8,7 @@ voice commands and NLP can direct the robot's actions.
 http://www.beyond-kinetics.com/store/five_product_details.php
 
 
-#Prerequisites
+# Prerequisites
 cmake
 homebrew
 libfreenect
